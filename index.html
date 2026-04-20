@@ -1125,7 +1125,7 @@ async function tryRemoteLoad() {
 }
 
 function overlaySnapshot(snap) {
-  // Merge live Staircase health data onto CSV-sourced client records
+  // Merge live Staircase health data + meeting notes onto CSV-sourced client records
   snap.clients.forEach(sc => {
     const client = allClients.find(c =>
       c.name.toLowerCase().replace(/[^a-z0-9]/g,'').includes(
@@ -1140,6 +1140,12 @@ function overlaySnapshot(snap) {
       if (sc.asanaRAG)                    client.rag            = sc.asanaRAG;
       if (sc.asanaStatus)                 client.currentStatus  = sc.asanaStatus;
       if (sc.renewalDate)                 client.renewalDate    = sc.renewalDate;
+      // New: meeting notes + contact info from enriched snapshot
+      if (sc.meetings      && sc.meetings.length) client.meetings     = sc.meetings;
+      if (sc.contactName)                 client.contactName   = sc.contactName;
+      if (sc.contactTitle)                client.contactTitle  = sc.contactTitle;
+      if (sc.contactEmail)                client.contactEmail  = sc.contactEmail;
+      if (sc.statusNotes)                 client.statusNotes   = sc.statusNotes;
     }
   });
   applyFilters();
@@ -1602,6 +1608,7 @@ function renderHubOverview(c) {
     ['Phase',          esc(c.sfPhase||'–')],
     ['SF Case #',      c.sfCaseNum ? `<a href="${c.sfUrl||'#'}" target="_blank">${esc(c.sfCaseNum)}</a>` : '–'],
     ['Partner',        esc(c.partner||'–')],
+    ...(c.contactName ? [['Client Contact', `${esc(c.contactName)}${c.contactTitle ? ' — '+esc(c.contactTitle) : ''}${c.contactEmail ? ` (<a href="mailto:${esc(c.contactEmail)}">${esc(c.contactEmail)}</a>)` : ''}`]] : []),
   ];
   const infoRows2 = [
     ['AE',             esc(c.ae||'–')],
@@ -1694,6 +1701,20 @@ function generateAISummary(c) {
 
   if (suggestion) lines.push(`💡 <strong>Suggested next step:</strong> ${suggestion}`);
 
+  // Latest meeting note (from Outlook/Staircase)
+  if (c.meetings && c.meetings.length) {
+    const latest = c.meetings.slice().sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+    const dAgo = Math.round((new Date() - new Date(latest.date)) / 86400000);
+    const dAgoStr = dAgo === 0 ? 'today' : dAgo === 1 ? 'yesterday' : `${dAgo} days ago`;
+    lines.push(`📋 <strong>Last meeting (${new Date(latest.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} — ${dAgoStr}):</strong> ${esc(latest.title)}. ${esc(latest.summary||'').slice(0,180)}${(latest.summary||'').length>180?'…':''}`);
+    if (latest.actionItems && latest.actionItems.length) {
+      lines.push(`⚡ <strong>Open actions from last meeting:</strong><ul style="margin:4px 0 0;padding-left:18px;">${latest.actionItems.slice(0,4).map(a=>`<li>${esc(a)}</li>`).join('')}${latest.actionItems.length>4?'<li>…and more</li>':''}</ul>`);
+    }
+  }
+  if (c.statusNotes) {
+    lines.push(`📍 <strong>Status notes:</strong> ${esc(c.statusNotes)}`);
+  }
+
   box.innerHTML = lines.join('<br><br>');
 }
 
@@ -1710,48 +1731,102 @@ function renderHubTimeline(c) {
   const ph = document.getElementById('hub-phases');
   const today = new Date();
 
+  // TYPE ICONS & COLORS
+  const typeIcon  = { meeting: '🤝', email: '✉️', milestone: '🏁', default: '📌' };
+  const typeColor = { meeting: 'var(--blue)', email: 'var(--gray-500)', milestone: 'var(--green)', default: 'var(--gray-400)' };
+
   const events = [];
 
+  // ─── Milestone events from CSV ───
   if (c.sfCaseOpened && !c.sfCaseOpened.startsWith('0')) {
     const d = new Date(c.sfCaseOpened);
-    if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, kind: 'milestone', past: d <= today });
   }
   if (c.gcxCreated) {
     const d = parseTimestamp(c.gcxCreated);
-    if (d) events.push({ date: d, label: 'GuideCX Project Created', detail: '', past: d <= today });
+    if (d) events.push({ date: d, label: 'GuideCX Project Created', detail: '', kind: 'milestone', past: d <= today });
   }
   if (c.expectedGoLive) {
     const d = new Date(c.expectedGoLive);
     if (!isNaN(d)) {
       const isOverdue = !c.actualGoLive && d < today;
-      events.push({ date: d, label: 'Expected Go-Live', detail: 'DM implementation target', past: d <= today, overdue: isOverdue });
+      events.push({ date: d, label: 'Expected Go-Live', detail: 'DM implementation target', kind: 'milestone', past: d <= today, overdue: isOverdue });
     }
   }
   if (c.actualGoLive) {
     const d = new Date(c.actualGoLive);
-    if (!isNaN(d)) events.push({ date: d, label: '✅ Actual Go-Live', detail: 'DM went live', past: true });
+    if (!isNaN(d)) events.push({ date: d, label: '✅ Actual Go-Live', detail: 'DM went live', kind: 'milestone', past: true });
   }
   if (c.renewalDate) {
     const d = new Date(c.renewalDate);
-    if (!isNaN(d)) events.push({ date: d, label: 'Contract Renewal', detail: c.contractStatus||'', past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'Contract Renewal', detail: c.contractStatus||'', kind: 'milestone', past: d <= today });
   }
   if (c.aiRenewal && c.aiRenewal !== c.renewalDate) {
     const d = new Date(c.aiRenewal);
-    if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), kind: 'milestone', past: d <= today });
   }
 
-  events.sort((a,b) => a.date - b.date);
+  // ─── Meeting notes from snapshot ───
+  if (c.meetings && c.meetings.length) {
+    c.meetings.forEach(m => {
+      const d = new Date(m.date);
+      if (!isNaN(d)) {
+        events.push({
+          date: d,
+          label: m.title || 'Meeting',
+          detail: m.summary || '',
+          attendees: m.attendees || [],
+          actionItems: m.actionItems || [],
+          kind: m.type || 'meeting',
+          past: true,
+          isMeeting: true
+        });
+      }
+    });
+  }
+
+  // Sort newest first for meeting-heavy timelines
+  events.sort((a,b) => b.date - a.date);
 
   if (!events.length) {
-    tl.innerHTML = '<p class="timeline-empty">No dated milestones available. Dates will populate as Copilot meeting notes are connected (Phase 2).</p>';
+    tl.innerHTML = '<p class="timeline-empty">No dated activity found. Meetings and emails will appear here as data is synced.</p>';
   } else {
-    tl.innerHTML = events.map(ev => `
-      <div class="timeline-item">
-        <div class="timeline-dot ${ev.overdue ? 'overdue' : ev.past ? 'past' : 'future'}"></div>
-        <div class="timeline-date">${ev.date.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'})}</div>
-        <div class="timeline-title">${ev.label}</div>
-        ${ev.detail ? `<div class="timeline-detail">${esc(ev.detail)}</div>` : ''}
-      </div>`).join('');
+    tl.innerHTML = events.map(ev => {
+      const dotClass = ev.overdue ? 'overdue' : ev.past ? 'past' : 'future';
+      const icon = typeIcon[ev.kind] || typeIcon.default;
+      const kindLabel = ev.kind ? `<span style="font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:${typeColor[ev.kind]||typeColor.default};margin-left:6px;">${ev.kind}</span>` : '';
+
+      const attendeeHtml = (ev.attendees && ev.attendees.length)
+        ? `<div style="margin-top:6px;font-size:11px;color:var(--gray-500);">
+             <strong style="color:var(--gray-600);">Attendees:</strong> ${ev.attendees.map(a => esc(a)).join(' · ')}
+           </div>` : '';
+
+      const actionHtml = (ev.actionItems && ev.actionItems.length)
+        ? `<div style="margin-top:6px;">
+             <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:3px;">Action items:</div>
+             <ul style="margin:0;padding-left:16px;font-size:12px;color:var(--gray-600);line-height:1.6;">
+               ${ev.actionItems.map(a => `<li>${esc(a)}</li>`).join('')}
+             </ul>
+           </div>` : '';
+
+      return `
+        <div class="timeline-item" style="${ev.isMeeting ? 'background:var(--gray-50);border-radius:8px;padding:10px 12px;margin-bottom:12px;' : ''}">
+          <div class="timeline-dot ${dotClass}" style="${ev.isMeeting ? 'background:'+(typeColor[ev.kind]||'var(--blue)')+';box-shadow:0 0 0 2px '+(typeColor[ev.kind]||'var(--blue)')+';' : ''}"></div>
+          <div class="timeline-date">${ev.date.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'})}${kindLabel}</div>
+          <div class="timeline-title">${icon} ${ev.label}</div>
+          ${ev.detail ? `<div class="timeline-detail" style="margin-top:4px;">${esc(ev.detail)}</div>` : ''}
+          ${attendeeHtml}
+          ${actionHtml}
+        </div>`;
+    }).join('');
+  }
+
+  // Status notes banner (from snapshot)
+  if (c.statusNotes) {
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;';
+    banner.innerHTML = `<strong>Status:</strong> ${esc(c.statusNotes)}`;
+    tl.parentNode.insertBefore(banner, tl);
   }
 
   // Phase history

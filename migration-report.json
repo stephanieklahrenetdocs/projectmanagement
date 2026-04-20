@@ -1,0 +1,302 @@
+{
+  "run_date": "2026-04-14T13:58:33.856276",
+  "dry_run": true,
+  "pm_filter": "Stephanie Klahre",
+  "summary": {
+    "total": 26,
+    "success": 0,
+    "partial": 0,
+    "errors": 0,
+    "dry_run": 26
+  },
+  "projects": [
+    {
+      "gcx_name": "B3 S.A. \u2013 BRASIL, BOLSA, BALCAO AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 B3 S.A. \u2013 BRASIL, BOLSA, BALCAO \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Legal AI Assistant Rollout",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Advokatbyran Kaiding AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Advokatbyran Kaiding \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Patterson Law AI PS Onboarding",
+      "asana_name": "\ud83d\udd34 Patterson Law \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Red",
+      "detected_milestone": "Hypercare & Closeout",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Analysis Group, Inc AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Analysis Group, Inc \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "AI Profiling",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Leathes Prior Solicitors AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Leathes Prior Solicitors \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {
+        "Engineer": "empty (will need manual assignment)"
+      },
+      "errors": []
+    },
+    {
+      "gcx_name": "Pender & Coward PC AI PS Onboarding",
+      "asana_name": "\ud83d\udfe1 Pender & Coward PC \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Amber",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Winckworth Sherwood AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Winckworth Sherwood \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "AI Profiling",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Lewis Silkin LLP AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Lewis Silkin LLP \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Forsters AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Forsters \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Henkel AG & Co. KGaA AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Henkel AG & Co. KGaA \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "GSK Stockmann AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 GSK Stockmann \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Chevez, Ruiz, Zamarripa y C\u00eda SC AI PS Onboarding",
+      "asana_name": "\ud83d\udfe1 Chevez, Ruiz, Zamarripa y C\u00eda SC \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Amber",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Mewburn Ellis LLP AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Mewburn Ellis LLP \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "AI Profiling",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Accuro Fiduciary Services Limited AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Accuro Fiduciary Services Limited \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Hypercare & Closeout",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Wiggin and Dana LLP AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Wiggin and Dana LLP \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Studio Apps Deployment",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Galloway, Johnson, Tompkins, Burr & Smith, PLC AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Galloway, Johnson, Tompkins, Burr & Smith, PLC \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Hypercare & Closeout",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Ploum Rotterdam Law Firm AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Ploum Rotterdam Law Firm \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Farrer & Co AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Farrer & Co \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Hammad & Al-Mehdar Law Firm AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Hammad & Al-Mehdar Law Firm \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Allende & Brea AI PS Onboarding",
+      "asana_name": "\ud83d\udd34 Allende & Brea \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Red",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Hedrick Gardner Kincheloe & Garofalo LLP AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Hedrick Gardner Kincheloe & Garofalo LLP \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Garfias y C\u00eda Sociedad de Profesionales Ltda. AI PS Onboarding",
+      "asana_name": "\ud83d\udd34 Garfias y C\u00eda Sociedad de Profesionales Ltda. \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Red",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Briffa Legal AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 Briffa Legal \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Karawani & Co AI PS Onboarding",
+      "asana_name": "\ud83d\udfe1 Karawani & Co \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Amber",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "Chapman and Cutler LLP AI PS Onboarding",
+      "asana_name": "\ud83d\udfe1 Chapman and Cutler LLP \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Amber",
+      "detected_milestone": "Legal AI Assistant Rollout",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    },
+    {
+      "gcx_name": "City of Phoenix - Law Department AI PS Onboarding",
+      "asana_name": "\ud83d\udfe2 City of Phoenix - Law Department \u2014 ndMAX Implementation",
+      "pm_lc": "Stephanie Klahre",
+      "rag": "Green",
+      "detected_milestone": "Kickoff & Readiness",
+      "status": "dry_run",
+      "asana_project_gid": null,
+      "unmapped": {},
+      "errors": []
+    }
+  ]
+}

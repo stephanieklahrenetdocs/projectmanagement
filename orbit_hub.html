@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ndMAX Orbit — Client Hub</title>
+<style>
+  /* ═══════════════════════════════════════════
+     TOKENS & RESET
+  ═══════════════════════════════════════════ */
+  :root {
+    --navy:      #1a1a2e;
+    --navy-mid:  #16213e;
+    --navy-dark: #0f3460;
+    --accent:    #e94560;
+    --accent2:   #533483;
+    --green:     #22c55e;
+    --amber:     #f59e0b;
+    --red:       #ef4444;
+    --blue:      #3b82f6;
+    --gray-100:  #f3f4f6;
+    --gray-200:  #e5e7eb;
+    --gray-300:  #d1d5db;
+    --gray-500:  #6b7280;
+    --gray-700:  #374151;
+    --gray-900:  #111827;
+    --sidebar-w: 240px;
+    --hub-w:     820px;
+    --radius:    8px;
+    --shadow:    0 4px 24px rgba(0,0,0,.18);
+    --trans:     .18s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { cursor: pointer; font-family: inherit; }
+  input, select, textarea { font-family: inherit; }
+
+  /* ═══════════════════════════════════════════
+     HEADER
+  ═══════════════════════════════════════════ */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+    color: #fff;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,.4);
+  }
+  .header-logo { font-size: 20px; font-weight: 700; letter-spacing: -.5px; }
+  .header-logo span { color: var(--accent); }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,.5); margin-left: 4px; }
+  .header-spacer { flex: 1; }
+  .header-date { font-size: 12px; color: rgba(255,255,255,.6); }
+  .btn-load-csv {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    transition: background var(--trans);
+  }
+  .btn-load-csv:hover { background: #c73a52; }
+  #csv-input { display: none; }
+
+  /* ═══════════════════════════════════════════
+     LAYOUT
+  ═══════════════════════════════════════════ */
+  .layout {
+    display: flex;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--navy-mid);
+    color: #fff;
+    padding: 20px 14px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    border-right: 1px solid rgba(255,255,255,.06);
+  }
+  .sidebar-section { margin-bottom: 20px; }
+  .sidebar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,.4);
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 4px; }
+  .filter-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,.75);
+    text-align: left;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background var(--trans), color var(--trans);
+  }
+  .filter-btn:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .filter-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .filter-count {
+    margin-left: auto;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    font-size: 11px;
+    padding: 1px 7px;
+    min-width: 22px;
+    text-align: center;
+  }
+  .filter-btn.active .filter-count { background: rgba(255,255,255,.25); }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green  { background: var(--green); }
+  .dot-amber  { background: var(--amber); }
+  .dot-red    { background: var(--red); }
+  .dot-gray   { background: var(--gray-500); }
+  .dot-blue   { background: var(--blue); }
+
+  .search-box {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-size: 13px;
+  }
+  .search-box::placeholder { color: rgba(255,255,255,.35); }
+  .search-box:focus { outline: none; border-color: var(--accent); }
+
+  .select-filter {
+    width: 100%;
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-size: 12px;
+  }
+  .select-filter option { background: var(--navy-mid); color: #fff; }
+  .select-filter:focus { outline: none; border-color: var(--accent); }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+
+  /* ═══════════════════════════════════════════
+     KPI CARDS
+  ═══════════════════════════════════════════ */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    border-top: 3px solid var(--gray-200);
+    transition: transform var(--trans), box-shadow var(--trans);
+  }
+  .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+  .kpi-card.green  { border-top-color: var(--green); }
+  .kpi-card.amber  { border-top-color: var(--amber); }
+  .kpi-card.red    { border-top-color: var(--red); }
+  .kpi-card.blue   { border-top-color: var(--blue); }
+  .kpi-card.purple { border-top-color: #8b5cf6; }
+  .kpi-label { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--gray-900); line-height: 1; }
+  .kpi-sub   { font-size: 11px; color: var(--gray-500); margin-top: 4px; }
+
+  /* ═══════════════════════════════════════════
+     TABLE
+  ═══════════════════════════════════════════ */
+  .table-wrap {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--gray-200);
+    flex-wrap: wrap;
+  }
+  .table-title { font-size: 14px; font-weight: 600; color: var(--gray-700); flex: 1; }
+  .table-count { font-size: 12px; color: var(--gray-500); }
+  .sort-select {
+    padding: 5px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-300);
+    font-size: 12px;
+    color: var(--gray-700);
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--gray-100); }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  th:hover { color: var(--gray-900); }
+  th .sort-arrow { margin-left: 4px; opacity: .4; }
+  th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--gray-100);
+    cursor: pointer;
+    transition: background var(--trans);
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f0f7ff; }
+  td { padding: 10px 14px; vertical-align: middle; }
+
+  .rag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .rag-Green  { background: #dcfce7; color: #16a34a; }
+  .rag-Amber  { background: #fef3c7; color: #d97706; }
+  .rag-Red    { background: #fee2e2; color: #dc2626; }
+  .rag-       { background: var(--gray-200); color: var(--gray-500); }
+
+  .status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .status-On.Time    { background: #dcfce7; color: #16a34a; }
+  .status-Late       { background: #fee2e2; color: #dc2626; }
+  .status-On.Hold    { background: #fef3c7; color: #d97706; }
+  .status-Complete   { background: #e0e7ff; color: #4338ca; }
+
+  .pm-chip {
+    font-size: 11px;
+    background: var(--gray-100);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--gray-700);
+    white-space: nowrap;
+  }
+  .arr-val { font-weight: 600; color: var(--gray-900); }
+  .client-name { font-weight: 500; color: var(--navy-dark); }
+
+  /* no data state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray-500);
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h3 { font-size: 16px; color: var(--gray-700); margin-bottom: 8px; }
+  .empty-state p { font-size: 13px; }
+  .btn-primary {
+    display: inline-block;
+    margin-top: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ═══════════════════════════════════════════
+     CLIENT HUB OVERLAY
+  ═══════════════════════════════════════════ */
+  .hub-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--trans);
+  }
+  .hub-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .hub-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(var(--hub-w), 95vw);
+    background: #fff;
+    box-shadow: -8px 0 40px rgba(0,0,0,.25);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    overflow: hidden;
+  }
+  .hub-panel.open { transform: translateX(0); }
+
+  /* hub header */
+  .hub-header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+    color: #fff;
+    padding: 20px 24px 16px;
+    flex-shrink: 0;
+  }
+  .hub-header-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .hub-close {
+    background: rgba(255,255,255,.1);
+    border: none;
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background var(--trans);
+    flex-shrink: 0;
+  }
+  .hub-close:hover { background: rgba(255,255,255,.2); }
+  .hub-client-name { font-size: 20px; font-weight: 700; flex: 1; line-height: 1.2; }
+  .hub-meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: rgba(255,255,255,.7);
+  }
+  .hub-meta-item { display: flex; align-items: center; gap: 4px; }
+  .hub-meta-item strong { color: #fff; }
+
+  /* hub tabs */
+  .hub-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--gray-200);
+    background: #fff;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .hub-tabs::-webkit-scrollbar { display: none; }
+  .hub-tab {
+    padding: 12px 20px;
+    border: none;
+    background: transparent;
+    color: var(--gray-500);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color var(--trans), border-color var(--trans);
+  }
+  .hub-tab:hover { color: var(--gray-900); }
+  .hub-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  /* hub body */
+  .hub-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .hub-pane { display: none; }
+  .hub-pane.active { display: block; }
+
+  /* ── OVERVIEW TAB ── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .info-card {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .info-card-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--gray-500);
+    margin-bottom: 10px;
+  }
+  .info-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    align-items: flex-start;
+  }
+  .info-key { color: var(--gray-500); min-width: 110px; flex-shrink: 0; }
+  .info-val { color: var(--gray-900); font-weight: 500; }
+  .info-val a { font-weight: 500; }
+
+  .status-note {
+    background: #fffbeb;
+    border-left: 3px solid var(--amber);
+    padding: 12px 14px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .ai-summary-box {
+    background: linear-gradient(135deg, #f0f4ff 0%, #faf0ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--gray-700);
+  }
+  .ai-summary-box .ai-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #6366f1;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── TIMELINE TAB ── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--blue);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--blue);
+  }
+  .timeline-dot.past   { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .timeline-dot.future { background: var(--gray-300); box-shadow: 0 0 0 2px var(--gray-300); }
+  .timeline-dot.overdue { background: var(--red); box-shadow: 0 0 0 2px var(--red); }
+  .timeline-date { font-size: 11px; color: var(--gray-500); margin-bottom: 2px; }
+  .timeline-title { font-size: 14px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px; }
+  .timeline-detail { font-size: 13px; color: var(--gray-500); line-height: 1.4; }
+  .timeline-phase-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    background: #e0e7ff;
+    color: #4338ca;
+    margin-top: 4px;
+  }
+  .timeline-empty {
+    color: var(--gray-500);
+    font-size: 13px;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  /* ── PRODUCTS TAB ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .product-card {
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: border-color var(--trans), background var(--trans);
+    position: relative;
+  }
+  .product-card.covered {
+    border-color: var(--green);
+    background: #f0fdf4;
+  }
+  .product-card.not-covered {
+    border-color: var(--gray-200);
+    background: #fafafa;
+    opacity: .7;
+  }
+  .product-toggle {
+    position: absolute;
+    top: 12px; right: 12px;
+  }
+  .toggle-input { display: none; }
+  .toggle-label {
+    display: inline-block;
+    width: 40px; height: 22px;
+    background: var(--gray-300);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background var(--trans);
+  }
+  .toggle-label::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform var(--trans);
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  }
+  .toggle-input:checked + .toggle-label { background: var(--green); }
+  .toggle-input:checked + .toggle-label::after { transform: translateX(18px); }
+  .product-icon { font-size: 24px; margin-bottom: 8px; }
+  .product-name { font-size: 14px; font-weight: 600; color: var(--gray-900); margin-bottom: 4px; }
+  .product-desc { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
+  .product-status-label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .product-card.covered .product-status-label { color: var(--green); }
+  .product-card.not-covered .product-status-label { color: var(--gray-500); }
+
+  /* ── USAGE TAB ── */
+  .usage-section { margin-bottom: 24px; }
+  .usage-section h3 { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 12px; }
+  .usage-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .usage-stat {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+  .usage-stat-val { font-size: 24px; font-weight: 700; color: var(--navy-dark); }
+  .usage-stat-lbl { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+  .progress-bar-wrap { margin-bottom: 12px; }
+  .progress-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-700); margin-bottom: 4px; }
+  .progress-bar {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--blue);
+    transition: width .5s ease;
+  }
+  .progress-bar-fill.green { background: var(--green); }
+  .progress-bar-fill.amber { background: var(--amber); }
+  .progress-bar-fill.red   { background: var(--red); }
+  .usage-placeholder {
+    background: #f8f9ff;
+    border: 1px dashed #c7d2fe;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    color: var(--gray-500);
+    font-size: 13px;
+  }
+  .usage-placeholder .ph-icon { font-size: 28px; margin-bottom: 8px; }
+
+  /* ── NOTES TAB ── */
+  .notes-area textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 14px;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--gray-900);
+    resize: vertical;
+  }
+  .notes-area textarea:focus { outline: none; border-color: var(--blue); }
+  .notes-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .btn-save {
+    background: var(--navy-dark);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background var(--trans);
+  }
+  .btn-save:hover { background: var(--navy); }
+  .save-msg {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity var(--trans);
+  }
+  .save-msg.show { opacity: 1; }
+  .notes-history { margin-top: 20px; }
+  .notes-history h4 { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 10px; }
+  .note-entry {
+    background: var(--gray-100);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .note-entry .note-date { font-size: 11px; color: var(--gray-500); margin-bottom: 4px; }
+
+  /* ── LINKS TAB ── */
+  .links-grid { display: grid; gap: 10px; }
+  .link-card {
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--gray-900);
+    border: 1px solid var(--gray-200);
+    transition: background var(--trans), border-color var(--trans);
+  }
+  .link-card:hover { background: #e0e7ff; border-color: #c7d2fe; text-decoration: none; }
+  .link-icon { font-size: 22px; flex-shrink: 0; }
+  .link-label { font-size: 14px; font-weight: 600; color: var(--navy-dark); }
+  .link-sub { font-size: 12px; color: var(--gray-500); }
+  .link-arrow { margin-left: auto; color: var(--gray-400); font-size: 16px; }
+
+  /* ── SECTION HEADER ── */
+  .section-hdr {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-700);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--gray-200);
+  }
+
+  /* ═══════════════════════════════════════════
+     TOAST
+  ═══════════════════════════════════════════ */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--gray-900);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    transition: transform .3s ease;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ═══════════════════════════════════════════
+     UTILITIES
+  ═══════════════════════════════════════════ */
+  .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; display: block; }
+  .spacer-8 { height: 8px; }
+  .spacer-16 { height: 16px; }
+  .spacer-24 { height: 24px; }
+  .full-width { grid-column: 1 / -1; }
+  @media (max-width: 680px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .usage-stats-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="header">
+  <div class="header-logo">nd<span>MAX</span> Orbit</div>
+  <div class="header-sub">Client Hub</div>
+  <div class="header-spacer"></div>
+  <span class="header-date" id="hdr-date"></span>
+  <span id="auto-status" style="font-size:11px;color:rgba(255,255,255,.5);margin-right:4px;"></span>
+  <button class="btn-load-csv" id="btn-connect" onclick="connectCSVFile()" title="Connect a CSV file for auto-refresh on every load">⚡ Connect CSV</button>
+  <button class="btn-load-csv" style="background:#374151;margin-left:6px;" onclick="document.getElementById('csv-input').click()" title="One-time manual load">↑ Load Once</button>
+  <input type="file" id="csv-input" accept=".csv" onchange="handleCSVUpload(event)">
+</header>
+
+<!-- ═══════════════ LAYOUT ═══════════════ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Search</div>
+      <input class="search-box" type="text" placeholder="Client name..." id="search-input" oninput="applyFilters()">
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">RAG Status</div>
+      <div class="filter-group" id="rag-filters">
+        <button class="filter-btn active" data-rag="ALL" onclick="setRAG('ALL')">
+          <span class="dot dot-gray"></span>All <span class="filter-count" id="cnt-ALL">–</span>
+        </button>
+        <button class="filter-btn" data-rag="Green" onclick="setRAG('Green')">
+          <span class="dot dot-green"></span>Green <span class="filter-count" id="cnt-Green">–</span>
+        </button>
+        <button class="filter-btn" data-rag="Amber" onclick="setRAG('Amber')">
+          <span class="dot dot-amber"></span>Amber <span class="filter-count" id="cnt-Amber">–</span>
+        </button>
+        <button class="filter-btn" data-rag="Red" onclick="setRAG('Red')">
+          <span class="dot dot-red"></span>Red <span class="filter-count" id="cnt-Red">–</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">PM / LC</div>
+      <select class="select-filter" id="pm-filter" onchange="applyFilters()">
+        <option value="">All PMs</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Region</div>
+      <select class="select-filter" id="region-filter" onchange="applyFilters()">
+        <option value="">All Regions</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Segment</div>
+      <select class="select-filter" id="segment-filter" onchange="applyFilters()">
+        <option value="">All Segments</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Status</div>
+      <select class="select-filter" id="status-filter" onchange="applyFilters()">
+        <option value="">All Statuses</option>
+        <option>On Time</option>
+        <option>Late</option>
+        <option>On Hold</option>
+      </select>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- KPI Row -->
+    <div class="kpi-row" id="kpi-row">
+      <div class="kpi-card blue">
+        <div class="kpi-label">Total Clients</div>
+        <div class="kpi-value" id="kpi-total">–</div>
+        <div class="kpi-sub">in portfolio</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-label">Green</div>
+        <div class="kpi-value" id="kpi-green">–</div>
+        <div class="kpi-sub">on track</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Amber</div>
+        <div class="kpi-value" id="kpi-amber">–</div>
+        <div class="kpi-sub">needs attention</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-label">Red</div>
+        <div class="kpi-value" id="kpi-red">–</div>
+        <div class="kpi-sub">at risk</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-label">Total AI ARR</div>
+        <div class="kpi-value" id="kpi-arr">–</div>
+        <div class="kpi-sub">contracted</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg License Count</div>
+        <div class="kpi-value" id="kpi-licenses">–</div>
+        <div class="kpi-sub">users per client</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <div class="table-title">Client Portfolio</div>
+        <div class="table-count" id="table-count"></div>
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="name-asc">Name A→Z</option>
+          <option value="name-desc">Name Z→A</option>
+          <option value="rag-asc">RAG: Red first</option>
+          <option value="arr-desc">AI ARR: High→Low</option>
+          <option value="arr-asc">AI ARR: Low→High</option>
+          <option value="status-asc">Status</option>
+        </select>
+      </div>
+      <div id="table-container">
+        <div class="empty-state">
+          <div class="icon">📊</div>
+          <h3>No data loaded</h3>
+          <p>Load your combined CSV export to populate the dashboard.</p>
+          <button class="btn-primary" onclick="document.getElementById('csv-input').click()">↑ Load CSV File</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════════ CLIENT HUB OVERLAY ═══════════════ -->
+<div class="hub-overlay" id="hub-overlay" onclick="closeHub()"></div>
+
+<div class="hub-panel" id="hub-panel">
+  <div class="hub-header">
+    <div class="hub-header-top">
+      <div>
+        <div class="hub-client-name" id="hub-client-name">Client Name</div>
+        <div class="hub-meta" id="hub-meta"></div>
+      </div>
+      <button class="hub-close" onclick="closeHub()">✕</button>
+    </div>
+  </div>
+
+  <div class="hub-tabs">
+    <button class="hub-tab active" data-tab="overview"  onclick="switchTab('overview')">Overview</button>
+    <button class="hub-tab"        data-tab="timeline"  onclick="switchTab('timeline')">Timeline</button>
+    <button class="hub-tab"        data-tab="products"  onclick="switchTab('products')">Products</button>
+    <button class="hub-tab"        data-tab="usage"     onclick="switchTab('usage')">Usage</button>
+    <button class="hub-tab"        data-tab="notes"     onclick="switchTab('notes')">Notes</button>
+    <button class="hub-tab"        data-tab="links"     onclick="switchTab('links')">Links</button>
+  </div>
+
+  <div class="hub-body">
+    <!-- OVERVIEW -->
+    <div class="hub-pane active" id="pane-overview">
+      <div class="section-hdr">Current Status</div>
+      <div class="status-note" id="hub-status-note">No status note available.</div>
+
+      <div class="ai-summary-box" id="hub-ai-summary">
+        <div class="ai-label">🤖 AI Snapshot</div>
+        <div id="hub-ai-text">Loading…</div>
+      </div>
+
+      <div class="spacer-16"></div>
+      <div class="section-hdr">Account Details</div>
+      <div class="overview-grid" id="hub-overview-grid"></div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="hub-pane" id="pane-timeline">
+      <div class="section-hdr">Implementation Timeline</div>
+      <div class="timeline" id="hub-timeline"></div>
+      <div class="spacer-16"></div>
+      <div class="section-hdr">Phase History</div>
+      <div id="hub-phases" style="font-size:13px;color:var(--gray-500);line-height:1.7;"></div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="hub-pane" id="pane-products">
+      <div class="section-hdr">Product Coverage</div>
+      <p style="font-size:12px;color:var(--gray-500);margin-bottom:14px;">
+        Toggles show ND PS scope for this client. Changes saved locally per client.
+      </p>
+      <div class="products-grid" id="hub-products-grid"></div>
+    </div>
+
+    <!-- USAGE -->
+    <div class="hub-pane" id="pane-usage">
+      <div class="section-hdr">License & Seat Usage</div>
+      <div class="usage-stats-row" id="hub-usage-stats"></div>
+      <div class="usage-section">
+        <h3>DM Seat Adoption</h3>
+        <div id="hub-usage-bars"></div>
+      </div>
+      <div class="section-hdr">AI Product Usage</div>
+      <div class="usage-placeholder">
+        <div class="ph-icon">📈</div>
+        <strong>Power BI telemetry not yet connected</strong><br>
+        Active users per AI product (Legal AI Assistant, PatternBuilder) will appear here once the Power BI data pipeline is wired in Phase 2.
+      </div>
+    </div>
+
+    <!-- NOTES -->
+    <div class="hub-pane" id="pane-notes">
+      <div class="section-hdr">Team Notes</div>
+      <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
+        Notes are saved locally to your browser. Use format: <em>[date] – summary. detail. next step. – initials</em>
+      </p>
+      <div class="notes-area">
+        <textarea id="hub-notes-ta" placeholder="Add team notes here…"></textarea>
+        <div class="notes-toolbar">
+          <button class="btn-save" onclick="saveNotes()">Save Notes</button>
+          <span class="save-msg" id="save-msg">✓ Saved</span>
+        </div>
+      </div>
+      <div class="notes-history" id="hub-notes-history"></div>
+    </div>
+
+    <!-- LINKS -->
+    <div class="hub-pane" id="pane-links">
+      <div class="section-hdr">Quick Links</div>
+      <div class="links-grid" id="hub-links-grid"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+// ══════════════════════════════════════════
+// CSV PARSER — handles quoted fields with commas/newlines
+// ══════════════════════════════════════════
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false, i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { field += '"'; i += 2; continue; }
+        inQuotes = false;
+      } else {
+        field += ch;
+      }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === ',') { row.push(field.trim()); field = ''; }
+      else if (ch === '\r' || ch === '\n') {
+        if (ch === '\r' && text[i + 1] === '\n') i++;
+        row.push(field.trim()); field = '';
+        if (row.some(c => c !== '')) rows.push(row);
+        row = [];
+      } else { field += ch; }
+    }
+    i++;
+  }
+  if (field || row.length) { row.push(field.trim()); if (row.some(c => c !== '')) rows.push(row); }
+  return rows;
+}
+
+// ══════════════════════════════════════════
+// COLUMN MAP (0-indexed)
+// ══════════════════════════════════════════
+const C = {
+  name:          0,
+  projectName:   1,
+  pm:            2,
+  status:        7,
+  statusCat:     8,
+  rag:           9,
+  currentStatus: 10,
+  phase:         11,
+  engineer:      12,
+  valueEngineer: 13,
+  tags:          14,
+  cashValue:     16,
+  gcxUrl:        17,
+  sfUrl:         18,
+  gcxCreated:    19,
+  sfCaseNum:     21,
+  sfPhase:       22,
+  sfCaseOpened:  23,
+  expectedGoLive:24,
+  actualGoLive:  25,
+  partner:       26,
+  segment:       27,
+  region:        28,
+  country:       29,
+  industry:      30,
+  subindustry:   31,
+  dmSeatsContracted: 32,
+  arrContracted: 33,
+  aiArrContracted: 34,
+  dmSeatsLive:   35,
+  arrLive:       36,
+  arrRatio:      37,
+  bundle:        38,
+  aiProduct:     39,
+  ae:            40,
+  csm:           41,
+  renewalDate:   42,
+  prevDms:       43,
+  contractStatus:44,
+  platform:      45,
+  aiRenewal:     46,
+  aiArr:         47,
+  licenseCount:  48,
+  top50:         49,
+};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let allClients = [];
+let filteredClients = [];
+let activeRAG = 'ALL';
+let currentClientKey = null;
+
+// ══════════════════════════════════════════
+// REMOTE FETCH — GitHub Pages data/ folder
+// ══════════════════════════════════════════
+async function tryRemoteLoad() {
+  let csvLoaded = false;
+
+  // 1. Try data/combined.csv (full CSV committed to repo)
+  try {
+    const r = await fetch('data/combined.csv', { cache: 'no-store' });
+    if (r.ok) {
+      const text = await r.text();
+      processCSV(text);
+      csvLoaded = true;
+    }
+  } catch(e) { /* not on GitHub Pages */ }
+
+  // 2. Try data/snapshot.json (daily Staircase pull)
+  try {
+    const r = await fetch('data/snapshot.json', { cache: 'no-store' });
+    if (r.ok) {
+      const snap = await r.json();
+      if (snap.clients && snap.clients.length) {
+        if (csvLoaded) {
+          overlaySnapshot(snap);
+        } else {
+          loadFromSnapshot(snap);
+          csvLoaded = true;
+        }
+        const el = document.getElementById('auto-status');
+        const genTime = snap.generated ? new Date(snap.generated).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+        el.textContent = `🛰️ Live${genTime ? ' · ' + genTime : ''}`;
+        el.style.color = 'rgba(34,197,94,.9)';
+      }
+    }
+  } catch(e) { /* no snapshot yet */ }
+
+  if (csvLoaded && !document.getElementById('auto-status').textContent.includes('🛰️')) {
+    const el = document.getElementById('auto-status');
+    el.textContent = '🌐 GitHub';
+    el.style.color = 'rgba(147,197,253,.85)';
+  }
+
+  return csvLoaded;
+}
+
+function overlaySnapshot(snap) {
+  // Merge live Staircase health data onto CSV-sourced client records
+  snap.clients.forEach(sc => {
+    const client = allClients.find(c =>
+      c.name.toLowerCase().replace(/[^a-z0-9]/g,'').includes(
+        sc.name.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,12)) ||
+      sc.name.toLowerCase().replace(/[^a-z0-9]/g,'').includes(
+        c.name.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,12))
+    );
+    if (client) {
+      if (sc.healthScore   !== undefined) client.healthScore    = sc.healthScore;
+      if (sc.lastActivity)                client.lastActivityDate = sc.lastActivity;
+      if (sc.atRisk        !== undefined) client.atRisk         = sc.atRisk;
+      if (sc.asanaRAG)                    client.rag            = sc.asanaRAG;
+      if (sc.asanaStatus)                 client.currentStatus  = sc.asanaStatus;
+      if (sc.renewalDate)                 client.renewalDate    = sc.renewalDate;
+    }
+  });
+  applyFilters();
+  updateKPIs();
+}
+
+function loadFromSnapshot(snap) {
+  // Build client list directly from snapshot when no CSV is loaded
+  allClients = snap.clients.map((sc, idx) => ({
+    _idx: idx,
+    name:             sc.name || '',
+    pm:               sc.pm || '',
+    status:           sc.status || '',
+    rag:              sc.asanaRAG || sc.rag || '',
+    currentStatus:    sc.asanaStatus || sc.statusNote || '',
+    healthScore:      sc.healthScore,
+    aiArrContracted:  sc.aiArr || null,
+    arrContracted:    sc.arrContracted || null,
+    arrLive:          sc.arrLive || null,
+    renewalDate:      sc.renewalDate || '',
+    aiRenewal:        sc.aiRenewal || '',
+    region:           sc.region || '',
+    country:          sc.country || '',
+    segment:          sc.segment || '',
+    licenseCount:     sc.licenseCount || null,
+    ae:               sc.ae || '',
+    csm:              sc.csm || '',
+    gcxUrl:           sc.gcxUrl || '',
+    sfUrl:            sc.sfUrl || '',
+    engineer:         sc.engineer || '',
+    valueEngineer:    sc.valueEngineer || '',
+    sfPhase:          sc.sfPhase || '',
+    dmSeatsLive:      sc.dmSeatsLive || null,
+    dmSeatsContracted:sc.dmSeatsContracted || null,
+    aiProduct:        sc.aiProduct || '',
+    top50:            sc.top50 || false,
+    lastActivityDate: sc.lastActivity || '',
+    atRisk:           sc.atRisk || false,
+    gcxCreated: '', sfCaseNum: '', sfCaseOpened: '', expectedGoLive: '',
+    actualGoLive: '', partner: '', prevDms: '', contractStatus: '',
+    bundle: '', cashValue: null, industry: '', subindustry: '',
+    tags: '', phase: '', arrRatio: null, aiArr: null, projectName: '',
+  }));
+  localStorage.setItem('orbit-data', JSON.stringify(allClients));
+  buildFilterOptions();
+  applyFilters();
+  updateKPIs();
+}
+
+// ══════════════════════════════════════════
+// FILE SYSTEM ACCESS API — auto-reconnect on every load
+// ══════════════════════════════════════════
+const IDB_NAME = 'orbit-hub';
+const IDB_STORE = 'file-handles';
+const IDB_KEY   = 'csv-handle';
+
+function openIDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = e => reject(e);
+  });
+}
+
+async function storeHandle(handle) {
+  const db = await openIDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(handle, IDB_KEY);
+    tx.oncomplete = resolve;
+    tx.onerror = reject;
+  });
+}
+
+async function retrieveHandle() {
+  const db = await openIDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(IDB_KEY);
+    req.onsuccess = e => resolve(e.target.result || null);
+    req.onerror   = reject;
+  });
+}
+
+async function connectCSVFile() {
+  if (!window.showOpenFilePicker) {
+    // Browser doesn't support File System Access API — fall back to input
+    document.getElementById('csv-input').click();
+    return;
+  }
+  try {
+    const [handle] = await window.showOpenFilePicker({
+      types: [{ description: 'CSV files', accept: { 'text/csv': ['.csv'] } }],
+      multiple: false,
+    });
+    await storeHandle(handle);
+    await readFromHandle(handle);
+    showToast('⚡ Connected! Dashboard will auto-update from this file on every open.');
+    setAutoStatus(handle.name, true);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('Could not connect file: ' + e.message);
+  }
+}
+
+async function readFromHandle(handle) {
+  // Check permission
+  let perm = await handle.queryPermission({ mode: 'read' });
+  if (perm !== 'granted') {
+    perm = await handle.requestPermission({ mode: 'read' });
+  }
+  if (perm !== 'granted') return false;
+  const file = await handle.getFile();
+  const text = await file.text();
+  processCSV(text);
+  localStorage.setItem('orbit-csv-name', file.name);
+  localStorage.setItem('orbit-csv-date', new Date().toLocaleString());
+  return true;
+}
+
+async function tryAutoLoad() {
+  if (!window.showOpenFilePicker) return false;
+  try {
+    const handle = await retrieveHandle();
+    if (!handle) return false;
+    // Try silently — if permission already granted it reads instantly
+    const perm = await handle.queryPermission({ mode: 'read' });
+    if (perm === 'granted') {
+      const ok = await readFromHandle(handle);
+      if (ok) {
+        setAutoStatus(handle.name, true);
+        return true;
+      }
+    } else {
+      // Permission lapsed (browser session ended) — show reconnect prompt
+      setAutoStatus(handle.name, false);
+    }
+  } catch(e) {
+    console.warn('Auto-load failed:', e);
+  }
+  return false;
+}
+
+function setAutoStatus(filename, active) {
+  const el = document.getElementById('auto-status');
+  if (active) {
+    el.textContent = `⚡ Auto: ${filename}`;
+    el.style.color = 'rgba(34,197,94,.85)';
+  } else {
+    el.textContent = `⚠ Reconnect: ${filename}`;
+    el.style.color = 'rgba(245,158,11,.9)';
+    el.style.cursor = 'pointer';
+    el.title = 'Click ⚡ Connect CSV to reconnect';
+  }
+}
+
+// ══════════════════════════════════════════
+// CSV LOAD (manual fallback)
+// ══════════════════════════════════════════
+function handleCSVUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    processCSV(ev.target.result);
+    showToast(`✓ Loaded ${file.name}`);
+    localStorage.setItem('orbit-csv-name', file.name);
+    localStorage.setItem('orbit-csv-date', new Date().toLocaleString());
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function processCSV(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) { showToast('Could not parse CSV'); return; }
+  const header = rows[0];
+  const data = rows.slice(1);
+  allClients = data.map((row, idx) => {
+    const g = (i) => (row[i] || '').trim();
+    return {
+      _idx: idx,
+      name:         g(C.name),
+      projectName:  g(C.projectName),
+      pm:           g(C.pm),
+      status:       g(C.status),
+      rag:          g(C.rag),
+      currentStatus:g(C.currentStatus),
+      phase:        g(C.phase),
+      engineer:     g(C.engineer),
+      valueEngineer:g(C.valueEngineer),
+      tags:         g(C.tags),
+      cashValue:    parseNum(g(C.cashValue)),
+      gcxUrl:       g(C.gcxUrl),
+      sfUrl:        g(C.sfUrl),
+      gcxCreated:   g(C.gcxCreated),
+      sfCaseNum:    g(C.sfCaseNum),
+      sfPhase:      g(C.sfPhase),
+      sfCaseOpened: g(C.sfCaseOpened),
+      expectedGoLive: g(C.expectedGoLive),
+      actualGoLive: g(C.actualGoLive),
+      partner:      g(C.partner),
+      segment:      g(C.segment),
+      region:       g(C.region),
+      country:      g(C.country),
+      industry:     g(C.industry),
+      subindustry:  g(C.subindustry),
+      dmSeatsContracted: parseNum(g(C.dmSeatsContracted)),
+      arrContracted: parseNum(g(C.arrContracted)),
+      aiArrContracted: parseNum(g(C.aiArrContracted)),
+      dmSeatsLive:  parseNum(g(C.dmSeatsLive)),
+      arrLive:      parseNum(g(C.arrLive)),
+      arrRatio:     parseNum(g(C.arrRatio)),
+      bundle:       g(C.bundle),
+      aiProduct:    g(C.aiProduct),
+      ae:           g(C.ae),
+      csm:          g(C.csm),
+      renewalDate:  g(C.renewalDate),
+      prevDms:      g(C.prevDms),
+      contractStatus: g(C.contractStatus),
+      platform:     g(C.platform),
+      aiRenewal:    g(C.aiRenewal),
+      aiArr:        parseNum(g(C.aiArr)),
+      licenseCount: parseNum(g(C.licenseCount)),
+      top50:        g(C.top50) === 'True',
+    };
+  }).filter(c => c.name);
+
+  localStorage.setItem('orbit-data', JSON.stringify(allClients));
+  buildFilterOptions();
+  applyFilters();
+  updateKPIs();
+}
+
+function parseNum(s) {
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
+// ══════════════════════════════════════════
+// FILTER OPTIONS
+// ══════════════════════════════════════════
+function buildFilterOptions() {
+  const pms = [...new Set(allClients.map(c => c.pm).filter(Boolean))].sort();
+  const regions = [...new Set(allClients.map(c => c.region).filter(Boolean))].sort();
+  const segs = [...new Set(allClients.map(c => c.segment).filter(Boolean))].sort();
+
+  const pmSel = document.getElementById('pm-filter');
+  pmSel.innerHTML = '<option value="">All PMs</option>' + pms.map(p => `<option>${p}</option>`).join('');
+  const regSel = document.getElementById('region-filter');
+  regSel.innerHTML = '<option value="">All Regions</option>' + regions.map(r => `<option>${r}</option>`).join('');
+  const segSel = document.getElementById('segment-filter');
+  segSel.innerHTML = '<option value="">All Segments</option>' + segs.map(s => `<option>${s}</option>`).join('');
+
+  // RAG counts
+  ['Green','Amber','Red'].forEach(rag => {
+    const cnt = allClients.filter(c => c.rag === rag).length;
+    document.getElementById('cnt-' + rag).textContent = cnt;
+  });
+  document.getElementById('cnt-ALL').textContent = allClients.length;
+}
+
+// ══════════════════════════════════════════
+// FILTERS
+// ══════════════════════════════════════════
+function setRAG(val) {
+  activeRAG = val;
+  document.querySelectorAll('[data-rag]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.rag === val);
+  });
+  applyFilters();
+}
+
+function applyFilters() {
+  if (!allClients.length) return;
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const pm     = document.getElementById('pm-filter').value;
+  const region = document.getElementById('region-filter').value;
+  const seg    = document.getElementById('segment-filter').value;
+  const status = document.getElementById('status-filter').value;
+  const sort   = document.getElementById('sort-select').value;
+
+  filteredClients = allClients.filter(c => {
+    if (activeRAG !== 'ALL' && c.rag !== activeRAG) return false;
+    if (pm     && c.pm     !== pm)     return false;
+    if (region && c.region !== region) return false;
+    if (seg    && c.segment !== seg)   return false;
+    if (status && c.status !== status) return false;
+    if (search && !c.name.toLowerCase().includes(search) &&
+        !c.pm.toLowerCase().includes(search) &&
+        !(c.country||'').toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  // Sort
+  filteredClients.sort((a, b) => {
+    if (sort === 'name-asc')  return a.name.localeCompare(b.name);
+    if (sort === 'name-desc') return b.name.localeCompare(a.name);
+    if (sort === 'arr-desc')  return (b.aiArrContracted||0) - (a.aiArrContracted||0);
+    if (sort === 'arr-asc')   return (a.aiArrContracted||0) - (b.aiArrContracted||0);
+    if (sort === 'rag-asc') {
+      const order = {Red:0, Amber:1, Green:2, '':3};
+      return (order[a.rag]??3) - (order[b.rag]??3);
+    }
+    if (sort === 'status-asc') return a.status.localeCompare(b.status);
+    return 0;
+  });
+
+  renderTable();
+  updateKPIs();
+}
+
+// ══════════════════════════════════════════
+// KPIs
+// ══════════════════════════════════════════
+function updateKPIs() {
+  const base = filteredClients.length ? filteredClients : allClients;
+  document.getElementById('kpi-total').textContent = base.length;
+  document.getElementById('kpi-green').textContent = base.filter(c => c.rag === 'Green').length;
+  document.getElementById('kpi-amber').textContent = base.filter(c => c.rag === 'Amber').length;
+  document.getElementById('kpi-red').textContent   = base.filter(c => c.rag === 'Red').length;
+  const totalAiArr = base.reduce((s,c) => s + (c.aiArrContracted||0), 0);
+  document.getElementById('kpi-arr').textContent = '$' + fmtM(totalAiArr);
+  const lics = base.filter(c => c.licenseCount).map(c => c.licenseCount);
+  const avgLic = lics.length ? Math.round(lics.reduce((a,b)=>a+b,0)/lics.length) : 0;
+  document.getElementById('kpi-licenses').textContent = avgLic || '–';
+}
+
+function fmtM(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(0) + 'K';
+  return n.toFixed(0);
+}
+
+function fmtCurrency(n) {
+  if (!n && n !== 0) return '–';
+  return '$' + n.toLocaleString('en-US', {maximumFractionDigits:0});
+}
+
+// ══════════════════════════════════════════
+// TABLE RENDER
+// ══════════════════════════════════════════
+function renderTable() {
+  const container = document.getElementById('table-container');
+  document.getElementById('table-count').textContent = `${filteredClients.length} clients`;
+
+  if (!filteredClients.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><h3>No clients match</h3><p>Try adjusting the filters.</p></div>';
+    return;
+  }
+
+  let html = `<table><thead><tr>
+    <th>Client</th>
+    <th>PM / LC</th>
+    <th>RAG</th>
+    <th>Status</th>
+    <th>Region</th>
+    <th>AI ARR</th>
+    <th>Licenses</th>
+    <th>AE / CSM</th>
+  </tr></thead><tbody>`;
+
+  filteredClients.forEach((c, i) => {
+    const ragClass = 'rag-' + c.rag;
+    const statusClass = 'status-' + c.status.replace(/\s/g,'.');
+    const aiArr = c.aiArrContracted ? fmtCurrency(c.aiArrContracted) : '–';
+    const lic   = c.licenseCount ? c.licenseCount.toLocaleString() : '–';
+    const pm    = c.pm || '–';
+    const ae    = c.ae || '–';
+    const csm   = c.csm || '–';
+    const hs    = c.healthScore != null ? c.healthScore : null;
+    const hsColor = hs == null ? 'var(--gray-300)' : hs >= 70 ? 'var(--green)' : hs >= 45 ? 'var(--amber)' : 'var(--red)';
+    const hsDisplay = hs != null ? `<span title="Staircase health score" style="font-size:11px;font-weight:700;color:${hsColor};margin-left:4px;">${hs}</span>` : '';
+    html += `<tr onclick="openHub(${c._idx})">
+      <td><span class="client-name truncate" title="${esc(c.name)}">${esc(c.name)}${c.top50 ? ' ⭐' : ''}</span>
+          <span style="font-size:11px;color:var(--gray-500)">${esc(c.country||'')}</span></td>
+      <td><span class="pm-chip">${esc(pm)}</span></td>
+      <td><span class="rag-badge ${ragClass}"><span class="dot dot-${(c.rag||'').toLowerCase()}"></span>${c.rag||'–'}</span>${hsDisplay}</td>
+      <td><span class="status-badge ${statusClass}">${c.status||'–'}</span></td>
+      <td style="font-size:12px;">${esc(c.region||'–')}</td>
+      <td class="arr-val">${aiArr}</td>
+      <td style="font-size:12px;color:var(--gray-700)">${lic}</td>
+      <td style="font-size:11px;color:var(--gray-500);">${esc(ae)}<br>${esc(csm)}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════
+// CLIENT HUB
+// ══════════════════════════════════════════
+function openHub(idx) {
+  const c = allClients.find(x => x._idx === idx);
+  if (!c) return;
+  currentClientKey = 'client-' + c.name.replace(/\s+/g,'-').toLowerCase();
+
+  document.getElementById('hub-client-name').textContent = c.name;
+  renderHubMeta(c);
+  renderHubOverview(c);
+  renderHubTimeline(c);
+  renderHubProducts(c);
+  renderHubUsage(c);
+  renderHubNotes(c);
+  renderHubLinks(c);
+  generateAISummary(c);
+
+  // Reset to overview tab
+  switchTab('overview');
+
+  document.getElementById('hub-overlay').classList.add('open');
+  document.getElementById('hub-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHub() {
+  document.getElementById('hub-overlay').classList.remove('open');
+  document.getElementById('hub-panel').classList.remove('open');
+  document.body.style.overflow = '';
+  currentClientKey = null;
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.hub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.hub-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
+}
+
+// ── META BAR ──
+function renderHubMeta(c) {
+  const meta = document.getElementById('hub-meta');
+  const parts = [];
+  if (c.rag) parts.push(`<span class="hub-meta-item"><span class="dot dot-${c.rag.toLowerCase()}"></span><strong>${c.rag}</strong></span>`);
+  if (c.status) parts.push(`<span class="hub-meta-item">📋 <strong>${c.status}</strong></span>`);
+  if (c.segment) parts.push(`<span class="hub-meta-item">🏢 ${c.segment}</span>`);
+  if (c.country) parts.push(`<span class="hub-meta-item">🌍 ${c.country}</span>`);
+  if (c.aiArrContracted) parts.push(`<span class="hub-meta-item">💰 <strong>${fmtCurrency(c.aiArrContracted)}</strong> AI ARR</span>`);
+  meta.innerHTML = parts.join('');
+}
+
+// ── OVERVIEW ──
+function renderHubOverview(c) {
+  const note = c.currentStatus || 'No current status note.';
+  document.getElementById('hub-status-note').textContent = note;
+
+  const grid = document.getElementById('hub-overview-grid');
+  const card = (title, rows) => `<div class="info-card">
+    <div class="info-card-title">${title}</div>
+    ${rows.map(([k,v]) => `<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`).join('')}
+  </div>`;
+
+  const infoRows1 = [
+    ['PM / LC',        esc(c.pm||'–')],
+    ['Engineer',       esc(c.engineer||'–')],
+    ['Value Eng.',     esc(c.valueEngineer||'–')],
+    ['Phase',          esc(c.sfPhase||'–')],
+    ['SF Case #',      c.sfCaseNum ? `<a href="${c.sfUrl||'#'}" target="_blank">${esc(c.sfCaseNum)}</a>` : '–'],
+    ['Partner',        esc(c.partner||'–')],
+  ];
+  const infoRows2 = [
+    ['AE',             esc(c.ae||'–')],
+    ['CSM',            esc(c.csm||'–')],
+    ['Contract',       esc(c.contractStatus||'–')],
+    ['Prev. DMS',      esc(c.prevDms||'–')],
+    ['Renewal',        esc(c.renewalDate||'–')],
+    ['AI Renewal',     esc(c.aiRenewal||'–')],
+  ];
+  const infoRows3 = [
+    ['Contracted ARR', fmtCurrency(c.arrContracted)],
+    ['AI ARR',         fmtCurrency(c.aiArrContracted)],
+    ['Live ARR',       fmtCurrency(c.arrLive)],
+    ['ARR Ratio',      c.arrRatio != null ? (c.arrRatio*100).toFixed(0)+'%' : '–'],
+    ['Cash Value',     fmtCurrency(c.cashValue)],
+    ['Top 50',         c.top50 ? '⭐ Yes' : 'No'],
+  ];
+  const infoRows4 = [
+    ['Segment',        esc(c.segment||'–')],
+    ['Region',         esc(c.region||'–')],
+    ['Country',        esc(c.country||'–')],
+    ['Industry',       esc(c.industry||'–')],
+    ['Bundle',         esc(c.bundle||'–')],
+    ['AI Product',     esc(c.aiProduct||'–')],
+  ];
+
+  grid.innerHTML =
+    card('Team', infoRows1) +
+    card('Account', infoRows2) +
+    card('Financials', infoRows3) +
+    card('Firm Profile', infoRows4);
+}
+
+// ── AI SUMMARY ──
+function generateAISummary(c) {
+  const box = document.getElementById('hub-ai-text');
+  // Build a smart narrative from available data
+  const lines = [];
+  const rag = c.rag || 'unknown';
+  const ragEmoji = {Green:'🟢', Amber:'🟡', Red:'🔴'}[rag] || '⚪';
+  const status = c.status || 'unknown';
+  const phase  = c.sfPhase || 'unknown phase';
+  const lics   = c.licenseCount;
+  const dmLive = c.dmSeatsLive;
+  const dmCon  = c.dmSeatsContracted;
+
+  // Situation
+  let situation = `${ragEmoji} This ${c.segment||''} client in ${c.country||'unknown country'} is currently <strong>${status}</strong> and flagged <strong>${rag}</strong>.`;
+  if (phase && phase !== '–') situation += ` SF implementation phase: <strong>${phase}</strong>.`;
+  if (c.healthScore != null) {
+    const hColor = c.healthScore >= 70 ? '#16a34a' : c.healthScore >= 45 ? '#d97706' : '#dc2626';
+    situation += ` Staircase health score: <strong style="color:${hColor}">${c.healthScore}/100</strong>.`;
+  }
+  lines.push(situation);
+
+  // Financial context
+  if (c.aiArrContracted) {
+    lines.push(`💰 ${fmtCurrency(c.aiArrContracted)} in contracted AI ARR with ${lics||'unknown'} licensed seats.`);
+  }
+
+  // DM seat signal
+  if (dmLive != null && dmCon) {
+    const pct = Math.round((dmLive/dmCon)*100);
+    if (pct < 50) lines.push(`⚠️ Only ${pct}% of DM seats are live (${dmLive} of ${dmCon}) — potential adoption risk.`);
+    else if (pct >= 100) lines.push(`✅ DM fully adopted: ${dmLive} of ${dmCon} seats live (${pct}%).`);
+    else lines.push(`📊 DM seat adoption at ${pct}% (${dmLive}/${dmCon} seats live).`);
+  }
+
+  // Product signal
+  const prod = c.aiProduct||'';
+  if (prod === '[No AI products owned]') lines.push(`🚫 No AI products owned — check if this project is still active.`);
+  else if (prod) lines.push(`🧰 AI product: <strong>${prod}</strong>.`);
+
+  // Renewal signal
+  if (c.renewalDate) {
+    const daysToRenewal = daysDiff(c.renewalDate);
+    if (daysToRenewal !== null && daysToRenewal < 90) {
+      lines.push(`🔔 <strong>Renewal in ${daysToRenewal} days</strong> (${c.renewalDate}) — ensure implementation is progressing.`);
+    }
+  }
+
+  // Suggested next step from status note
+  const statusNote = c.currentStatus||'';
+  let suggestion = '';
+  if (rag === 'Red' && status === 'On Hold') suggestion = 'Priority: Re-engage client. Coordinate with AE/CSM to unblock and set restart date.';
+  else if (rag === 'Red' && status === 'Late') suggestion = 'Priority: Identify root blocker. Schedule stakeholder call and document impediments.';
+  else if (rag === 'Amber') suggestion = 'Monitor closely. Confirm next scheduled touchpoint and review outstanding action items.';
+  else if (rag === 'Green' && status === 'Late') suggestion = 'Status is Late but RAG is Green — review if timeline needs updating or if project is near closeout.';
+  else if (rag === 'Green') suggestion = 'On track. Continue current cadence and prepare for next milestone transition.';
+
+  if (suggestion) lines.push(`💡 <strong>Suggested next step:</strong> ${suggestion}`);
+
+  box.innerHTML = lines.join('<br><br>');
+}
+
+function daysDiff(dateStr) {
+  if (!dateStr || dateStr.length < 6) return null;
+  const d = new Date(dateStr);
+  if (isNaN(d)) return null;
+  return Math.round((d - new Date()) / 86400000);
+}
+
+// ── TIMELINE ──
+function renderHubTimeline(c) {
+  const tl = document.getElementById('hub-timeline');
+  const ph = document.getElementById('hub-phases');
+  const today = new Date();
+
+  const events = [];
+
+  if (c.sfCaseOpened && !c.sfCaseOpened.startsWith('0')) {
+    const d = new Date(c.sfCaseOpened);
+    if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, past: d <= today });
+  }
+  if (c.gcxCreated) {
+    const d = parseTimestamp(c.gcxCreated);
+    if (d) events.push({ date: d, label: 'GuideCX Project Created', detail: '', past: d <= today });
+  }
+  if (c.expectedGoLive) {
+    const d = new Date(c.expectedGoLive);
+    if (!isNaN(d)) {
+      const isOverdue = !c.actualGoLive && d < today;
+      events.push({ date: d, label: 'Expected Go-Live', detail: 'DM implementation target', past: d <= today, overdue: isOverdue });
+    }
+  }
+  if (c.actualGoLive) {
+    const d = new Date(c.actualGoLive);
+    if (!isNaN(d)) events.push({ date: d, label: '✅ Actual Go-Live', detail: 'DM went live', past: true });
+  }
+  if (c.renewalDate) {
+    const d = new Date(c.renewalDate);
+    if (!isNaN(d)) events.push({ date: d, label: 'Contract Renewal', detail: c.contractStatus||'', past: d <= today });
+  }
+  if (c.aiRenewal && c.aiRenewal !== c.renewalDate) {
+    const d = new Date(c.aiRenewal);
+    if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), past: d <= today });
+  }
+
+  events.sort((a,b) => a.date - b.date);
+
+  if (!events.length) {
+    tl.innerHTML = '<p class="timeline-empty">No dated milestones available. Dates will populate as Copilot meeting notes are connected (Phase 2).</p>';
+  } else {
+    tl.innerHTML = events.map(ev => `
+      <div class="timeline-item">
+        <div class="timeline-dot ${ev.overdue ? 'overdue' : ev.past ? 'past' : 'future'}"></div>
+        <div class="timeline-date">${ev.date.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'})}</div>
+        <div class="timeline-title">${ev.label}</div>
+        ${ev.detail ? `<div class="timeline-detail">${esc(ev.detail)}</div>` : ''}
+      </div>`).join('');
+  }
+
+  // Phase history
+  const phaseStr = c.phase || '';
+  if (phaseStr) {
+    const phases = phaseStr.split(',').map(s => s.trim()).filter(Boolean);
+    ph.innerHTML = '<p style="color:var(--gray-500);font-size:12px;margin-bottom:8px;">GuideCX phase tags (historical):</p>' +
+      phases.map(p => `<span class="timeline-phase-badge" style="margin:2px 4px 2px 0;">${esc(p)}</span>`).join('');
+  } else {
+    ph.innerHTML = '<p style="color:var(--gray-500);font-size:13px;font-style:italic;">No phase data available.</p>';
+  }
+}
+
+function parseTimestamp(str) {
+  // Handles "12:53.0" (corrupted) and proper dates
+  if (!str || str.match(/^\d+:\d+\.\d+$/)) return null;
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
+}
+
+// ── PRODUCTS ──
+const PRODUCTS = [
+  {
+    key: 'legalAI',
+    name: 'Legal AI Assistant',
+    icon: '🤖',
+    desc: 'AI-powered document search, Smart Answers, and contextual assistance.',
+    detectFn: (aiProd) => aiProd.includes('AI100') || aiProd.includes('AI300') || aiProd.includes('AI Assistant'),
+  },
+  {
+    key: 'studioApps',
+    name: 'Studio Apps (App Builder)',
+    icon: '🏗️',
+    desc: 'Custom workflow apps built in the ndMAX Studio environment.',
+    detectFn: (aiProd) => aiProd.includes('AI200') || aiProd.includes('AI300') || aiProd.includes('App Builder') || aiProd.includes('Enterprise'),
+  },
+  {
+    key: 'aiProfiling',
+    name: 'AI Profiling',
+    icon: '🧬',
+    desc: 'AI-powered matter profiling and document classification.',
+    detectFn: (aiProd) => aiProd.includes('AI300') || aiProd.includes('Enterprise'),
+  },
+  {
+    key: 'patternBuilder',
+    name: 'PatternBuilder',
+    icon: '📐',
+    desc: 'Visual workflow builder for matter templates and document automation.',
+    detectFn: (aiProd) => aiProd.includes('PatternBuilder') || aiProd.includes('AI200') || aiProd.includes('AI300'),
+  },
+  {
+    key: 'editor',
+    name: 'Editor (Word Add-in)',
+    icon: '✏️',
+    desc: 'Microsoft Word integration for ndMAX document management.',
+    detectFn: (aiProd) => false, // manually toggled
+  },
+  {
+    key: 'customApps',
+    name: 'Custom Applications',
+    icon: '⚙️',
+    desc: 'Bespoke apps beyond standard library (NDA, EL, etc.).',
+    detectFn: (aiProd) => aiProd.includes('AI300'),
+  },
+];
+
+function renderHubProducts(c) {
+  const grid = document.getElementById('hub-products-grid');
+  const savedToggles = JSON.parse(localStorage.getItem(currentClientKey + '-products') || '{}');
+  const aiProd = c.aiProduct || '';
+
+  grid.innerHTML = PRODUCTS.map(p => {
+    const autoDetect = p.detectFn(aiProd);
+    const toggled = savedToggles[p.key] !== undefined ? savedToggles[p.key] : autoDetect;
+    const covered = toggled;
+    return `<div class="product-card ${covered ? 'covered' : 'not-covered'}" id="pcard-${p.key}">
+      <div class="product-toggle">
+        <input type="checkbox" class="toggle-input" id="tog-${p.key}" ${covered ? 'checked' : ''}
+          onchange="toggleProduct('${p.key}', this.checked)">
+        <label class="toggle-label" for="tog-${p.key}"></label>
+      </div>
+      <div class="product-icon">${p.icon}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.desc}</div>
+      <div class="product-status-label">${covered ? '✓ In Scope' : '○ Not in Scope'}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleProduct(key, val) {
+  if (!currentClientKey) return;
+  const storKey = currentClientKey + '-products';
+  const saved = JSON.parse(localStorage.getItem(storKey) || '{}');
+  saved[key] = val;
+  localStorage.setItem(storKey, JSON.stringify(saved));
+  // Update card appearance
+  const card = document.getElementById('pcard-' + key);
+  if (card) {
+    card.className = 'product-card ' + (val ? 'covered' : 'not-covered');
+    card.querySelector('.product-status-label').textContent = val ? '✓ In Scope' : '○ Not in Scope';
+  }
+  showToast(val ? '✓ Product added to scope' : 'Product removed from scope');
+}
+
+// ── USAGE ──
+function renderHubUsage(c) {
+  const stats = document.getElementById('hub-usage-stats');
+  const bars  = document.getElementById('hub-usage-bars');
+
+  stats.innerHTML = `
+    <div class="usage-stat">
+      <div class="usage-stat-val">${c.licenseCount != null ? c.licenseCount : '–'}</div>
+      <div class="usage-stat-lbl">Licensed Seats</div>
+    </div>
+    <div class="usage-stat">
+      <div class="usage-stat-val">${c.dmSeatsLive != null ? c.dmSeatsLive : '–'}</div>
+      <div class="usage-stat-lbl">Live DM Seats</div>
+    </div>
+    <div class="usage-stat">
+      <div class="usage-stat-val">${c.dmSeatsContracted != null ? c.dmSeatsContracted : '–'}</div>
+      <div class="usage-stat-lbl">Contracted DM Seats</div>
+    </div>`;
+
+  let barsHTML = '';
+  if (c.dmSeatsContracted && c.dmSeatsLive != null) {
+    const pct = Math.min(100, Math.round((c.dmSeatsLive / c.dmSeatsContracted) * 100));
+    const cls = pct >= 80 ? 'green' : pct >= 50 ? '' : 'amber';
+    barsHTML += `<div class="progress-bar-wrap">
+      <div class="progress-bar-label"><span>DM Seats: ${c.dmSeatsLive} / ${c.dmSeatsContracted}</span><span>${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-bar-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }
+  if (c.arrContracted && c.arrLive != null) {
+    const pct = Math.min(100, Math.round((c.arrLive / c.arrContracted) * 100));
+    const cls = pct >= 80 ? 'green' : pct >= 50 ? '' : 'amber';
+    barsHTML += `<div class="progress-bar-wrap">
+      <div class="progress-bar-label"><span>ARR Live vs Contracted: ${fmtCurrency(c.arrLive)} / ${fmtCurrency(c.arrContracted)}</span><span>${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-bar-fill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }
+  bars.innerHTML = barsHTML || '<p style="color:var(--gray-500);font-size:13px;font-style:italic;">No seat data available for this client.</p>';
+}
+
+// ── NOTES ──
+function renderHubNotes(c) {
+  const key = currentClientKey + '-notes';
+  const saved = localStorage.getItem(key) || '';
+  document.getElementById('hub-notes-ta').value = saved;
+  document.getElementById('save-msg').classList.remove('show');
+
+  // History (show last 5 entries if they're in the right format)
+  const histDiv = document.getElementById('hub-notes-history');
+  if (saved.trim()) {
+    const lines = saved.split('\n').filter(l => l.trim()).slice(-5).reverse();
+    if (lines.length) {
+      histDiv.innerHTML = `<h4>Recent entries</h4>` +
+        lines.map(l => `<div class="note-entry">${esc(l)}</div>`).join('');
+      return;
+    }
+  }
+  histDiv.innerHTML = '';
+}
+
+function saveNotes() {
+  if (!currentClientKey) return;
+  const val = document.getElementById('hub-notes-ta').value;
+  localStorage.setItem(currentClientKey + '-notes', val);
+  const msg = document.getElementById('save-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2000);
+}
+
+// ── LINKS ──
+function renderHubLinks(c) {
+  const grid = document.getElementById('hub-links-grid');
+  const links = [];
+  if (c.gcxUrl) links.push({ icon:'🔗', label:'GuideCX Project', sub:'View project plan & tasks', url: c.gcxUrl });
+  if (c.sfUrl)  links.push({ icon:'☁️', label:'Salesforce Account', sub:'Account details, contacts & opportunities', url: c.sfUrl });
+  links.push({ icon:'📬', label:'Email Client (Outlook)', sub:'Open Outlook to search client emails', url: `https://outlook.office.com/mail/search/query/${encodeURIComponent(c.name)}` });
+  links.push({ icon:'📋', label:'Copy Client Name', sub: c.name, url: null, action: () => { navigator.clipboard.writeText(c.name); showToast('Copied: ' + c.name); } });
+
+  grid.innerHTML = links.map((l, i) => {
+    if (l.action) {
+      return `<a class="link-card" href="#" onclick="linkActions[${i}](event)">
+        <span class="link-icon">${l.icon}</span>
+        <div><div class="link-label">${l.label}</div><div class="link-sub">${l.sub}</div></div>
+        <span class="link-arrow">›</span>
+      </a>`;
+    }
+    return `<a class="link-card" href="${l.url||'#'}" target="_blank" rel="noopener">
+      <span class="link-icon">${l.icon}</span>
+      <div><div class="link-label">${l.label}</div><div class="link-sub">${l.sub}</div></div>
+      <span class="link-arrow">›</span>
+    </a>`;
+  }).join('');
+
+  // Store action handlers
+  window.linkActions = links.map(l => l.action ? (e) => { e.preventDefault(); l.action(); } : null);
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeHub();
+});
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+async function init() {
+  // Date in header
+  document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric'});
+
+  // 1. Try remote fetch from GitHub Pages (data/ folder)
+  const remoteLoaded = await tryRemoteLoad();
+  if (remoteLoaded) return;
+
+  // 2. Try auto-load from connected file (File System Access API)
+  const autoLoaded = await tryAutoLoad();
+  if (autoLoaded) return;
+
+  // 2. Check for embedded CSV (injected by refresh_hub.py)
+  if (typeof EMBEDDED_CSV !== 'undefined' && EMBEDDED_CSV) {
+    processCSV(EMBEDDED_CSV);
+    const embDate = typeof EMBEDDED_DATE !== 'undefined' ? EMBEDDED_DATE : '';
+    showToast(`✓ Data embedded ${embDate}`);
+    document.getElementById('auto-status').textContent = `📦 Embedded ${embDate}`;
+    document.getElementById('auto-status').style.color = 'rgba(147,197,253,.9)';
+    return;
+  }
+
+  // 3. Fall back to localStorage snapshot
+  const saved = localStorage.getItem('orbit-data');
+  if (saved) {
+    try {
+      allClients = JSON.parse(saved);
+      allClients.forEach((c, i) => { if (c._idx === undefined) c._idx = i; });
+      buildFilterOptions();
+      applyFilters();
+      updateKPIs();
+      const csvName = localStorage.getItem('orbit-csv-name') || '';
+      const csvDate = localStorage.getItem('orbit-csv-date') || '';
+      const el = document.getElementById('auto-status');
+      el.textContent = csvDate ? `💾 Cached ${csvDate}` : '💾 Cached';
+      el.style.color = 'rgba(255,255,255,.45)';
+      if (csvName) showToast(`Showing cached data from ${csvName} — connect CSV to auto-refresh`);
+    } catch(e) {
+      console.warn('Could not restore saved data', e);
+    }
+  }
+}
+
+init();
+</script>
+</body>
+</html>

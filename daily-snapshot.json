@@ -1,0 +1,387 @@
+{
+  "generated": "2026-04-20T08:00:00.000Z",
+  "source": "Staircase AI + Asana + Outlook",
+  "notes": "Asana PS team (GID 1204685785059509) returned 0 projects — no PS projects found or team GID may need updating. Asana RAG values marked as Unknown.",
+  "clients": [
+    {
+      "name": "KGSA",
+      "healthScore": 0,
+      "renewalDate": "2026-05-01",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 11,
+      "atRisk": true
+    },
+    {
+      "name": "PLLR Lawyers",
+      "healthScore": 0,
+      "renewalDate": null,
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": null,
+      "atRisk": true
+    },
+    {
+      "name": "Quicker Law, LLC",
+      "healthScore": 1,
+      "renewalDate": "2027-04-06",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 351,
+      "atRisk": true
+    },
+    {
+      "name": "The Stahl Organization",
+      "healthScore": 2,
+      "renewalDate": "2026-05-12",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 22,
+      "atRisk": true
+    },
+    {
+      "name": "The Phoenix Law Group, PLC",
+      "healthScore": 5,
+      "renewalDate": "2026-05-17",
+      "lastActivity": "2026-04-14",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 27,
+      "atRisk": true
+    },
+    {
+      "name": "Law Office Of Jim Zadeh, PC",
+      "healthScore": 6,
+      "renewalDate": "2026-07-03",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 74,
+      "atRisk": true
+    },
+    {
+      "name": "Kelvin Chia Partnership KCP",
+      "healthScore": 8,
+      "renewalDate": "2026-07-02",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 73,
+      "atRisk": true
+    },
+    {
+      "name": "Venturous Counsel",
+      "healthScore": 11,
+      "renewalDate": "2026-08-12",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 114,
+      "atRisk": true
+    },
+    {
+      "name": "Baxter Service Company Limited",
+      "healthScore": 13,
+      "renewalDate": "2028-04-01",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 711,
+      "atRisk": true
+    },
+    {
+      "name": "Commonwealth of Pennsylvania - Board of Claims",
+      "healthScore": 18,
+      "renewalDate": "2026-05-24",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 34,
+      "atRisk": true
+    },
+    {
+      "name": "Ryan & Co Solicitors",
+      "healthScore": 18,
+      "renewalDate": "2027-03-02",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 316,
+      "atRisk": true
+    },
+    {
+      "name": "Neural Concept",
+      "healthScore": 19,
+      "renewalDate": "2026-11-28",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 222,
+      "atRisk": true
+    },
+    {
+      "name": "Klasko Immigration Law Partners",
+      "healthScore": 19,
+      "renewalDate": "2026-10-09",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 172,
+      "atRisk": true
+    },
+    {
+      "name": "SignatureFD",
+      "healthScore": 22,
+      "renewalDate": "2027-04-10",
+      "lastActivity": "2026-04-14",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 355,
+      "atRisk": true
+    },
+    {
+      "name": "Baker Law Group LLC",
+      "healthScore": 23,
+      "renewalDate": "2026-10-06",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 169,
+      "atRisk": true
+    },
+    {
+      "name": "Sullivan, McGibbons, Crickard & Associates",
+      "healthScore": 23,
+      "renewalDate": "2026-06-28",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 69,
+      "atRisk": true
+    },
+    {
+      "name": "Burnham Brown",
+      "healthScore": 24,
+      "renewalDate": "2026-05-02",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 12,
+      "atRisk": true
+    },
+    {
+      "name": "Wyman Legal Solutions",
+      "healthScore": 24,
+      "renewalDate": "2027-11-01",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 560,
+      "atRisk": true
+    },
+    {
+      "name": "Wahlin Law Firm",
+      "healthScore": 25,
+      "renewalDate": "2026-06-02",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 43,
+      "atRisk": true
+    },
+    {
+      "name": "Schwartz, Conroy & Hack, PC",
+      "healthScore": 26,
+      "renewalDate": "2026-09-02",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 135,
+      "atRisk": true
+    },
+    {
+      "name": "King and Sommer, PLLC",
+      "healthScore": 28,
+      "renewalDate": "2026-05-31",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 41,
+      "atRisk": true
+    },
+    {
+      "name": "Caldwell, Bennett, Thomas, Toraason & Mead, PLLC",
+      "healthScore": 29,
+      "renewalDate": "2026-06-06",
+      "lastActivity": "2026-04-13",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 47,
+      "atRisk": true
+    },
+    {
+      "name": "Oak One",
+      "healthScore": 30,
+      "renewalDate": "2026-06-07",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 48,
+      "atRisk": true
+    },
+    {
+      "name": "Smith Currie & Hancock",
+      "healthScore": 31,
+      "renewalDate": "2026-06-01",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 42,
+      "atRisk": true
+    },
+    {
+      "name": "Cooper Grace Ward (CGW)",
+      "healthScore": 32,
+      "renewalDate": "2026-10-02",
+      "lastActivity": "2026-04-19",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 165,
+      "atRisk": true
+    },
+    {
+      "name": "Dale & Lessmann",
+      "healthScore": 34,
+      "renewalDate": "2026-07-01",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 72,
+      "atRisk": true
+    },
+    {
+      "name": "Porteous Hainkel & Johnson LLP",
+      "healthScore": 35,
+      "renewalDate": "2026-05-02",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 12,
+      "atRisk": true
+    },
+    {
+      "name": "Pacific Legal Foundation",
+      "healthScore": 38,
+      "renewalDate": "2027-10-31",
+      "lastActivity": "2026-04-08",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 559,
+      "atRisk": true
+    },
+    {
+      "name": "EIP Partnership LLP",
+      "healthScore": 37,
+      "renewalDate": "2026-08-02",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 104,
+      "atRisk": true
+    },
+    {
+      "name": "Barriston Law",
+      "healthScore": 40,
+      "renewalDate": "2026-05-01",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 11,
+      "atRisk": true
+    },
+    {
+      "name": "Macpherson Kelley",
+      "healthScore": 40,
+      "renewalDate": "2026-12-30",
+      "lastActivity": "2026-04-14",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 254,
+      "atRisk": true
+    },
+    {
+      "name": "Charleston Financial Advisors",
+      "healthScore": 41,
+      "renewalDate": "2026-05-18",
+      "lastActivity": "2026-04-15",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 28,
+      "atRisk": true
+    },
+    {
+      "name": "Adams & Remers",
+      "healthScore": 43,
+      "renewalDate": "2026-07-18",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 89,
+      "atRisk": true
+    },
+    {
+      "name": "Nexa Legal LLP",
+      "healthScore": 44,
+      "renewalDate": "2027-01-15",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 270,
+      "atRisk": true
+    },
+    {
+      "name": "Panza Maurer",
+      "healthScore": 45,
+      "renewalDate": "2028-08-29",
+      "lastActivity": "2026-04-16",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 861,
+      "atRisk": true
+    },
+    {
+      "name": "Forsters",
+      "healthScore": 46,
+      "renewalDate": "2028-09-30",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 893,
+      "atRisk": true
+    },
+    {
+      "name": "Milbank LLP",
+      "healthScore": 46,
+      "renewalDate": "2027-01-01",
+      "lastActivity": "2026-04-17",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 256,
+      "atRisk": true
+    },
+    {
+      "name": "Halcyon Chambers",
+      "healthScore": 48,
+      "renewalDate": "2026-07-21",
+      "lastActivity": "2026-04-20",
+      "asanaRAG": "Unknown",
+      "asanaStatus": "No Asana data",
+      "renewalDaysAway": 92,
+      "atRisk": true
+    }
+  ]
+}

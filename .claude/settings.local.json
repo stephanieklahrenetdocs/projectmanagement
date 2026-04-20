@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ':*)",
+      "Bash(python -c ':*)",
+      "Bash(where python3:*)",
+      "Bash(where python:*)",
+      "Bash(where py:*)",
+      "Bash(ls /c/Python*)",
+      "Read(//c//**)",
+      "Bash(cmd /c \"py --version\")",
+      "Bash(cmd /c \"python --version\")",
+      "Bash(cmd /c \"python3 --version\")",
+      "Bash(cmd /c \"py -3 --version\")",
+      "Bash(cmd /c \"node --version\")",
+      "Bash(cmd /c \"node -e \\\\\"console.log\\('works'\\)\\\\\"\")",
+      "Bash(unzip -l newpmsystem.zip)",
+      "Bash(unzip -o newpmsystem.zip -d newpmsystem_extracted)",
+      "Bash(pandoc \"C:/Users/Stephanie.Klahre/Downloads/newpmsystem_extracted/ndMAX_Orbit_Specification_v1.docx\" -o /tmp/orbit_spec.md)",
+      "Bash(python \"C:/Users/Stephanie.Klahre/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/b201be22-243a-4c0b-b32f-79a960d39926/c03fbd15-c696-4ec2-a523-f700e773e405/skills/docx/scripts/office/unpack.py\" \"C:/Users/Stephanie.Klahre/Downloads/newpmsystem_extracted/ndMAX_Orbit_Specification_v1.docx\" \"C:/Users/Stephanie.Klahre/Downloads/newpmsystem_extracted/spec_unpacked/\")",
+      "Bash(cp ndMAX_Orbit_Specification_v1.docx ndMAX_Orbit_Specification_v1.zip)",
+      "Bash(unzip -o ndMAX_Orbit_Specification_v1.zip -d spec_unpacked/)",
+      "Read(//c/Users/Stephanie.Klahre/Downloads/**)",
+      "mcp__44474e62-7e16-4019-becf-c4d8f66aa681__get_me",
+      "mcp__44474e62-7e16-4019-becf-c4d8f66aa681__get_projects",
+      "mcp__6bda1a02-40e7-405e-a5af-19b0147f4f51__staircase_query",
+      "mcp__scheduled-tasks__list_scheduled_tasks",
+      "mcp__scheduled-tasks__create_scheduled_task",
+      "Bash(gh repo *)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(mkdir -p \"/mnt/c/Users/Stephanie.Klahre/Documents/PROJECT MANAGEMENT SYSTEM/.github/workflows\")",
+      "Bash(mkdir -p \"/mnt/c/Users/Stephanie.Klahre/Documents/PROJECT MANAGEMENT SYSTEM/data\")",
+      "Bash(python3 -c ' *)",
+      "mcp__scheduled-tasks__update_scheduled_task",
+      "mcp__c38b4e5e-afd5-4de3-800f-8bf8c45a4be6__outlook_email_search"
+    ]
+  }
+}

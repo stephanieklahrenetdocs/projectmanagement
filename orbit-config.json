@@ -1,0 +1,91 @@
+{
+  "workspace_gid": "1148806218142272",
+  "team_gid": "1204685785059509",
+  "my_user_gid": "1211028599268999",
+  "custom_fields": {
+    "RAG Status": {
+      "gid": "DRY_RUN_RAG_STATUS",
+      "resource_subtype": "enum"
+    },
+    "PM/LC": {
+      "gid": "DRY_RUN_PM/LC",
+      "resource_subtype": "enum"
+    },
+    "Engineer": {
+      "gid": "DRY_RUN_ENGINEER",
+      "resource_subtype": "enum"
+    },
+    "Value Engineer": {
+      "gid": "DRY_RUN_VALUE_ENGINEER",
+      "resource_subtype": "enum"
+    },
+    "ARR / Cash Value": {
+      "gid": "DRY_RUN_ARR_/_CASH_VALUE",
+      "resource_subtype": "number"
+    },
+    "Cash Bucket": {
+      "gid": "DRY_RUN_CASH_BUCKET",
+      "resource_subtype": "enum"
+    },
+    "Start Quarter": {
+      "gid": "DRY_RUN_START_QUARTER",
+      "resource_subtype": "enum"
+    },
+    "GCX Status": {
+      "gid": "DRY_RUN_GCX_STATUS",
+      "resource_subtype": "enum"
+    },
+    "Current Milestone": {
+      "gid": "DRY_RUN_CURRENT_MILESTONE",
+      "resource_subtype": "enum"
+    },
+    "DM Implementation Phase": {
+      "gid": "DRY_RUN_DM_IMPLEMENTATION_PHASE",
+      "resource_subtype": "enum"
+    },
+    "DM Expected Go-Live": {
+      "gid": "DRY_RUN_DM_EXPECTED_GO-LIVE",
+      "resource_subtype": "date"
+    },
+    "DM Actual Go-Live": {
+      "gid": "DRY_RUN_DM_ACTUAL_GO-LIVE",
+      "resource_subtype": "date"
+    },
+    "Products Purchased": {
+      "gid": "DRY_RUN_PRODUCTS_PURCHASED",
+      "resource_subtype": "multi_enum"
+    },
+    "Client Location": {
+      "gid": "DRY_RUN_CLIENT_LOCATION",
+      "resource_subtype": "text"
+    },
+    "Client Champion": {
+      "gid": "DRY_RUN_CLIENT_CHAMPION",
+      "resource_subtype": "text"
+    },
+    "Champion Email": {
+      "gid": "DRY_RUN_CHAMPION_EMAIL",
+      "resource_subtype": "text"
+    },
+    "Last Activity Date": {
+      "gid": "DRY_RUN_LAST_ACTIVITY_DATE",
+      "resource_subtype": "date"
+    },
+    "Engagement Velocity": {
+      "gid": "DRY_RUN_ENGAGEMENT_VELOCITY",
+      "resource_subtype": "enum"
+    },
+    "Projected End Date": {
+      "gid": "DRY_RUN_PROJECTED_END_DATE",
+      "resource_subtype": "date"
+    }
+  },
+  "milestone_sections": [
+    "Kickoff & Readiness",
+    "Legal AI Assistant Rollout",
+    "Studio Apps Deployment",
+    "AI Profiling",
+    "Hypercare & Closeout"
+  ],
+  "dry_run": true
+}

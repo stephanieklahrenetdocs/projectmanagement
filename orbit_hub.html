@@ -2251,7 +2251,7 @@ async function doTimelineSync() {
   }
 }
 
-// Shared low-level API call — always uses MCP beta header
+// Shared low-level M365 MCP API call
 async function m365ApiCall(apiKey, prompt, maxTokens) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -2259,12 +2259,36 @@ async function m365ApiCall(apiKey, prompt, maxTokens) {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'mcp-client-2025-04-04'
+      'anthropic-beta': 'mcp-client-2025-04-04',
+      'anthropic-dangerous-direct-browser-access': 'true'   // required for browser CORS
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-5',
-      max_tokens: maxTokens || 4096,
-      mcp_servers: [{ type: 'url', url: 'https://microsoft365.mcp.claude.com/mcp', name: 'microsoft365' }],
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 4000,
+      mcp_servers: [{ type: 'url', url: 'https://microsoft365.mcp.claude.com/mcp', name: 'm365' }],
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`API ${resp.status}: ${err.slice(0, 220)}`);
+  }
+  return resp.json();
+}
+
+// Plain Claude call (no MCP) — for summarization
+async function claudeCall(apiKey, prompt, maxTokens) {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: maxTokens || 2000,
       messages: [{ role: 'user', content: prompt }]
     })
   });
@@ -2288,35 +2312,45 @@ function extractJsonArray(data) {
   return JSON.parse(text.slice(s, e + 1));
 }
 
-// Extract meetingTranscriptUrl from a full-event-details API response
-function extractMeetingTranscriptUrl(data) {
+// Extract a named string field from any API response block
+function extractFieldFromResponse(data, fieldName) {
   for (const block of data.content || []) {
-    // Collect raw text from this block
-    let text = '';
-    if (block.type === 'mcp_tool_result' || block.type === 'tool_result') {
-      text = typeof block.content === 'string'
-        ? block.content
-        : Array.isArray(block.content)
-          ? block.content.map(c => c.text || c.content || '').join('')
-          : '';
-    } else if (block.type === 'text') {
-      text = block.text || '';
-    }
+    // mcp_tool_result: content is an array; real text is in content[0].text
+    const text = block.type === 'mcp_tool_result'
+      ? (block.content?.[0]?.text || '')
+      : block.type === 'text'
+        ? (block.text || '')
+        : '';
     if (!text) continue;
 
-    // Try JSON parse — field may be at top level or nested
+    // Try JSON parse first
     const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
     const objStart = clean.indexOf('{');
     if (objStart !== -1) {
       try {
         const parsed = JSON.parse(clean.slice(objStart));
-        if (parsed.meetingTranscriptUrl) return parsed.meetingTranscriptUrl;
-        // Sometimes nested inside a data wrapper
-        if (parsed.value?.meetingTranscriptUrl) return parsed.value.meetingTranscriptUrl;
+        if (parsed[fieldName]) return parsed[fieldName];
+        if (parsed.value?.[fieldName]) return parsed.value[fieldName];
       } catch {}
     }
 
-    // Regex fallback — grab the URI directly
+    // Regex fallback — handles the meetingTranscriptUrl URI directly
+    const regex = new RegExp(`"${fieldName}"\\s*:\\s*"([^"]+)"`);
+    const match = text.match(regex);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+function extractMeetingTranscriptUrl(data) {
+  // Try field parser first
+  const fromField = extractFieldFromResponse(data, 'meetingTranscriptUrl');
+  if (fromField) return fromField;
+  // Regex fallback scanning all text for the meeting-transcript:/// URI
+  for (const block of data.content || []) {
+    const text = block.type === 'mcp_tool_result'
+      ? (block.content?.[0]?.text || '')
+      : block.type === 'text' ? (block.text || '') : '';
     const match = text.match(/meeting-transcript:\/\/\/[^\s"'\]\\]+/);
     if (match) return match[0];
   }
@@ -2373,12 +2407,8 @@ If no events found, return [].`;
     try {
       const detailData = await m365ApiCall(
         apiKey,
-        `Use the read_resource tool with this exact URI and return the complete tool result JSON:
-
-URI: ${mtg.uri}
-
-I need the meetingTranscriptUrl field from the response. Return the raw tool result content without modification.`,
-        1024
+        `Use the read_resource tool to read this calendar event:\n${mtg.uri}\n\nReturn the complete JSON from the tool result, especially the meetingTranscriptUrl field.`,
+        4000
       );
       mtg.meetingTranscriptUrl = extractMeetingTranscriptUrl(detailData) || null;
     } catch(e) {
@@ -2461,17 +2491,13 @@ async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
   bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Fetching transcript from Teams…</div>`;
 
   try {
-    // Step 1 — fetch transcript via M365 MCP
+    // ── Step 3: Fetch transcript via M365 MCP ────────────────────────────────
     let rawTranscript = getTranscriptCache(meetingId);
     if (!rawTranscript) {
       const txData = await m365ApiCall(
         apiKey,
-        `Use the read_resource tool to read the meeting transcript at this exact URI:
-
-${transcriptUrl}
-
-After calling the tool, return ONLY the raw WEBVTT content from the response. The tool result will be a JSON object — look for transcripts[0].content which contains the WEBVTT text. Return that content verbatim with no modifications, no summarization, no commentary.`,
-        4096
+        `Use the read_resource tool to read this meeting transcript:\n${transcriptUrl}\n\nReturn the complete tool result as JSON.`,
+        8000
       );
 
       rawTranscript = extractTranscriptFromResponse(txData);
@@ -2481,60 +2507,14 @@ After calling the tool, return ONLY the raw WEBVTT content from the response. Th
       setTranscriptCache(meetingId, rawTranscript);
     }
 
-    bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Transcript retrieved (${Math.round(rawTranscript.length/50)/10}k chars) — summarizing with Claude…</div>`;
+    const kchars = Math.round(rawTranscript.length / 100) / 10;
+    bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Transcript retrieved (${kchars}k chars) — generating recap…</div>`;
 
-    // Step 2 — summarize (no MCP)
-    const truncated = rawTranscript.slice(0, 30000); // ~7500 tokens safety limit
-    const summaryPrompt = `You are summarizing a meeting transcript for a legal AI implementation project management system called ndMAX Orbit.
+    // ── Step 4: Summarize with plain Claude (no MCP) ─────────────────────────
+    const truncated = rawTranscript.slice(0, 50000); // ~12.5k tokens
+    const summaryPrompt = `Summarize this meeting transcript for a project management system.\n\nTranscript:\n${truncated}\n\nGenerate:\n## Summary\n[2-3 sentences]\n\n## Key Decisions\n- [bullet points]\n\n## Action Items\n- [Owner]: [item] — [deadline if mentioned]\n\n## Topics Covered\n- [Topic]: [brief description]\n\n## Client Attendees\n- [Name] (role if mentioned)\n\n## ND Team Attendees\n- [Name] (role if mentioned)\n\nBe concise. Focus on decisions and action items. Omit sections with nothing to report.`;
 
-Here is the meeting transcript:
-
-${truncated}
-
-Generate a structured recap in this exact format (use ## for section headers, - for bullet points):
-
-## Summary
-[2-3 sentence overview of what was discussed and decided]
-
-## Key Decisions
-- [Decision 1]
-- [Decision 2]
-
-## Action Items
-- [Owner]: [Action item] — [deadline if mentioned]
-- [Owner]: [Action item]
-
-## Topics Covered
-- [Topic]: [Brief description]
-
-## Client Attendees
-- [Name] (role if mentioned)
-
-## ND Team Attendees
-- [Name] (role if mentioned)
-
-Keep it concise and actionable. Focus on decisions made and next steps, not play-by-play of the conversation. If a section has no items, omit it.`;
-
-    const sumResp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 2048,
-        messages: [{ role: 'user', content: summaryPrompt }]
-      })
-    });
-
-    if (!sumResp.ok) {
-      const e = await sumResp.text();
-      throw new Error(`Summarization failed (${sumResp.status}): ${e.slice(0,150)}`);
-    }
-
-    const sumData = await sumResp.json();
+    const sumData = await claudeCall(apiKey, summaryPrompt, 2000);
     const recap = sumData.content?.find(b => b.type === 'text')?.text || '';
     if (!recap) throw new Error('Empty summary returned');
 
@@ -2563,42 +2543,31 @@ async function regenRecap(meetingId, transcriptUrl, btn) {
 }
 
 function extractTranscriptFromResponse(data) {
-  // Walk every content block — tool results and text blocks
   for (const block of data.content || []) {
-    let text = '';
-
-    if (block.type === 'mcp_tool_result' || block.type === 'tool_result') {
-      // content may be a string or an array of {type:'text', text:'...'}
-      if (typeof block.content === 'string') {
-        text = block.content;
-      } else if (Array.isArray(block.content)) {
-        text = block.content.map(c => c.text || c.content || '').join('');
-      }
-    } else if (block.type === 'text') {
-      text = block.text || '';
-    }
-
+    // mcp_tool_result: text lives in content[0].text
+    const text = block.type === 'mcp_tool_result'
+      ? (block.content?.[0]?.text || '')
+      : block.type === 'text'
+        ? (block.text || '')
+        : '';
     if (!text) continue;
 
-    // ── Try JSON first (real response format: { meeting:{}, transcripts:[{content:'WEBVTT...'}] })
+    // Primary path: JSON object with transcripts[0].content = "WEBVTT..."
     const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
     const objStart = clean.indexOf('{');
     if (objStart !== -1) {
       try {
         const parsed = JSON.parse(clean.slice(objStart));
-        // Primary path: transcripts[0].content
         if (parsed.transcripts?.[0]?.content) return parsed.transcripts[0].content;
-        // Fallback paths
-        if (parsed.content && typeof parsed.content === 'string' && parsed.content.includes('WEBVTT'))
-          return parsed.content;
         if (parsed.value?.transcripts?.[0]?.content) return parsed.value.transcripts[0].content;
+        // Occasionally the content field IS the WEBVTT
+        if (parsed.content?.includes?.('WEBVTT')) return parsed.content;
       } catch {}
     }
 
-    // ── Raw WEBVTT in the block (Claude sometimes returns it unwrapped)
+    // Fallback: raw WEBVTT text in the block
     if (text.includes('WEBVTT')) return text;
   }
-
   return null;
 }
 

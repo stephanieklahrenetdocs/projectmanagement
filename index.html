@@ -2231,16 +2231,19 @@ async function doTimelineSync() {
 
   btn.disabled = true;
   btn.textContent = '⏳ Syncing…';
-  status.textContent = 'Calling Anthropic API with M365 calendar access…';
+
+  const setStatus = msg => { status.textContent = msg; };
+  setStatus('Starting calendar sync…');
 
   try {
-    const events = await syncClientMeetings(c, apiKey);
+    const events = await syncClientMeetings(c, apiKey, setStatus);
     setMeetingCache(c.name, events);
     renderHubTimeline(c, events);
-    status.textContent = `✅ Synced ${events.length} events — cached for 24h`;
+    const withTx = events.filter(e => e.meetingTranscriptUrl).length;
+    setStatus(`✅ ${events.length} meetings synced — ${withTx} with transcripts — cached 24h`);
   } catch(err) {
     console.error('Timeline sync error:', err);
-    status.textContent = `⚠️ Sync failed: ${err.message}. Showing snapshot data.`;
+    setStatus(`⚠️ Sync failed: ${err.message}. Showing snapshot data.`);
     renderHubTimeline(c, null);
   } finally {
     btn.disabled = false;
@@ -2248,39 +2251,8 @@ async function doTimelineSync() {
   }
 }
 
-async function syncClientMeetings(c, apiKey) {
-  const clientName = c.name;
-  const today = new Date();
-  const sixMonthsAgo = new Date(today);
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-  const threeMonthsFwd = new Date(today);
-  threeMonthsFwd.setMonth(threeMonthsFwd.getMonth() + 3);
-
-  const prompt = `You are helping populate a project management dashboard for a legal AI implementation consultant named Stephanie Klahre.
-
-Task: Find all calendar meetings and calls involving the client "${clientName}" between ${sixMonthsAgo.toISOString().slice(0,10)} and ${threeMonthsFwd.toISOString().slice(0,10)}.
-
-Steps to follow:
-1. Search the calendar for events containing "${clientName}" in the subject or attendee list
-2. For each event found, read the full event details using read_resource with URI "calendar:///events/{eventId}" — this gives you the meetingTranscriptUrl field
-3. Return a JSON array (no markdown fences, no explanation — raw JSON only)
-
-Each item in the array must have these fields:
-{
-  "date": "YYYY-MM-DDTHH:MM:SS",
-  "title": "Meeting subject line",
-  "attendees": ["Name 1", "Name 2"],
-  "location": "Microsoft Teams / Zoom / phone / in-person",
-  "summary": "2-3 sentence summary from the event body (leave empty string for future events)",
-  "actionItems": ["action item 1"],
-  "eventId": "the calendar event ID",
-  "meetingTranscriptUrl": "the meeting-transcript:/// URI from the event details, or null if not present",
-  "isInternal": false
-}
-
-Set isInternal:true if the meeting has no client attendees (only NetDocuments staff).
-Include both past meetings and upcoming meetings. If no meetings found, return [].`;
-
+// Shared low-level API call — always uses MCP beta header
+async function m365ApiCall(apiKey, prompt, maxTokens) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -2291,36 +2263,131 @@ Include both past meetings and upcoming meetings. If no meetings found, return [
     },
     body: JSON.stringify({
       model: 'claude-opus-4-5',
-      max_tokens: 8192,
-      mcp_servers: [{
-        type: 'url',
-        url: 'https://microsoft365.mcp.claude.com/mcp',
-        name: 'microsoft365'
-      }],
+      max_tokens: maxTokens || 4096,
+      mcp_servers: [{ type: 'url', url: 'https://microsoft365.mcp.claude.com/mcp', name: 'microsoft365' }],
       messages: [{ role: 'user', content: prompt }]
     })
   });
-
   if (!resp.ok) {
-    const errBody = await resp.text();
-    throw new Error(`API ${resp.status}: ${errBody.slice(0, 200)}`);
+    const err = await resp.text();
+    throw new Error(`API ${resp.status}: ${err.slice(0, 220)}`);
+  }
+  return resp.json();
+}
+
+// Parse any API response and return the first JSON array found in text blocks
+function extractJsonArray(data) {
+  const text = (data.content || [])
+    .filter(b => b.type === 'text')
+    .map(b => b.text)
+    .join('\n')
+    .replace(/```json?\n?/g, '').replace(/```\n?/g, '').trim();
+  const s = text.indexOf('[');
+  const e = text.lastIndexOf(']');
+  if (s === -1) return [];
+  return JSON.parse(text.slice(s, e + 1));
+}
+
+// Extract meetingTranscriptUrl from a full-event-details API response
+function extractMeetingTranscriptUrl(data) {
+  for (const block of data.content || []) {
+    // Collect raw text from this block
+    let text = '';
+    if (block.type === 'mcp_tool_result' || block.type === 'tool_result') {
+      text = typeof block.content === 'string'
+        ? block.content
+        : Array.isArray(block.content)
+          ? block.content.map(c => c.text || c.content || '').join('')
+          : '';
+    } else if (block.type === 'text') {
+      text = block.text || '';
+    }
+    if (!text) continue;
+
+    // Try JSON parse — field may be at top level or nested
+    const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
+    const objStart = clean.indexOf('{');
+    if (objStart !== -1) {
+      try {
+        const parsed = JSON.parse(clean.slice(objStart));
+        if (parsed.meetingTranscriptUrl) return parsed.meetingTranscriptUrl;
+        // Sometimes nested inside a data wrapper
+        if (parsed.value?.meetingTranscriptUrl) return parsed.value.meetingTranscriptUrl;
+      } catch {}
+    }
+
+    // Regex fallback — grab the URI directly
+    const match = text.match(/meeting-transcript:\/\/\/[^\s"'\]\\]+/);
+    if (match) return match[0];
+  }
+  return null;
+}
+
+async function syncClientMeetings(c, apiKey, onStatus) {
+  const clientName = c.name;
+  const today = new Date();
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const threeMonthsFwd = new Date(today);
+  threeMonthsFwd.setMonth(threeMonthsFwd.getMonth() + 3);
+
+  // ── STEP 1: Calendar search ──────────────────────────────────────────────
+  onStatus?.(`Searching calendar for "${clientName}" meetings…`);
+
+  const searchPrompt = `Search my Microsoft 365 calendar for all meetings and calls where "${clientName}" appears in the subject line or attendee list, between ${sixMonthsAgo.toISOString().slice(0,10)} and ${threeMonthsFwd.toISOString().slice(0,10)}.
+
+Return a JSON array — raw JSON only, no markdown fences. Each object must have:
+{
+  "uri": "the full calendar:///events/... URI for this event",
+  "title": "exact meeting subject line",
+  "date": "YYYY-MM-DDTHH:MM:SS (local time)",
+  "attendees": ["First Last", "First Last"],
+  "location": "Microsoft Teams / Zoom / phone / in-person / blank",
+  "summary": "1-2 sentences from the event body describing the purpose (empty string for future events)",
+  "actionItems": [],
+  "isInternal": false,
+  "kind": "meeting"
+}
+
+Set isInternal:true only if every attendee is a NetDocuments employee (no client attendees).
+Set kind to "upcoming" for events in the future, "meeting" for past events.
+If no events found, return [].`;
+
+  const searchData = await m365ApiCall(apiKey, searchPrompt, 6000);
+  let meetings = [];
+  try {
+    meetings = extractJsonArray(searchData);
+  } catch(e) {
+    throw new Error('Could not parse calendar search results: ' + e.message);
+  }
+  if (!Array.isArray(meetings) || !meetings.length) return [];
+
+  // ── STEP 2: Per-event detail fetch → meetingTranscriptUrl ────────────────
+  // Only fetch details for past Teams meetings (upcoming ones won't have transcripts)
+  const pastMeetings = meetings.filter(m => m.kind !== 'upcoming' && m.uri);
+  onStatus?.(`Found ${meetings.length} meetings — fetching event details for ${pastMeetings.length} past meetings…`);
+
+  for (let i = 0; i < pastMeetings.length; i++) {
+    const mtg = pastMeetings[i];
+    onStatus?.(`Getting transcript URL: ${i + 1}/${pastMeetings.length} — ${mtg.title?.slice(0,40)}`);
+    try {
+      const detailData = await m365ApiCall(
+        apiKey,
+        `Use the read_resource tool with this exact URI and return the complete tool result JSON:
+
+URI: ${mtg.uri}
+
+I need the meetingTranscriptUrl field from the response. Return the raw tool result content without modification.`,
+        1024
+      );
+      mtg.meetingTranscriptUrl = extractMeetingTranscriptUrl(detailData) || null;
+    } catch(e) {
+      console.warn('Event detail fetch failed for', mtg.title, e.message);
+      mtg.meetingTranscriptUrl = null;
+    }
   }
 
-  const data = await resp.json();
-
-  // Extract the final text block — Claude returns its JSON answer there
-  const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('\n') || '[]';
-  const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
-
-  // Find first [ ... ] block in case there's preamble text
-  const arrStart = clean.indexOf('[');
-  const arrEnd   = clean.lastIndexOf(']');
-  if (arrStart === -1) return [];
-  const jsonStr = clean.slice(arrStart, arrEnd + 1);
-  const events = JSON.parse(jsonStr);
-
-  if (!Array.isArray(events)) throw new Error('Unexpected response format');
-  return events;
+  return meetings;
 }
 
 // ─── RECAP CACHE ─────────────────────────────────────────────────────────────
@@ -2397,31 +2464,19 @@ async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
     // Step 1 — fetch transcript via M365 MCP
     let rawTranscript = getTranscriptCache(meetingId);
     if (!rawTranscript) {
-      const txResp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-beta': 'mcp-client-2025-04-04'
-        },
-        body: JSON.stringify({
-          model: 'claude-opus-4-5',
-          max_tokens: 4096,
-          mcp_servers: [{ type: 'url', url: 'https://microsoft365.mcp.claude.com/mcp', name: 'microsoft365' }],
-          messages: [{ role: 'user', content: `Read the meeting transcript at this URI and return its complete raw content: ${transcriptUrl}` }]
-        })
-      });
+      const txData = await m365ApiCall(
+        apiKey,
+        `Use the read_resource tool to read the meeting transcript at this exact URI:
 
-      if (!txResp.ok) {
-        const e = await txResp.text();
-        throw new Error(`Transcript fetch failed (${txResp.status}): ${e.slice(0,150)}`);
-      }
+${transcriptUrl}
 
-      const txData = await txResp.json();
+After calling the tool, return ONLY the raw WEBVTT content from the response. The tool result will be a JSON object — look for transcripts[0].content which contains the WEBVTT text. Return that content verbatim with no modifications, no summarization, no commentary.`,
+        4096
+      );
+
       rawTranscript = extractTranscriptFromResponse(txData);
       if (!rawTranscript || rawTranscript.length < 50) {
-        throw new Error('Transcript was empty or could not be read');
+        throw new Error('Transcript was empty or unavailable for this meeting');
       }
       setTranscriptCache(meetingId, rawTranscript);
     }
@@ -2508,34 +2563,43 @@ async function regenRecap(meetingId, transcriptUrl, btn) {
 }
 
 function extractTranscriptFromResponse(data) {
-  // MCP tool result blocks
-  const toolResults = (data.content || [])
-    .filter(b => b.type === 'mcp_tool_result' || b.type === 'tool_result')
-    .map(b => {
-      if (typeof b.content === 'string') return b.content;
-      if (Array.isArray(b.content)) return b.content.map(c => c.text || c.content || '').join('\n');
-      return '';
-    })
-    .join('\n');
+  // Walk every content block — tool results and text blocks
+  for (const block of data.content || []) {
+    let text = '';
 
-  // Try parsing as JSON — transcript may be nested
-  if (toolResults) {
-    try {
-      const parsed = JSON.parse(toolResults);
-      if (parsed.transcripts?.[0]?.content) return parsed.transcripts[0].content;
-      if (parsed.content) return parsed.content;
-    } catch {}
-    // If it looks like WEBVTT, return directly
-    if (toolResults.includes('WEBVTT')) return toolResults;
+    if (block.type === 'mcp_tool_result' || block.type === 'tool_result') {
+      // content may be a string or an array of {type:'text', text:'...'}
+      if (typeof block.content === 'string') {
+        text = block.content;
+      } else if (Array.isArray(block.content)) {
+        text = block.content.map(c => c.text || c.content || '').join('');
+      }
+    } else if (block.type === 'text') {
+      text = block.text || '';
+    }
+
+    if (!text) continue;
+
+    // ── Try JSON first (real response format: { meeting:{}, transcripts:[{content:'WEBVTT...'}] })
+    const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
+    const objStart = clean.indexOf('{');
+    if (objStart !== -1) {
+      try {
+        const parsed = JSON.parse(clean.slice(objStart));
+        // Primary path: transcripts[0].content
+        if (parsed.transcripts?.[0]?.content) return parsed.transcripts[0].content;
+        // Fallback paths
+        if (parsed.content && typeof parsed.content === 'string' && parsed.content.includes('WEBVTT'))
+          return parsed.content;
+        if (parsed.value?.transcripts?.[0]?.content) return parsed.value.transcripts[0].content;
+      } catch {}
+    }
+
+    // ── Raw WEBVTT in the block (Claude sometimes returns it unwrapped)
+    if (text.includes('WEBVTT')) return text;
   }
 
-  // Fall back to text blocks
-  const textBlocks = (data.content || [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text)
-    .join('\n');
-
-  return toolResults || textBlocks;
+  return null;
 }
 
 // ─── TRANSCRIPT MODAL ─────────────────────────────────────────────────────────

@@ -815,6 +815,13 @@
     </div>
 
     <div class="sidebar-section">
+      <div class="sidebar-label">Engineer</div>
+      <select class="select-filter" id="engineer-filter" onchange="applyFilters()">
+        <option value="">All Engineers</option>
+      </select>
+    </div>
+
+    <div class="sidebar-section">
       <div class="sidebar-label">Status</div>
       <select class="select-filter" id="status-filter" onchange="applyFilters()">
         <option value="">All Statuses</option>
@@ -1392,6 +1399,7 @@ function buildFilterOptions() {
   const pms = [...new Set(allClients.map(c => c.pm).filter(Boolean))].sort();
   const regions = [...new Set(allClients.map(c => c.region).filter(Boolean))].sort();
   const segs = [...new Set(allClients.map(c => c.segment).filter(Boolean))].sort();
+  const engineers = [...new Set(allClients.map(c => c.engineer).filter(Boolean))].sort();
 
   const pmSel = document.getElementById('pm-filter');
   pmSel.innerHTML = '<option value="">All PMs</option>' + pms.map(p => `<option>${p}</option>`).join('');
@@ -1399,6 +1407,8 @@ function buildFilterOptions() {
   regSel.innerHTML = '<option value="">All Regions</option>' + regions.map(r => `<option>${r}</option>`).join('');
   const segSel = document.getElementById('segment-filter');
   segSel.innerHTML = '<option value="">All Segments</option>' + segs.map(s => `<option>${s}</option>`).join('');
+  const engSel = document.getElementById('engineer-filter');
+  engSel.innerHTML = '<option value="">All Engineers</option>' + engineers.map(e => `<option>${e}</option>`).join('');
 
   // RAG counts
   ['Green','Amber','Red'].forEach(rag => {
@@ -1426,16 +1436,19 @@ function applyFilters() {
   const region = document.getElementById('region-filter').value;
   const seg    = document.getElementById('segment-filter').value;
   const status = document.getElementById('status-filter').value;
+  const eng    = document.getElementById('engineer-filter').value;
   const sort   = document.getElementById('sort-select').value;
 
   filteredClients = allClients.filter(c => {
     if (activeRAG !== 'ALL' && c.rag !== activeRAG) return false;
-    if (pm     && c.pm     !== pm)     return false;
-    if (region && c.region !== region) return false;
-    if (seg    && c.segment !== seg)   return false;
-    if (status && c.status !== status) return false;
+    if (pm     && c.pm       !== pm)  return false;
+    if (region && c.region   !== region) return false;
+    if (seg    && c.segment  !== seg) return false;
+    if (status && c.status   !== status) return false;
+    if (eng    && c.engineer !== eng) return false;
     if (search && !c.name.toLowerCase().includes(search) &&
         !c.pm.toLowerCase().includes(search) &&
+        !(c.engineer||'').toLowerCase().includes(search) &&
         !(c.country||'').toLowerCase().includes(search)) return false;
     return true;
   });

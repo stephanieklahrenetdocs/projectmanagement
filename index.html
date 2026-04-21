@@ -749,6 +749,128 @@
     .products-grid { grid-template-columns: 1fr; }
     .usage-stats-row { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ═══════════════════════════════════════════
+     TIMELINE — LIVE SYNC
+  ═══════════════════════════════════════════ */
+  .tl-sync-bar {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; padding: 9px 12px;
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: 8px;
+  }
+  .tl-sync-btn {
+    padding: 5px 13px; font-size: 12px; font-weight: 600;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; cursor: pointer; white-space: nowrap;
+    transition: background .15s;
+  }
+  .tl-sync-btn:hover { background: #4338ca; }
+  .tl-sync-btn:disabled { background: var(--gray-300); cursor: wait; }
+  .tl-sync-status { font-size: 11px; color: var(--gray-500); flex: 1; min-width: 0; }
+  .tl-settings-btn {
+    font-size: 17px; cursor: pointer; color: var(--gray-400);
+    background: none; border: none; padding: 2px 4px; flex-shrink: 0;
+    transition: color .15s;
+  }
+  .tl-settings-btn:hover { color: var(--gray-700); }
+
+  /* Timeline entry cards */
+  .tl-entry {
+    border-left: 3px solid var(--gray-200);
+    padding: 0 0 18px 16px; position: relative;
+  }
+  .tl-entry::before {
+    content: ''; position: absolute; left: -5px; top: 4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gray-300); border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--gray-300);
+  }
+  .tl-entry.tl-upcoming  { border-left-color: #7c3aed; }
+  .tl-entry.tl-upcoming::before  { background: #7c3aed; box-shadow: 0 0 0 1px #7c3aed; }
+  .tl-entry.tl-meeting   { border-left-color: var(--blue); }
+  .tl-entry.tl-meeting::before   { background: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+  .tl-entry.tl-milestone { border-left-color: var(--green); }
+  .tl-entry.tl-milestone::before { background: var(--green); box-shadow: 0 0 0 1px var(--green); }
+  .tl-entry.tl-email     { border-left-color: var(--gray-400); }
+  .tl-entry.tl-email::before     { background: var(--gray-400); box-shadow: 0 0 0 1px var(--gray-400); }
+  .tl-entry.tl-internal  { opacity: .65; }
+
+  .tl-entry-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 3px; }
+  .tl-entry-date { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; }
+  .tl-badge {
+    font-size: 10px; font-weight: 700; padding: 1px 7px;
+    border-radius: 10px; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .tl-badge-upcoming { background: #ede9fe; color: #5b21b6; }
+  .tl-badge-internal { background: #f3f4f6; color: #6b7280; }
+  .tl-badge-live     { background: #d1fae5; color: #065f46; font-size: 9px; }
+  .tl-entry-title { font-size: 14px; font-weight: 600; color: var(--gray-900); margin: 2px 0 5px; line-height: 1.35; }
+  .tl-entry-meta {
+    font-size: 12px; color: var(--gray-500);
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+  }
+  .tl-entry-meta span { display: flex; align-items: center; gap: 3px; }
+  .tl-attendees { margin-top: 5px; }
+  .tl-attendee-pill {
+    display: inline-block; background: var(--gray-100);
+    border: 1px solid var(--gray-200); border-radius: 10px;
+    padding: 1px 8px; margin: 2px 3px 2px 0;
+    font-size: 11px; color: var(--gray-700); white-space: nowrap;
+  }
+  .tl-recap-toggle {
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    cursor: pointer; background: none; border: none; padding: 0;
+    display: inline-flex; align-items: center; gap: 4px; margin-top: 7px;
+  }
+  .tl-recap-toggle:hover { color: #4338ca; }
+  .tl-recap-body {
+    display: none; background: var(--gray-50);
+    border: 1px solid var(--gray-200); border-radius: 6px;
+    padding: 10px 12px; margin-top: 6px;
+    font-size: 12px; color: var(--gray-700); line-height: 1.65;
+  }
+  .tl-recap-body.open { display: block; }
+  .tl-actions-list { margin: 4px 0 0; padding-left: 16px; font-size: 12px; color: var(--gray-600); line-height: 1.75; }
+
+  /* ═══════════════════════════════════════════
+     SETTINGS MODAL
+  ═══════════════════════════════════════════ */
+  .tl-modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,.5);
+    z-index: 3000; display: none; align-items: center; justify-content: center;
+  }
+  .tl-modal-bg.open { display: flex; }
+  .tl-modal {
+    background: #fff; border-radius: 14px; padding: 26px 28px;
+    width: 500px; max-width: 94vw;
+    box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  }
+  .tl-modal h3 { margin: 0 0 4px; font-size: 17px; color: var(--navy-dark); }
+  .tl-modal-sub { font-size: 13px; color: var(--gray-500); line-height: 1.5; margin: 0 0 18px; }
+  .tl-modal label { font-size: 12px; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 5px; }
+  .tl-modal input {
+    width: 100%; box-sizing: border-box; padding: 8px 11px;
+    border: 1px solid var(--gray-300); border-radius: 7px;
+    font-size: 13px; margin-bottom: 14px;
+  }
+  .tl-modal input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(99,102,241,.15); }
+  .tl-modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+  .tl-btn-cancel {
+    padding: 7px 16px; font-size: 13px; font-weight: 600;
+    background: var(--gray-100); color: var(--gray-700);
+    border: none; border-radius: 7px; cursor: pointer;
+  }
+  .tl-btn-cancel:hover { background: var(--gray-200); }
+  .tl-btn-save {
+    padding: 7px 16px; font-size: 13px; font-weight: 600;
+    background: var(--accent); color: #fff; border: none; border-radius: 7px; cursor: pointer;
+  }
+  .tl-btn-save:hover { background: #4338ca; }
+  .tl-key-banner { font-size: 12px; padding: 7px 11px; border-radius: 7px; margin-bottom: 14px; display: none; }
+  .tl-key-ok   { background: #d1fae5; color: #065f46; }
+  .tl-key-none { background: #fef3c7; color: #92400e; }
+  .tl-key-err  { background: #fee2e2; color: #991b1b; }
 </style>
 </head>
 <body>
@@ -763,6 +885,7 @@
   <button class="btn-load-csv" id="btn-connect" onclick="connectCSVFile()" title="Connect a CSV file for auto-refresh on every load">⚡ Connect CSV</button>
   <button class="btn-load-csv" style="background:#374151;margin-left:6px;" onclick="document.getElementById('csv-input').click()" title="One-time manual load">↑ Load Once</button>
   <input type="file" id="csv-input" accept=".csv" onchange="handleCSVUpload(event)">
+  <button class="tl-settings-btn" onclick="openSettingsModal()" title="Settings — API key & calendar sync" style="margin-left:4px;font-size:20px;line-height:1;background:none;border:none;color:rgba(255,255,255,.55);">⚙️</button>
 </header>
 
 <!-- ═══════════════ LAYOUT ═══════════════ -->
@@ -935,8 +1058,13 @@
 
     <!-- TIMELINE -->
     <div class="hub-pane" id="pane-timeline">
-      <div class="section-hdr">Implementation Timeline</div>
-      <div class="timeline" id="hub-timeline"></div>
+      <div id="tl-sync-bar" class="tl-sync-bar">
+        <button class="tl-sync-btn" id="tl-sync-btn" onclick="doTimelineSync()">📅 Sync Meetings</button>
+        <span class="tl-sync-status" id="tl-sync-status">Tap to pull live calendar events</span>
+        <button class="tl-settings-btn" onclick="openSettingsModal()" title="Calendar sync settings" style="background:none;border:none;">⚙️</button>
+      </div>
+      <div class="section-hdr">Meetings &amp; Implementation Timeline</div>
+      <div id="hub-timeline"></div>
       <div class="spacer-16"></div>
       <div class="section-hdr">Phase History</div>
       <div id="hub-phases" style="font-size:13px;color:var(--gray-500);line-height:1.7;"></div>
@@ -1556,9 +1684,12 @@ function esc(str) {
 // ══════════════════════════════════════════
 // CLIENT HUB
 // ══════════════════════════════════════════
+let _currentHubClient = null;
+
 function openHub(idx) {
   const c = allClients.find(x => x._idx === idx);
   if (!c) return;
+  _currentHubClient = c;
   currentClientKey = 'client-' + c.name.replace(/\s+/g,'-').toLowerCase();
 
   document.getElementById('hub-client-name').textContent = c.name;
@@ -1739,107 +1870,105 @@ function daysDiff(dateStr) {
 }
 
 // ── TIMELINE ──
-function renderHubTimeline(c) {
+function renderHubTimeline(c, liveEvents) {
   const tl = document.getElementById('hub-timeline');
   const ph = document.getElementById('hub-phases');
   const today = new Date();
-
-  // TYPE ICONS & COLORS
-  const typeIcon  = { meeting: '🤝', email: '✉️', milestone: '🏁', default: '📌' };
-  const typeColor = { meeting: 'var(--blue)', email: 'var(--gray-500)', milestone: 'var(--green)', default: 'var(--gray-400)' };
 
   const events = [];
 
   // ─── Milestone events from CSV ───
   if (c.sfCaseOpened && !c.sfCaseOpened.startsWith('0')) {
     const d = new Date(c.sfCaseOpened);
-    if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, kind: 'milestone', past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, kind: 'milestone' });
   }
   if (c.gcxCreated) {
     const d = parseTimestamp(c.gcxCreated);
-    if (d) events.push({ date: d, label: 'GuideCX Project Created', detail: '', kind: 'milestone', past: d <= today });
+    if (d) events.push({ date: d, label: 'GuideCX Project Created', detail: '', kind: 'milestone' });
   }
   if (c.expectedGoLive) {
     const d = new Date(c.expectedGoLive);
     if (!isNaN(d)) {
-      const isOverdue = !c.actualGoLive && d < today;
-      events.push({ date: d, label: 'Expected Go-Live', detail: 'DM implementation target', kind: 'milestone', past: d <= today, overdue: isOverdue });
+      events.push({ date: d, label: 'Expected Go-Live', detail: 'DM implementation target', kind: 'milestone', overdue: !c.actualGoLive && d < today, upcoming: d > today });
     }
   }
   if (c.actualGoLive) {
     const d = new Date(c.actualGoLive);
-    if (!isNaN(d)) events.push({ date: d, label: '✅ Actual Go-Live', detail: 'DM went live', kind: 'milestone', past: true });
+    if (!isNaN(d)) events.push({ date: d, label: '✅ Actual Go-Live', detail: 'DM went live', kind: 'milestone' });
   }
   if (c.renewalDate) {
     const d = new Date(c.renewalDate);
-    if (!isNaN(d)) events.push({ date: d, label: 'Contract Renewal', detail: c.contractStatus||'', kind: 'milestone', past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'Contract Renewal', detail: c.contractStatus||'', kind: 'milestone', upcoming: d > today });
   }
   if (c.aiRenewal && c.aiRenewal !== c.renewalDate) {
     const d = new Date(c.aiRenewal);
-    if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), kind: 'milestone', past: d <= today });
+    if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), kind: 'milestone', upcoming: d > today });
   }
 
-  // ─── Meeting notes from snapshot ───
-  if (c.meetings && c.meetings.length) {
-    c.meetings.forEach(m => {
-      const d = new Date(m.date);
+  // ─── Meetings from live sync (if provided) ───
+  if (liveEvents && liveEvents.length) {
+    liveEvents.forEach(m => {
+      const d = new Date(m.date || m.start);
       if (!isNaN(d)) {
         events.push({
           date: d,
-          label: m.title || 'Meeting',
-          detail: m.summary || '',
+          label: m.title || m.subject || 'Meeting',
+          detail: m.summary || m.body || '',
           attendees: m.attendees || [],
           actionItems: m.actionItems || [],
-          kind: m.type || 'meeting',
-          past: true,
-          isMeeting: true
+          location: m.location || '',
+          kind: d > today ? 'upcoming' : 'meeting',
+          live: true
         });
       }
     });
   }
 
-  // Sort newest first for meeting-heavy timelines
-  events.sort((a,b) => b.date - a.date);
-
-  if (!events.length) {
-    tl.innerHTML = '<p class="timeline-empty">No dated activity found. Meetings and emails will appear here as data is synced.</p>';
-  } else {
-    tl.innerHTML = events.map(ev => {
-      const dotClass = ev.overdue ? 'overdue' : ev.past ? 'past' : 'future';
-      const icon = typeIcon[ev.kind] || typeIcon.default;
-      const kindLabel = ev.kind ? `<span style="font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:${typeColor[ev.kind]||typeColor.default};margin-left:6px;">${ev.kind}</span>` : '';
-
-      const attendeeHtml = (ev.attendees && ev.attendees.length)
-        ? `<div style="margin-top:6px;font-size:11px;color:var(--gray-500);">
-             <strong style="color:var(--gray-600);">Attendees:</strong> ${ev.attendees.map(a => esc(a)).join(' · ')}
-           </div>` : '';
-
-      const actionHtml = (ev.actionItems && ev.actionItems.length)
-        ? `<div style="margin-top:6px;">
-             <div style="font-size:11px;font-weight:600;color:var(--gray-600);margin-bottom:3px;">Action items:</div>
-             <ul style="margin:0;padding-left:16px;font-size:12px;color:var(--gray-600);line-height:1.6;">
-               ${ev.actionItems.map(a => `<li>${esc(a)}</li>`).join('')}
-             </ul>
-           </div>` : '';
-
-      return `
-        <div class="timeline-item" style="${ev.isMeeting ? 'background:var(--gray-50);border-radius:8px;padding:10px 12px;margin-bottom:12px;' : ''}">
-          <div class="timeline-dot ${dotClass}" style="${ev.isMeeting ? 'background:'+(typeColor[ev.kind]||'var(--blue)')+';box-shadow:0 0 0 2px '+(typeColor[ev.kind]||'var(--blue)')+';' : ''}"></div>
-          <div class="timeline-date">${ev.date.toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'})}${kindLabel}</div>
-          <div class="timeline-title">${icon} ${ev.label}</div>
-          ${ev.detail ? `<div class="timeline-detail" style="margin-top:4px;">${esc(ev.detail)}</div>` : ''}
-          ${attendeeHtml}
-          ${actionHtml}
-        </div>`;
-    }).join('');
+  // ─── Meetings from snapshot (fallback / supplement) ───
+  if (c.meetings && c.meetings.length) {
+    c.meetings.forEach(m => {
+      const d = new Date(m.date);
+      if (!isNaN(d)) {
+        // Skip if live sync already has this date (within 1 day)
+        const alreadyCovered = liveEvents && liveEvents.some(lm => {
+          const ld = new Date(lm.date || lm.start);
+          return Math.abs(ld - d) < 86400000;
+        });
+        if (!alreadyCovered) {
+          events.push({
+            date: d,
+            label: m.title || 'Meeting',
+            detail: m.summary || '',
+            attendees: m.attendees || [],
+            actionItems: m.actionItems || [],
+            kind: m.type || 'meeting'
+          });
+        }
+      }
+    });
   }
 
+  // Sort newest first
+  events.sort((a,b) => b.date - a.date);
+
   // Status notes banner (from snapshot)
+  const statusDiv = document.createElement('div');
   if (c.statusNotes) {
-    const banner = document.createElement('div');
-    banner.style.cssText = 'background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;';
-    banner.innerHTML = `<strong>Status:</strong> ${esc(c.statusNotes)}`;
-    tl.parentNode.insertBefore(banner, tl);
+    statusDiv.style.cssText = 'background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;';
+    statusDiv.innerHTML = `<strong>Status:</strong> ${esc(c.statusNotes)}`;
+  }
+
+  if (!events.length) {
+    tl.innerHTML = '';
+    if (statusDiv.innerHTML) tl.appendChild(statusDiv);
+    const empty = document.createElement('p');
+    empty.className = 'timeline-empty';
+    empty.textContent = 'No dated activity found. Tap "Sync Meetings" to pull live calendar data.';
+    tl.appendChild(empty);
+  } else {
+    const entriesHtml = events.map(ev => buildTimelineEntry(ev)).join('');
+    tl.innerHTML = entriesHtml;
+    if (statusDiv.innerHTML) tl.insertAdjacentElement('afterbegin', statusDiv);
   }
 
   // Phase history
@@ -1851,6 +1980,214 @@ function renderHubTimeline(c) {
   } else {
     ph.innerHTML = '<p style="color:var(--gray-500);font-size:13px;font-style:italic;">No phase data available.</p>';
   }
+}
+
+function buildTimelineEntry(ev) {
+  const dateStr = ev.date.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+  let timeStr = '';
+  // Show time if not midnight
+  if (ev.date.getHours() || ev.date.getMinutes()) {
+    timeStr = ' ' + ev.date.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  }
+
+  const kindMap = { meeting:'meeting', upcoming:'upcoming', milestone:'milestone', email:'email', internal:'internal' };
+  const kindClass = kindMap[ev.kind] || 'meeting';
+  const extraClass = ev.kind === 'upcoming' ? ' tl-upcoming' : ev.kind === 'milestone' ? ' tl-milestone' : ev.kind === 'email' ? ' tl-email' : ev.kind === 'internal' ? ' tl-internal' : ' tl-meeting';
+
+  let badge = '';
+  if (ev.kind === 'upcoming') badge = '<span class="tl-badge tl-badge-upcoming">UPCOMING</span>';
+  else if (ev.live)           badge = '<span class="tl-badge tl-badge-live">LIVE</span>';
+  else if (ev.kind === 'internal') badge = '<span class="tl-badge tl-badge-internal">INTERNAL</span>';
+
+  const attendeeHtml = (ev.attendees && ev.attendees.length)
+    ? `<div class="tl-attendees">${ev.attendees.map(a => `<span class="tl-attendee-pill">${esc(a)}</span>`).join('')}</div>`
+    : '';
+
+  const locationHtml = ev.location
+    ? `<span style="font-size:11px;color:var(--gray-500);">📍 ${esc(ev.location)}</span>`
+    : '';
+
+  const metaParts = [dateStr + timeStr, locationHtml].filter(Boolean);
+
+  let recapToggleId = 'recap-' + Math.random().toString(36).slice(2,8);
+  let recapHtml = '';
+  if (ev.detail || (ev.actionItems && ev.actionItems.length)) {
+    const actionHtml = (ev.actionItems && ev.actionItems.length)
+      ? `<ul class="tl-actions-list">${ev.actionItems.map(a => `<li>${esc(a)}</li>`).join('')}</ul>`
+      : '';
+    recapHtml = `
+      <button class="tl-recap-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide recap':'▼ Show recap'">▼ Show recap</button>
+      <div class="tl-recap-body" id="${recapToggleId}">
+        ${ev.detail ? `<p style="margin-bottom:6px;">${esc(ev.detail)}</p>` : ''}
+        ${actionHtml}
+      </div>`;
+  }
+
+  return `
+    <div class="tl-entry${extraClass}">
+      <div class="tl-entry-top">
+        <div class="tl-entry-date">${metaParts[0]}${locationHtml ? ' · ' : ''}${locationHtml}</div>
+        ${badge}
+      </div>
+      <div class="tl-entry-title">${esc(ev.label)}</div>
+      ${attendeeHtml}
+      ${recapHtml}
+    </div>`;
+}
+
+// ─── CALENDAR SYNC ───────────────────────────────────────────────────────────
+
+function getMeetingCache(clientName) {
+  try {
+    const raw = localStorage.getItem('orbit_mtgs_' + clientName);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (Date.now() - obj.ts > 86400000) return null; // 24h TTL
+    return obj.events;
+  } catch { return null; }
+}
+
+function setMeetingCache(clientName, events) {
+  try {
+    localStorage.setItem('orbit_mtgs_' + clientName, JSON.stringify({ ts: Date.now(), events }));
+  } catch {}
+}
+
+async function doTimelineSync() {
+  const c = _currentHubClient;
+  if (!c) return;
+  const btn = document.getElementById('tl-sync-btn');
+  const status = document.getElementById('tl-sync-status');
+
+  // Check cache first
+  const cached = getMeetingCache(c.name);
+  if (cached) {
+    status.textContent = `Showing cached data (< 24h old)`;
+    renderHubTimeline(c, cached);
+    return;
+  }
+
+  const apiKey = localStorage.getItem('orbit_api_key');
+  if (!apiKey) {
+    openSettingsModal('no-key');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Syncing…';
+  status.textContent = 'Calling Anthropic API with M365 calendar access…';
+
+  try {
+    const events = await syncClientMeetings(c, apiKey);
+    setMeetingCache(c.name, events);
+    renderHubTimeline(c, events);
+    status.textContent = `✅ Synced ${events.length} events — cached for 24h`;
+  } catch(err) {
+    console.error('Timeline sync error:', err);
+    status.textContent = `⚠️ Sync failed: ${err.message}. Showing snapshot data.`;
+    renderHubTimeline(c, null);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '📅 Sync Meetings';
+  }
+}
+
+async function syncClientMeetings(c, apiKey) {
+  // Use Anthropic API with M365 MCP server to fetch calendar events for this client
+  const clientName = c.name;
+  const today = new Date();
+  const sixMonthsAgo = new Date(today);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  const threeMonthsFwd = new Date(today);
+  threeMonthsFwd.setMonth(threeMonthsFwd.getMonth() + 3);
+
+  const prompt = `Search my Microsoft 365 calendar and email for all meetings and calls involving "${clientName}" between ${sixMonthsAgo.toISOString().slice(0,10)} and ${threeMonthsFwd.toISOString().slice(0,10)}.
+
+Return a JSON array (no markdown, no explanation — raw JSON only) where each item has:
+{
+  "date": "YYYY-MM-DDTHH:MM:SS",
+  "title": "Meeting subject",
+  "attendees": ["name1", "name2"],
+  "location": "Teams / Zoom / in-person / etc",
+  "summary": "2-3 sentence summary of what was discussed",
+  "actionItems": ["action 1", "action 2"]
+}
+
+Include past meetings AND upcoming meetings. For past meetings, use calendar event title/body; for upcoming, just include the meeting details without a summary. If no meetings found, return [].`;
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-beta': 'mcp-client-2025-04-04'
+    },
+    body: JSON.stringify({
+      model: 'claude-opus-4-5',
+      max_tokens: 4096,
+      mcp_servers: [{
+        type: 'url',
+        url: 'https://microsoft365.mcp.claude.com/mcp',
+        name: 'microsoft365'
+      }],
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  if (!resp.ok) {
+    const errBody = await resp.text();
+    throw new Error(`API ${resp.status}: ${errBody.slice(0, 200)}`);
+  }
+
+  const data = await resp.json();
+  // Extract text content from response
+  const text = data.content?.find(b => b.type === 'text')?.text || '[]';
+
+  // Parse JSON — strip any accidental markdown fences
+  const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
+  const events = JSON.parse(clean);
+
+  if (!Array.isArray(events)) throw new Error('Unexpected response format');
+  return events;
+}
+
+// ─── SETTINGS MODAL ──────────────────────────────────────────────────────────
+
+function openSettingsModal(reason) {
+  const modal = document.getElementById('tl-modal-bg');
+  const key = localStorage.getItem('orbit_api_key') || '';
+  document.getElementById('tl-api-key-input').value = key;
+  // Show status banner
+  const banner = document.getElementById('tl-key-banner');
+  if (reason === 'no-key') {
+    banner.textContent = 'No API key set — enter your Anthropic key below to enable live calendar sync.';
+    banner.className = 'tl-key-banner tl-key-none';
+    banner.style.display = '';
+  } else if (key) {
+    banner.textContent = 'API key is saved.';
+    banner.className = 'tl-key-banner tl-key-ok';
+    banner.style.display = '';
+  } else {
+    banner.style.display = 'none';
+  }
+  modal.style.display = 'flex';
+}
+
+function closeSettingsModal() {
+  document.getElementById('tl-modal-bg').style.display = 'none';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('tl-api-key-input').value.trim();
+  if (!key) {
+    localStorage.removeItem('orbit_api_key');
+    showToast('API key cleared.');
+  } else {
+    localStorage.setItem('orbit_api_key', key);
+    showToast('API key saved to browser storage.');
+  }
+  closeSettingsModal();
 }
 
 function parseTimestamp(str) {
@@ -2107,5 +2444,31 @@ async function init() {
 
 init();
 </script>
+
+<!-- ═══ SETTINGS MODAL ═══ -->
+<div id="tl-modal-bg" class="tl-modal-bg" style="display:none;" onclick="if(event.target===this)closeSettingsModal()">
+  <div class="tl-modal">
+    <div class="tl-modal-title">⚙️ Calendar Sync Settings</div>
+    <div id="tl-key-banner" class="tl-key-banner" style="display:none;"></div>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:14px;line-height:1.5;">
+      Orbit uses the Anthropic API to pull live calendar events from your Microsoft 365 account.
+      Your key is stored only in this browser — never sent to any server except Anthropic.
+    </p>
+    <div class="tl-modal-field">
+      <label class="tl-modal-label">Anthropic API Key</label>
+      <input class="tl-modal-input" type="password" id="tl-api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+      <div style="font-size:11px;color:var(--gray-500);margin-top:4px;">
+        Get your key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--gray-500);margin-bottom:16px;padding:10px;background:var(--gray-100);border-radius:6px;line-height:1.5;">
+      <strong style="color:var(--gray-700);">How it works:</strong> When you click "Sync Meetings" on a client's timeline tab, Orbit sends a request to the Anthropic API with access to your M365 calendar. Claude searches your calendar for meetings involving that client and returns a structured list. Results are cached for 24 hours.
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="tl-btn-cancel" onclick="closeSettingsModal()">Cancel</button>
+      <button class="tl-btn-save" onclick="saveApiKey()">Save Key</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

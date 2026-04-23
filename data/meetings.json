@@ -1,0 +1,461 @@
+{
+  "generated": "2026-04-23T00:00:00Z",
+  "source": "Outlook Calendar + SharePoint Notes + Staircase AI",
+  "note": "Pre-fetched by Claude Code. Hub reads this file directly — no API key required in browser.",
+  "clients": {
+    "Wiggin and Dana LLP": [
+      {
+        "id": "wiggin-2026-04-15",
+        "date": "2026-04-15",
+        "type": "meeting",
+        "title": "Summarize App Troubleshooting",
+        "summary": "Discussed troubleshooting Summarize app linked to old data tables causing errors and activation issues. Agreed to delete old app and all obsolete tables, then reimport from scratch. Customer cooperative and satisfied with guidance.",
+        "attendees": ["Stephanie Klahre (ND)", "Nikki Patel — Sr AI Value App Eng (ND)", "Chel Guardino — Sr Mgr Apps & Adoption (Wiggin)"],
+        "actionItems": [
+          "Client: Delete old Summarize app and associated obsolete tables",
+          "ND: Assist with re-importing Summarize app from scratch",
+          "Client: Rename new app with clear identifier (date/initials) for version control",
+          "Client: Verify and activate new app once imported"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "wiggin-2026-04-07",
+        "date": "2026-04-07",
+        "type": "meeting",
+        "title": "Studio Apps Review & Configuration Session",
+        "summary": "Reviewed six Studio apps: Translate, Summarize, Prompt Generator, Contract Playbook Generator, Issues List, and Extract. Client plans initial deployment with Translate, Prompt Generator, Playbook Generator, and Issues List. Discussed user group access control to manage app visibility. Client expressed satisfaction with demos.",
+        "attendees": ["Stephanie Klahre (ND)", "Nikki Patel — Sr AI Value App Eng (ND)", "Jason Eiseman — Director of AI (Wiggin)", "Chel Guardino — Sr Mgr Apps & Adoption (Wiggin)", "Mary Barry — Knowledge Manager (Wiggin)", "Bill Dunlap — CIO (Wiggin, pending)"],
+        "actionItems": [
+          "ND: Send current prompt spreadsheet for Summarize app",
+          "Client: Upload updated prompts or reinstall Summarize to restore missing doc types",
+          "Client: Reinstall Contract Playbook app to resolve errors",
+          "ND: Assist with Extract app templates and training session",
+          "Client: Create user groups for app access control"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "wiggin-2026-03-04",
+        "date": "2026-03-04",
+        "type": "meeting",
+        "title": "ndMAX Progress Check",
+        "summary": "Meeting with Wiggin and Dana LLP to review AI implementation progress.",
+        "attendees": ["Stephanie Klahre (ND)", "Chel Guardino (Wiggin)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "wiggin-2024-06-13",
+        "date": "2024-06-13",
+        "type": "meeting",
+        "title": "Summarize and Extract Trademark Sync and Build",
+        "summary": "Internal sync and build session for Wiggin Summarize and Extract Trademark apps.",
+        "attendees": ["Stephanie Klahre (ND)", "Brandon Hill (ND)", "Paola Leichter (ND)"],
+        "actionItems": [],
+        "source": "outlook",
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5R4AAA%3D",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Analysis Group": [
+      {
+        "id": "ag-2026-04-14",
+        "date": "2026-04-14",
+        "type": "email",
+        "title": "ndMAX Kickoff Next Steps & Action Items",
+        "summary": "Active thread resolving permission issues for AI profiling group and Studio apps import access. Emilio Campos unable to add himself to profiling app group. Van Nguyen trying to import apps, needs support account access.",
+        "attendees": ["Stephanie Klahre (ND)", "Kyle Kissell (ND)", "Emilio Campos (ND)", "Steve Yates (Analysis Group)", "Van Nguyen (Analysis Group)", "Nicole Kirby (Analysis Group)"],
+        "actionItems": [
+          "ND: Resolve profiling app group permission issue for Emilio Campos",
+          "ND: Provide Van Nguyen support account access for app import"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "ag-2026-04-03",
+        "date": "2026-04-03",
+        "type": "meeting",
+        "title": "AI Profiling & Taxonomy Introduction",
+        "summary": "Kyle Kissell introduced AI taxonomy implementation: phased approach starting with manual testing on closed documents, gathering feedback, then automating. 93 document types, 30 metadata fields configurable. AI uses Azure OpenAI, supports text extraction. Client expressed interest in sandbox trial and BI integration via ND Mirror.",
+        "attendees": ["Stephanie Klahre (ND)", "Kyle Kissell — Legal Value Eng Director (ND)", "Emilio Campos — PS Consultant (ND)", "Stephen Yates — Sr Mgr Legal Ops (Analysis Group)"],
+        "actionItems": [
+          "ND: Send AI taxonomy PowerPoint documentation",
+          "ND: Assist with sandbox environment setup and AI profiling installation",
+          "Client: Provide recently closed documents for initial AI processing trial",
+          "ND: Follow up on sandbox access and coordinate with client IT team",
+          "ND: Support IT team evaluating ND Mirror/API integration for data warehouse"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "ag-2026-03-30",
+        "date": "2026-03-30",
+        "type": "meeting",
+        "title": "Analysis Group Progress Session",
+        "summary": "Follow-up meeting on AI implementation progress and next steps.",
+        "attendees": ["Stephanie Klahre (ND)", "Stephen Yates (Analysis Group)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Galloway, Johnson, Tompkins, Burr & Smith, PLC": [
+      {
+        "id": "galloway-2026-03-11",
+        "date": "2026-03-11",
+        "type": "meeting",
+        "title": "AI Studio Apps Demo Session",
+        "summary": "Stephanie and Emilio demoed Summarize, Timeline, and Compare apps. Also presented a custom affirmative defense app built specifically for Galloway. Two additional repeat sessions scheduled to accommodate all attorneys. Feedback and feature requests to be routed through Barbara Noble.",
+        "attendees": ["Stephanie Klahre (ND)", "Emilio Campos — PS Consultant (ND)", "Barbara Noble — CTO (Galloway)"],
+        "actionItems": [
+          "Emilio: Finalize Medical Summary App",
+          "Barbara: Review Response Generator and provide feedback",
+          "Encourage users to explore AI apps and direct feature requests to Barbara Noble"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "galloway-2026-02-27",
+        "date": "2026-02-27",
+        "type": "meeting",
+        "title": "ndMAX Progress Meeting",
+        "summary": "Follow-up meeting on ndMAX AI implementation status.",
+        "attendees": ["Stephanie Klahre (ND)", "Barbara Noble (Galloway)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "galloway-2026-02-26",
+        "date": "2026-02-26",
+        "type": "meeting",
+        "title": "ndMAX Kickoff / Planning Session",
+        "summary": "Meeting to plan ndMAX AI implementation and onboarding.",
+        "attendees": ["Stephanie Klahre (ND)", "Barbara Noble (Galloway)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "City of Phoenix - Law Department": [
+      {
+        "id": "phoenix-2026-04-16",
+        "date": "2026-04-16",
+        "type": "meeting",
+        "title": "Legal AI Assistant & Studio Apps Demo",
+        "summary": "Detailed demonstration of Legal AI Assistant, Prompt Generator, Summarize, Contract Risk Analysis, Position Prep, and Playbook Generator. Client valued ease of use and prompt library reuse. Requested Smart Answers private preview access. AI features enabled in sandbox environment during session.",
+        "attendees": ["Stephanie Klahre (ND)", "Nikki Patel — Sr AI Value App Eng (ND)", "Chris Fernelius — Legal AI Value Eng (ND)", "TJ Martin — Chief Asst City Attorney (Phoenix)", "Usharani Koripella — IT Manager (Phoenix)", "Stephanie Mortensen — Mgmt Services Admin (Phoenix)", "Kiruthika Vivekanandan — IT Analyst (Phoenix)", "Jessica Arambula (Phoenix)", "Mahesh Bhide (Phoenix)", "Vickie Sericati — Sr App Services Analyst (Phoenix)"],
+        "actionItems": [
+          "ND: Enable Legal AI Assistant and Smart Answers private preview in sandbox",
+          "Client: Provide list of frequent document types for Summarize prompt customization",
+          "ND: Generate and send customized prompt files for new document types",
+          "Client: Import Issues List app to enable Playbook Generator",
+          "ND: Share training videos for Studio apps and prompt generation",
+          "ND: Add client to private preview of Word editor with playbook integration"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "phoenix-2026-03-11",
+        "date": "2026-03-11",
+        "type": "meeting",
+        "title": "ndMAX AI Session",
+        "summary": "AI implementation review session with City of Phoenix Law Department.",
+        "attendees": ["Stephanie Klahre (ND)", "City of Phoenix Law Department team"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "phoenix-2026-03-04",
+        "date": "2026-03-04",
+        "type": "meeting",
+        "title": "ndMAX Kickoff Meeting",
+        "summary": "Initial kickoff meeting for AI PS onboarding.",
+        "attendees": ["Stephanie Klahre (ND)", "City of Phoenix Law Department team"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Farrer & Co": [
+      {
+        "id": "farrer-2026-04-15",
+        "date": "2026-04-15",
+        "type": "meeting",
+        "title": "AI File Review Automation & Pattern Builder",
+        "summary": "Discussed using AI-driven file review automation (Pattern Builder + background profiling) to reduce partner hours on manual document checks. Processing up to 48K documents/day; multi-month timeline for full historical ingestion. Resolved service account permission issues for document text access. Reviewed AI Assistant features, prompt libraries, and Word integration. Client cautiously optimistic, seeking phased pilot.",
+        "attendees": ["Stephanie Klahre (ND)", "Greg Hartley — Principal AI Consultant Lead (ND)", "Lydia Morris — CSM EMEA (ND)", "Colleen Baehrend (ND)", "Josh White — AE (ND)", "Paul Lovegrove — Assoc Dir IT (Farrer)", "Rod Fripp — IT Director (Farrer)", "Oliver Jeffcott — Sr Legal Tech & Innovation Mgr (Farrer)", "Elliott Herbert — Sr Applications Analyst (Farrer)"],
+        "actionItems": [
+          "ND: Enable AI profiling configuration and provide app download for testing",
+          "Farrer: Identify sample closed matters for AI profiling pilot",
+          "ND: Troubleshoot and resolve service account permission issues",
+          "Farrer: Review governance/security policies for data table access",
+          "ND: Monitor token usage; discuss options for large-scale ingestion",
+          "Schedule follow-up: Pattern Builder app creation demo"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Winckworth Sherwood": [
+      {
+        "id": "winckworth-2026-03-11",
+        "date": "2026-03-11",
+        "type": "email",
+        "title": "AI Legal Value Services Team Introduction",
+        "summary": "Introduction meeting request from AI Legal Value Services team for continued engagement post-onboarding.",
+        "attendees": ["Stephanie Klahre (ND)", "Christel Aguila (Winckworth Sherwood)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "winckworth-2026-03-03",
+        "date": "2026-03-03",
+        "type": "milestone",
+        "title": "✅ AI PS Onboarding Completed",
+        "summary": "All tasks completed for Winckworth Sherwood AI PS Onboarding. Plot Sales Agreement App built by Adam Scott and tested by Christel Aguila — client confirmed functionality.",
+        "attendees": ["Stephanie Klahre (ND)", "Adam Scott (ND)", "Christel Aguila (Winckworth Sherwood)"],
+        "actionItems": [],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "winckworth-2026-02-23",
+        "date": "2026-02-23",
+        "type": "email",
+        "title": "Plot Sales Agreement App Testing",
+        "summary": "Adam Scott building Plot Sales Agreement App on POC Cabinet. Christel Aguila actively testing. Active thread through Mar 3 confirming completion.",
+        "attendees": ["Adam Scott (ND)", "Christel Aguila (Winckworth Sherwood)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Chapman and Cutler LLP": [
+      {
+        "id": "chapman-2026-03-25",
+        "date": "2026-03-25",
+        "type": "email",
+        "title": "Smart Answers Configuration Update",
+        "summary": "Zane confirmed Smart Answers turned off for all cabinets EXCEPT Client Matter, as requested by client. Smart Answers sync meeting held with Andrea Pinkston. AI Profiling and Studio apps continue in parallel.",
+        "attendees": ["Stephanie Klahre (ND)", "Andrea Pinkston (ND)", "Zane (ND)", "Susan Schreiber (Chapman)"],
+        "actionItems": [
+          "Greg: Respond to Erik's email with troubleshooting guidance and LPA/trigger timeline update"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "chapman-2026-03-19",
+        "date": "2026-03-19",
+        "type": "meeting",
+        "title": "Chapman Cutler App Review",
+        "summary": "Teams meeting to review AI app implementation progress. Organized by Greg Hartley. Active discussions on AI profiling and Studio apps configuration. Client build work paused pending LPA delivery and trigger updates from ND product team.",
+        "attendees": ["Greg Hartley (ND)", "Stephanie Klahre (ND)", "Chris Fernelius (ND)", "Kyle Kissell (ND)", "Susan Schreiber (Chapman)"],
+        "actionItems": [
+          "ND: Deliver LPA update and resolve background app trigger blockers"
+        ],
+        "source": "outlook",
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5U0AAA%3D",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "chapman-2026-02-04",
+        "date": "2026-02-04",
+        "type": "meeting",
+        "title": "App Build Session — Extraction & Distribution",
+        "summary": "Meeting notes from OneNote: Discussed core extraction-to-table use case. Distribution list for deal workflows with roles-based email routing. App communications configuration (EC). Clause library app and RFP response workflows also covered.",
+        "attendees": ["Stephanie Klahre (ND)", "Greg Hartley (ND)", "Susan Schreiber (Chapman)"],
+        "actionItems": [
+          "Build extraction table app for deal distribution workflows",
+          "Configure roles-based email routing for deal communications"
+        ],
+        "source": "outlook",
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5UZAAA%3D",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Lewis Silkin LLP": [
+      {
+        "id": "lewissilkin-2026-02-12",
+        "date": "2026-02-12",
+        "type": "milestone",
+        "title": "GuideCX Project Created",
+        "summary": "Stephanie Klahre invited Lewis Silkin LLP to AI PS Onboarding project in GuideCX.",
+        "attendees": ["Stephanie Klahre (ND)", "Lewis Silkin LLP team"],
+        "actionItems": ["Complete GuideCX onboarding tasks to get back on schedule"],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "lewissilkin-2025-12-08",
+        "date": "2025-12-08",
+        "type": "milestone",
+        "title": "AI Upgrade Signed",
+        "summary": "Lewis Silkin LLP signed for AI upgrade (strategic customer).",
+        "attendees": [],
+        "actionItems": [],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Karawani & Co": [
+      {
+        "id": "karawani-2026-02-03",
+        "date": "2026-02-03",
+        "type": "email",
+        "title": "ndMAX Onboarding Sessions — Active",
+        "summary": "Manal Akouri and Raed Karawani actively engaged on ndMAX onboarding sessions. Ben Edwards and Adam Scott (ND) supporting. Ref: G2686WWBD. Security team review of data access still pending.",
+        "attendees": ["Adam Scott (ND)", "Ben Edwards (ND)", "Raed Karawani — Managing Partner (Karawani & Co)", "Manal Akouri — Partner (Karawani & Co)"],
+        "actionItems": [
+          "Client: Security team to confirm data access approval",
+          "Adam Scott: Proceed with onboarding once security decision received"
+        ],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Accuro Fiduciary Services": [
+      {
+        "id": "accuro-2026-04-07",
+        "date": "2026-04-07",
+        "type": "email",
+        "title": "Accuro AI Implementation Status Check",
+        "summary": "Stephanie asked Lydia Morris for update on Accuro. Lydia confirmed: Accuro owns AI Assistant and PatternBuilder, currently reviewing AI Assistant internally. Not currently engaging in active ndMAX PS. Lydia offered enablement support as needed.",
+        "attendees": ["Stephanie Klahre (ND)", "Lydia Morris — CSM EMEA (ND)"],
+        "actionItems": ["Monitor Accuro's internal AI review; offer enablement support when ready"],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "accuro-2025-11-14",
+        "date": "2025-11-14",
+        "type": "milestone",
+        "title": "AI Upgrade Deal Signed",
+        "summary": "Accuro Fiduciary Services Limited signed for AI upgrade. 175 users, SL110. Strategic account. Location: London/Switzerland. Previous DMS: SharePoint. AE: Mike Creffield.",
+        "attendees": [],
+        "actionItems": [],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Patterson Law": [
+      {
+        "id": "patterson-2026-04-03",
+        "date": "2026-04-03",
+        "type": "email",
+        "title": "Re-engagement Outreach",
+        "summary": "Stephanie flagged Patterson Law for re-engagement. Client paused AI implementation in December and has been silent since. Still has PS hours remaining. Team working on re-engagement approach.",
+        "attendees": ["Stephanie Klahre (ND)"],
+        "actionItems": ["Re-engage Patterson Law client contacts to restart AI implementation"],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "patterson-2026-03-20",
+        "date": "2026-03-20",
+        "type": "meeting",
+        "title": "Patterson Law Handoff Meeting",
+        "summary": "Internal handoff meeting transferring Patterson Law to Nikki Patel and Kyle Kissell for re-engagement. Tim Lutero and Kathleen Hogan also involved.",
+        "attendees": ["Stephanie Klahre (ND)", "Nikki Patel (ND)", "Kyle Kissell (ND)", "Tim Lutero (ND)", "Kathleen Hogan (ND)"],
+        "actionItems": ["Nikki Patel / Kyle Kissell to lead re-engagement with Patterson Law"],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "patterson-2026-01-20",
+        "date": "2026-01-20",
+        "type": "email",
+        "title": "Workshop Session Recap",
+        "summary": "Workshop session recap sent to Patterson Law contacts including John Kamphuis and Chris MacDonald. Wendy Arbuckle also copied.",
+        "attendees": ["Stephanie Klahre (ND)", "John Kamphuis (Patterson Law)", "Chris MacDonald (Patterson Law)", "Wendy Arbuckle (Patterson Law)"],
+        "actionItems": [],
+        "source": "outlook",
+        "meetingTranscriptUrl": null
+      },
+      {
+        "id": "patterson-2025-12-01",
+        "date": "2025-12-01",
+        "type": "milestone",
+        "title": "⚠️ Implementation Paused",
+        "summary": "Patterson Law requested pause on AI implementation. Project placed on hold pending client re-engagement.",
+        "attendees": [],
+        "actionItems": ["Re-engage client in Q1/Q2 2026"],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Mewburn Ellis LLP": [
+      {
+        "id": "mewburn-2026-04-01",
+        "date": "2026-04-01",
+        "type": "meeting",
+        "title": "Mewburn Ellis ndMAX Session",
+        "summary": "Active engagement session. Renewal Aug-01-2026 upcoming. Revenue $473,251. Greg Hartley (SDE) and Lydia Morris (CSM EMEA) engaged. Meeting recorded by Staircase AI.",
+        "attendees": ["Stephanie Klahre (ND)", "Greg Hartley (ND)", "Lydia Morris — CSM EMEA (ND)", "Mewburn Ellis team"],
+        "actionItems": [
+          "Maintain active engagement ahead of Aug 2026 renewal",
+          "Confirm next workshop or app build session date"
+        ],
+        "source": "staircase",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Advokatbyran Kaiding": [
+      {
+        "id": "kaiding-2026-03-23",
+        "date": "2026-03-23",
+        "type": "meeting",
+        "title": "ndMAX AI Introduction Session",
+        "summary": "NetDocuments introduced the ndMAX AI implementation to Advokatbyran Kaiding. Tier 41-74 users. Revenue $54,277. Meeting recorded by Staircase AI. Early onboarding stage.",
+        "attendees": ["Stephanie Klahre (ND)", "Advokatbyran Kaiding team"],
+        "actionItems": [
+          "Schedule follow-up session to begin app deployment planning"
+        ],
+        "source": "staircase",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "B3 Group": [
+      {
+        "id": "b3-2026-02-01",
+        "date": "2026-02-01",
+        "type": "milestone",
+        "title": "AI Profiling Implementation Started",
+        "summary": "Adam Scott began AI Profiling implementation for B3. Implementation of AI Profiling app for document classification; coordination with QuatroKeys on Auto Profiling design, triage workflow, and logging for prompt improvement. Plan for ongoing AI support as taxonomy evolves.",
+        "attendees": ["Adam Scott (ND)", "B3 legal team"],
+        "actionItems": [
+          "B3: Deliver sample model documents for AI Profiling testing",
+          "Adam: Resume AI Profiling configuration once documents received"
+        ],
+        "source": "sharepoint",
+        "meetingTranscriptUrl": null
+      }
+    ],
+    "Chevez, Ruiz, Zamarripa y Cia SC": [
+      {
+        "id": "chevez-2025-12-01",
+        "date": "2025-12-01",
+        "type": "milestone",
+        "title": "Renewal Discussion Initiated",
+        "summary": "Chevez, Ruiz, Zamarripa y Cia SC entered renewal discussion phase. Nikki Patel (SDE) engaged. LATAM strategic account. Renewal outcome will determine continued AI PS engagement scope.",
+        "attendees": ["Nikki Patel (ND)", "Chevez Ruiz team"],
+        "actionItems": [
+          "Follow up with Reik to confirm renewal status and re-engagement plan"
+        ],
+        "source": "staircase",
+        "meetingTranscriptUrl": null
+      }
+    ]
+  }
+}

@@ -1152,8 +1152,8 @@
     <!-- TIMELINE -->
     <div class="hub-pane" id="pane-timeline">
       <div id="tl-sync-bar" class="tl-sync-bar">
-        <button class="tl-sync-btn" id="tl-sync-btn" onclick="doTimelineSync()">📅 Sync Meetings</button>
-        <span class="tl-sync-status" id="tl-sync-status">Opening Timeline tab auto-syncs Outlook calendar</span>
+        <button class="tl-sync-btn" id="tl-sync-btn" onclick="doTimelineSync()">🔄 Refresh</button>
+        <span class="tl-sync-status" id="tl-sync-status">📅 Loading calendar data…</span>
         <button class="tl-settings-btn" onclick="openSettingsModal()" title="Calendar sync settings" style="background:none;border:none;">⚙️</button>
       </div>
       <div class="section-hdr">Meetings &amp; Implementation Timeline</div>
@@ -1306,6 +1306,8 @@ let allClients = [];
 let filteredClients = [];
 let activeRAG = 'ALL';
 let currentClientKey = null;
+let _meetingsData = {};      // loaded from data/meetings.json — keyed by client name
+let _meetingsGenerated = null;
 
 // ══════════════════════════════════════════
 // REMOTE FETCH — GitHub Pages data/ folder
@@ -1342,6 +1344,18 @@ async function tryRemoteLoad() {
       }
     }
   } catch(e) { /* no snapshot yet */ }
+
+  // 3. Try data/meetings.json (pre-fetched calendar + notes, no API key needed)
+  try {
+    const r = await fetch('data/meetings.json', { cache: 'no-store' });
+    if (r.ok) {
+      const mtgData = await r.json();
+      if (mtgData.clients) {
+        _meetingsData = mtgData.clients;
+        _meetingsGenerated = mtgData.generated || null;
+      }
+    }
+  } catch(e) { /* no meetings.json yet */ }
 
   if (csvLoaded && !document.getElementById('auto-status').textContent.includes('🛰️')) {
     const el = document.getElementById('auto-status');
@@ -1779,6 +1793,19 @@ function esc(str) {
 // ══════════════════════════════════════════
 let _currentHubClient = null;
 
+// Find pre-fetched meetings for a client from meetings.json (fuzzy name match)
+function getStaticMeetings(clientName) {
+  if (!_meetingsData || !clientName) return null;
+  // Exact match first
+  if (_meetingsData[clientName]) return _meetingsData[clientName];
+  // Fuzzy: normalize both sides
+  const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cn = norm(clientName);
+  const key = Object.keys(_meetingsData).find(k => norm(k) === cn ||
+    norm(k).includes(cn.slice(0,8)) || cn.includes(norm(k).slice(0,8)));
+  return key ? _meetingsData[key] : null;
+}
+
 function openHub(idx) {
   const c = allClients.find(x => x._idx === idx);
   if (!c) return;
@@ -1788,9 +1815,10 @@ function openHub(idx) {
   document.getElementById('hub-client-name').textContent = c.name;
   renderHubMeta(c);
   renderHubOverview(c);
-  // Use cached Outlook meetings immediately if available; otherwise fall back to snapshot
+  // Priority: 1) API-synced cache (freshest), 2) pre-fetched meetings.json, 3) snapshot fallback
   const cachedMeetings = getMeetingCache(c.name);
-  renderHubTimeline(c, cachedMeetings || null);
+  const staticMeetings = getStaticMeetings(c.name);
+  renderHubTimeline(c, cachedMeetings || staticMeetings || null);
   renderHubProducts(c);
   renderHubUsage(c);
   renderHubNotes(c);
@@ -1820,8 +1848,11 @@ function switchTab(name) {
   if (name === 'timeline' && _currentHubClient) {
     const apiKey = localStorage.getItem('orbit_api_key');
     const cached = getMeetingCache(_currentHubClient.name);
+    const staticMtgs = getStaticMeetings(_currentHubClient.name);
+    const statusEl = document.getElementById('tl-sync-status');
+
     if (cached) {
-      // Already loaded — just update the status bar to reflect source + age
+      // API-synced cache — freshest possible
       const cacheRaw = localStorage.getItem('orbit_mtgs_' + _currentHubClient.name);
       let ageStr = '';
       try {
@@ -1830,15 +1861,21 @@ function switchTab(name) {
         ageStr = mins < 60 ? `${mins}m ago` : `${Math.round(mins/60)}h ago`;
       } catch {}
       const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
-      document.getElementById('tl-sync-status').textContent =
+      statusEl.textContent =
         `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
+    } else if (staticMtgs && staticMtgs.length) {
+      // Pre-fetched from meetings.json — no API key needed
+      const genStr = _meetingsGenerated
+        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        : 'recently';
+      statusEl.textContent =
+        `📅 Calendar + Notes — ${staticMtgs.length} meetings — as of ${genStr}`;
     } else if (apiKey) {
-      // Have key, no cache — auto-sync immediately
+      // Have key, no data yet — auto-sync
       doTimelineSync();
     } else {
-      // No key, no cache — show snapshot note + prompt
-      document.getElementById('tl-sync-status').innerHTML =
-        'Showing Gainsight data. <a href="#" onclick="openSettingsModal(\'no-key\');return false;" style="color:var(--accent);">Add API key</a> to pull Outlook meetings.';
+      // No data at all — show snapshot fallback note
+      statusEl.textContent = '📋 Showing snapshot data — no live calendar sync available.';
     }
   }
 }
@@ -2243,17 +2280,29 @@ async function doTimelineSync() {
   const btn = document.getElementById('tl-sync-btn');
   const status = document.getElementById('tl-sync-status');
 
-  // Check cache first
+  // Check API-synced cache first (freshest)
   const cached = getMeetingCache(c.name);
   if (cached) {
-    status.textContent = `Showing cached data (< 24h old)`;
+    const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
+    status.textContent = `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — cached`;
     renderHubTimeline(c, cached);
     return;
   }
 
   const apiKey = localStorage.getItem('orbit_api_key');
   if (!apiKey) {
-    openSettingsModal('no-key');
+    // No API key — show pre-fetched static data if available
+    const staticMtgs = getStaticMeetings(c.name);
+    if (staticMtgs && staticMtgs.length) {
+      const genStr = _meetingsGenerated
+        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        : 'recently';
+      status.textContent = `📅 Calendar + Notes — ${staticMtgs.length} meetings — as of ${genStr}`;
+      renderHubTimeline(c, staticMtgs);
+    } else {
+      status.textContent = '📋 Showing snapshot data — no live calendar sync configured.';
+      renderHubTimeline(c, null);
+    }
     return;
   }
 

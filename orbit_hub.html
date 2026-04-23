@@ -1153,7 +1153,7 @@
     <div class="hub-pane" id="pane-timeline">
       <div id="tl-sync-bar" class="tl-sync-bar">
         <button class="tl-sync-btn" id="tl-sync-btn" onclick="doTimelineSync()">📅 Sync Meetings</button>
-        <span class="tl-sync-status" id="tl-sync-status">Tap to pull live calendar events</span>
+        <span class="tl-sync-status" id="tl-sync-status">Opening Timeline tab auto-syncs Outlook calendar</span>
         <button class="tl-settings-btn" onclick="openSettingsModal()" title="Calendar sync settings" style="background:none;border:none;">⚙️</button>
       </div>
       <div class="section-hdr">Meetings &amp; Implementation Timeline</div>
@@ -1788,7 +1788,9 @@ function openHub(idx) {
   document.getElementById('hub-client-name').textContent = c.name;
   renderHubMeta(c);
   renderHubOverview(c);
-  renderHubTimeline(c);
+  // Use cached Outlook meetings immediately if available; otherwise fall back to snapshot
+  const cachedMeetings = getMeetingCache(c.name);
+  renderHubTimeline(c, cachedMeetings || null);
   renderHubProducts(c);
   renderHubUsage(c);
   renderHubNotes(c);
@@ -1813,6 +1815,32 @@ function closeHub() {
 function switchTab(name) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.hub-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
+
+  // Auto-sync when Timeline tab is opened
+  if (name === 'timeline' && _currentHubClient) {
+    const apiKey = localStorage.getItem('orbit_api_key');
+    const cached = getMeetingCache(_currentHubClient.name);
+    if (cached) {
+      // Already loaded — just update the status bar to reflect source + age
+      const cacheRaw = localStorage.getItem('orbit_mtgs_' + _currentHubClient.name);
+      let ageStr = '';
+      try {
+        const ts = JSON.parse(cacheRaw).ts;
+        const mins = Math.round((Date.now() - ts) / 60000);
+        ageStr = mins < 60 ? `${mins}m ago` : `${Math.round(mins/60)}h ago`;
+      } catch {}
+      const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
+      document.getElementById('tl-sync-status').textContent =
+        `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
+    } else if (apiKey) {
+      // Have key, no cache — auto-sync immediately
+      doTimelineSync();
+    } else {
+      // No key, no cache — show snapshot note + prompt
+      document.getElementById('tl-sync-status').innerHTML =
+        'Showing Gainsight data. <a href="#" onclick="openSettingsModal(\'no-key\');return false;" style="color:var(--accent);">Add API key</a> to pull Outlook meetings.';
+    }
+  }
 }
 
 // ── META BAR ──
@@ -2240,7 +2268,7 @@ async function doTimelineSync() {
     setMeetingCache(c.name, events);
     renderHubTimeline(c, events);
     const withTx = events.filter(e => e.meetingTranscriptUrl).length;
-    setStatus(`✅ ${events.length} meetings synced — ${withTx} with transcripts — cached 24h`);
+    setStatus(`📅 Outlook calendar — ${events.length} meetings, ${withTx} with transcripts — cached 24h`);
   } catch(err) {
     console.error('Timeline sync error:', err);
     setStatus(`⚠️ Sync failed: ${err.message}. Showing snapshot data.`);

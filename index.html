@@ -25,7 +25,7 @@
     --gray-700:  #374151;
     --gray-900:  #111827;
     --sidebar-w: 240px;
-    --hub-w:     100vw;
+    --hub-w:     820px;
     --radius:    8px;
     --shadow:    0 4px 24px rgba(0,0,0,.18);
     --trans:     .18s ease;
@@ -339,7 +339,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 100vw;
+    width: min(var(--hub-w), 95vw);
     background: #fff;
     box-shadow: -8px 0 40px rgba(0,0,0,.25);
     z-index: 201;
@@ -1131,8 +1131,6 @@
     <button class="hub-tab"        data-tab="usage"     onclick="switchTab('usage')">Usage</button>
     <button class="hub-tab"        data-tab="notes"     onclick="switchTab('notes')">Notes</button>
     <button class="hub-tab"        data-tab="links"     onclick="switchTab('links')">Links</button>
-    <button class="hub-tab"        data-tab="feedback"  onclick="switchTab('feedback')">Customer Feedback</button>
-    <button class="hub-tab"        data-tab="features"  onclick="switchTab('features')">Feature Requests</button>
   </div>
 
   <div class="hub-body">
@@ -1154,7 +1152,7 @@
     <!-- TIMELINE -->
     <div class="hub-pane" id="pane-timeline">
       <div id="tl-sync-bar" class="tl-sync-bar">
-        <button class="tl-sync-btn" id="tl-sync-btn" onclick="doTimelineSync()">🔄 Refresh</button>
+        <button class="tl-sync-btn" id="tl-sync-btn" onclick="document.getElementById('tl-sync-btn').dataset.forceRefresh='1';doTimelineSync()">📅 Sync Meetings</button>
         <span class="tl-sync-status" id="tl-sync-status">📅 Loading calendar data…</span>
         <button class="tl-settings-btn" onclick="openSettingsModal()" title="Calendar sync settings" style="background:none;border:none;">⚙️</button>
       </div>
@@ -1210,36 +1208,6 @@
     <div class="hub-pane" id="pane-links">
       <div class="section-hdr">Quick Links</div>
       <div class="links-grid" id="hub-links-grid"></div>
-    </div>
-
-    <!-- CUSTOMER FEEDBACK -->
-    <div class="hub-pane" id="pane-feedback">
-      <div class="section-hdr">Customer Feedback</div>
-      <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
-        Record feedback shared by this client. Saved locally to your browser.
-      </p>
-      <div class="notes-area">
-        <textarea id="hub-feedback-ta" placeholder="Add customer feedback here…"></textarea>
-        <div class="notes-toolbar">
-          <button class="btn-save" onclick="saveFeedback()">Save Feedback</button>
-          <span class="save-msg" id="save-feedback-msg">✓ Saved</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- FEATURE REQUESTS -->
-    <div class="hub-pane" id="pane-features">
-      <div class="section-hdr">Feature Requests</div>
-      <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
-        Track feature requests raised by this client. Saved locally to your browser.
-      </p>
-      <div class="notes-area">
-        <textarea id="hub-features-ta" placeholder="Add feature requests here…"></textarea>
-        <div class="notes-toolbar">
-          <button class="btn-save" onclick="saveFeatures()">Save Feature Requests</button>
-          <span class="save-msg" id="save-features-msg">✓ Saved</span>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -1338,8 +1306,7 @@ let allClients = [];
 let filteredClients = [];
 let activeRAG = 'ALL';
 let currentClientKey = null;
-let _meetingsData = {};      // loaded from data/meetings.json — keyed by client name
-let _meetingsGenerated = null;
+// (meetings now come exclusively from live Outlook calendar API — see doTimelineSync)
 
 // ══════════════════════════════════════════
 // REMOTE FETCH — GitHub Pages data/ folder
@@ -1376,18 +1343,6 @@ async function tryRemoteLoad() {
       }
     }
   } catch(e) { /* no snapshot yet */ }
-
-  // 3. Try data/meetings.json (pre-fetched calendar + notes, no API key needed)
-  try {
-    const r = await fetch('data/meetings.json', { cache: 'no-store' });
-    if (r.ok) {
-      const mtgData = await r.json();
-      if (mtgData.clients) {
-        _meetingsData = mtgData.clients;
-        _meetingsGenerated = mtgData.generated || null;
-      }
-    }
-  } catch(e) { /* no meetings.json yet */ }
 
   if (csvLoaded && !document.getElementById('auto-status').textContent.includes('🛰️')) {
     const el = document.getElementById('auto-status');
@@ -1825,30 +1780,42 @@ function esc(str) {
 // ══════════════════════════════════════════
 let _currentHubClient = null;
 
-// Find pre-fetched meetings for a client from meetings.json (fuzzy name match)
-function getStaticMeetings(clientName) {
-  if (!_meetingsData || !clientName) return null;
-  const keys = Object.keys(_meetingsData);
-  if (!keys.length) return null;
-  // Exact match first
-  if (_meetingsData[clientName]) return _meetingsData[clientName];
-  // Normalize: lowercase, strip non-alphanumeric
-  const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const cn = norm(clientName);
-  // Try normalized exact, then first-word match, then substring match
-  const key = keys.find(k => {
-    const kn = norm(k);
-    if (kn === cn) return true;
-    // First significant word match (e.g. "wiggin" matches "Wiggin and Dana LLP")
-    const firstWord = cn.split(/[^a-z0-9]+/)[0];
-    if (firstWord.length >= 4 && kn.startsWith(firstWord)) return true;
-    if (firstWord.length >= 4 && cn.startsWith(norm(k).split(/[^a-z0-9]+/)[0])) return true;
-    // Substring: one contains the other (at least 6 chars)
-    if (cn.length >= 6 && kn.includes(cn.slice(0, 6))) return true;
-    if (kn.length >= 6 && cn.includes(kn.slice(0, 6))) return true;
-    return false;
+// ── ATTENDEE FORMATTING HELPERS ──
+// Format an email address as "First Last (ND)" or "First Last (ClientCo)"
+function formatAttendeeEmail(email, clientName) {
+  if (!email) return '';
+  if (!email.includes('@')) return email; // already a display name
+  const [local, domain] = email.toLowerCase().split('@');
+  const name = local.split('.').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  if (domain === 'netdocuments.com') return `${name} (ND)`;
+  // Derive short client label: strip suffixes like LLP, LLC, Inc, Ltd, PLC from clientName
+  const short = clientName
+    ? clientName.replace(/,.*/, '').replace(/\s+(LLP|LLC|Inc\.?|Ltd\.?|PLC|PLLC|PC|Co\.?)\s*$/i, '').trim()
+    : (domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1));
+  return `${name} (${short})`;
+}
+
+// Returns true if every attendee is a NetDocuments employee
+function isInternalMeeting(attendees) {
+  if (!attendees || !attendees.length) return false;
+  return attendees.every(a => {
+    const email = (typeof a === 'string' ? a : '').toLowerCase();
+    return !email || email.endsWith('@netdocuments.com');
   });
-  return key ? _meetingsData[key] : null;
+}
+
+// Display an ISO UTC string as local ET time string (e.g. "11:00 AM")
+function fmtTimeET(isoStr) {
+  const d = new Date(isoStr);
+  if (isNaN(d) || (!d.getUTCHours() && !d.getUTCMinutes())) return '';
+  return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+}
+
+// Display an ISO UTC string as ET date (e.g. "Mar 30, 2026")
+function fmtDateET(isoStr) {
+  const d = new Date(isoStr);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'America/New_York' });
 }
 
 function openHub(idx) {
@@ -1860,16 +1827,12 @@ function openHub(idx) {
   document.getElementById('hub-client-name').textContent = c.name;
   renderHubMeta(c);
   renderHubOverview(c);
-  // Priority: 1) API-synced cache (freshest), 2) pre-fetched meetings.json, 3) snapshot fallback
-  const cachedMeetings = getMeetingCache(c.name);
-  const staticMeetings = getStaticMeetings(c.name);
-  renderHubTimeline(c, cachedMeetings || staticMeetings || null);
+  // Show whatever is cached; full sync happens when user opens Timeline tab
+  renderHubTimeline(c, getMeetingCache(c.name) || null);
   renderHubProducts(c);
   renderHubUsage(c);
   renderHubNotes(c);
   renderHubLinks(c);
-  renderHubFeedback(c);
-  renderHubFeatures(c);
   generateAISummary(c);
 
   // Reset to overview tab
@@ -1891,17 +1854,15 @@ function switchTab(name) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.hub-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
 
-  // Re-render timeline every time the tab is opened so it always shows the freshest source
+  // Re-render timeline every time the tab is opened
   if (name === 'timeline' && _currentHubClient) {
     const c = _currentHubClient;
-    const apiKey = localStorage.getItem('orbit_api_key');
     const cached = getMeetingCache(c.name);
-    const staticMtgs = getStaticMeetings(c.name);
     const statusEl = document.getElementById('tl-sync-status');
 
     if (cached) {
-      // API-synced cache — freshest possible
-      const cacheRaw = localStorage.getItem('orbit_mtgs_' + c.name);
+      // Show cached data and display age
+      const cacheRaw = localStorage.getItem('meetings:' + c.name);
       let ageStr = '';
       try {
         const ts = JSON.parse(cacheRaw).ts;
@@ -1912,20 +1873,12 @@ function switchTab(name) {
       statusEl.textContent =
         `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
       renderHubTimeline(c, cached);
-    } else if (staticMtgs && staticMtgs.length) {
-      // Pre-fetched from meetings.json — re-render with this data
-      const genStr = _meetingsGenerated
-        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
-        : 'recently';
-      statusEl.textContent =
-        `📅 Calendar + Notes — ${staticMtgs.length} meetings — as of ${genStr}`;
-      renderHubTimeline(c, staticMtgs);
-    } else if (apiKey) {
-      // Have key, no data yet — auto-sync
+    } else if (localStorage.getItem('orbit_api_key')) {
+      // Have API key but no cache — auto-sync
       doTimelineSync();
     } else {
-      // No meetings.json match and no API key — show what we have from snapshot
-      statusEl.textContent = '📋 Showing snapshot data.';
+      // No API key — prompt user
+      statusEl.textContent = '🔑 Add your Anthropic API key in ⚙️ Settings to load live calendar data.';
       renderHubTimeline(c, null);
     }
   }
@@ -2086,7 +2039,7 @@ function renderHubTimeline(c, liveEvents) {
 
   const events = [];
 
-  // ─── Milestone events from CSV ───
+  // ─── CSV milestone events (real dates from Salesforce / GuideCX data) ───
   if (c.sfCaseOpened && !c.sfCaseOpened.startsWith('0')) {
     const d = new Date(c.sfCaseOpened);
     if (!isNaN(d)) events.push({ date: d, label: 'SF Case Opened', detail: `SF Case #${c.sfCaseNum||'–'}`, kind: 'milestone' });
@@ -2114,45 +2067,26 @@ function renderHubTimeline(c, liveEvents) {
     if (!isNaN(d)) events.push({ date: d, label: 'AI ARR Renewal', detail: fmtCurrency(c.aiArr), kind: 'milestone', upcoming: d > today });
   }
 
-  // ─── Meetings from live sync (if provided) ───
+  // ─── Meetings from Outlook calendar (the ONLY source of meeting data) ───
   if (liveEvents && liveEvents.length) {
     liveEvents.forEach(m => {
-      const d = new Date(m.date || m.start);
+      // Support both {start: ISO} (new format from calendar API) and {date: ISO} (legacy cache)
+      const startIso = m.start || m.date;
+      const d = new Date(startIso);
       if (!isNaN(d)) {
+        const internal = isInternalMeeting(m.attendees);
         events.push({
           date: d,
-          label: m.title || m.subject || 'Meeting',
-          detail: m.summary || m.body || '',
+          startIso,
+          label: m.subject || m.title || 'Meeting',
           attendees: m.attendees || [],
-          actionItems: m.actionItems || [],
           location: m.location || '',
-          kind: d > today ? 'upcoming' : 'meeting',
-          live: true
+          uri: m.uri || '',
+          meetingTranscriptUrl: m.meetingTranscriptUrl || null,
+          kind: d > today ? 'upcoming' : (internal ? 'internal' : 'meeting'),
+          live: true,
+          clientName: c.name
         });
-      }
-    });
-  }
-
-  // ─── Meetings from snapshot (fallback / supplement) ───
-  if (c.meetings && c.meetings.length) {
-    c.meetings.forEach(m => {
-      const d = new Date(m.date);
-      if (!isNaN(d)) {
-        // Skip if live sync already has this date (within 1 day)
-        const alreadyCovered = liveEvents && liveEvents.some(lm => {
-          const ld = new Date(lm.date || lm.start);
-          return Math.abs(ld - d) < 86400000;
-        });
-        if (!alreadyCovered) {
-          events.push({
-            date: d,
-            label: m.title || 'Meeting',
-            detail: m.summary || '',
-            attendees: m.attendees || [],
-            actionItems: m.actionItems || [],
-            kind: m.type || 'meeting'
-          });
-        }
       }
     });
   }
@@ -2160,27 +2094,15 @@ function renderHubTimeline(c, liveEvents) {
   // Sort newest first
   events.sort((a,b) => b.date - a.date);
 
-  // Status notes banner (from snapshot)
-  const statusDiv = document.createElement('div');
-  if (c.statusNotes) {
-    statusDiv.style.cssText = 'background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;font-size:13px;color:#1e40af;margin-bottom:16px;';
-    statusDiv.innerHTML = `<strong>Status:</strong> ${esc(c.statusNotes)}`;
-  }
-
   if (!events.length) {
-    tl.innerHTML = '';
-    if (statusDiv.innerHTML) tl.appendChild(statusDiv);
-    const empty = document.createElement('p');
-    empty.className = 'timeline-empty';
-    empty.textContent = 'No dated activity found. Tap "Sync Meetings" to pull live calendar data.';
-    tl.appendChild(empty);
+    tl.innerHTML = liveEvents
+      ? '<p class="timeline-empty">No meetings found. Try clicking 📅 Sync Meetings to search Outlook.</p>'
+      : '<p class="timeline-empty">Click 📅 Sync Meetings to load your Outlook calendar meetings for this client.</p>';
   } else {
-    const entriesHtml = events.map(ev => buildTimelineEntry(ev)).join('');
-    tl.innerHTML = entriesHtml;
-    if (statusDiv.innerHTML) tl.insertAdjacentElement('afterbegin', statusDiv);
+    tl.innerHTML = events.map(ev => buildTimelineEntry(ev)).join('');
   }
 
-  // Phase history
+  // Phase history (GuideCX tags — still valuable)
   const phaseStr = c.phase || '';
   if (phaseStr) {
     const phases = phaseStr.split(',').map(s => s.trim()).filter(Boolean);
@@ -2192,65 +2114,65 @@ function renderHubTimeline(c, liveEvents) {
 }
 
 function buildTimelineEntry(ev) {
-  const dateStr = ev.date.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
-  let timeStr = '';
-  if (ev.date.getHours() || ev.date.getMinutes()) {
-    timeStr = ' · ' + ev.date.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
-  }
+  // Use ET-aware date/time for calendar meetings (they have UTC ISO start strings)
+  // Milestones use plain Date objects that represent midnight-local dates
+  const dateStr = ev.startIso ? fmtDateET(ev.startIso) : ev.date.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+  const rawTime = ev.startIso ? fmtTimeET(ev.startIso) : (ev.date.getHours() || ev.date.getMinutes() ? ev.date.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'}) : '');
+  const timeStr = rawTime ? ` · ${rawTime}` : '';
 
   const extraClass = ev.kind === 'upcoming' ? ' tl-upcoming'
     : ev.kind === 'milestone' ? ' tl-milestone'
-    : ev.kind === 'email'     ? ' tl-email'
     : ev.kind === 'internal'  ? ' tl-internal'
     : ' tl-meeting';
 
   let badge = '';
-  if (ev.kind === 'upcoming')   badge = '<span class="tl-badge tl-badge-upcoming">UPCOMING</span>';
-  else if (ev.live)             badge = '<span class="tl-badge tl-badge-live">LIVE</span>';
+  if (ev.kind === 'upcoming')      badge = '<span class="tl-badge tl-badge-upcoming">UPCOMING</span>';
   else if (ev.kind === 'internal') badge = '<span class="tl-badge tl-badge-internal">INTERNAL</span>';
 
+  // Format attendees: email strings → "First Last (ND)" / "First Last (ClientCo)"
   const attendeeHtml = (ev.attendees && ev.attendees.length)
-    ? `<div class="tl-attendees">${ev.attendees.map(a => `<span class="tl-attendee-pill">${esc(a)}</span>`).join('')}</div>`
+    ? `<div class="tl-attendees">${ev.attendees.map(a => `<span class="tl-attendee-pill">${esc(formatAttendeeEmail(a, ev.clientName))}</span>`).join('')}</div>`
     : '';
 
-  const locationHtml = ev.location
+  const locationHtml = ev.location && ev.location !== 'Microsoft Teams'
     ? ` · <span style="color:var(--gray-400);">📍 ${esc(ev.location)}</span>`
     : '';
 
-  // Generate a stable meeting ID for cache key
-  const meetingId = btoa(encodeURIComponent((ev.date.toISOString() + '|' + (ev.label||'')).slice(0,80))).replace(/[^a-zA-Z0-9]/g,'').slice(0,24);
+  // Stable cache key: prefer URI, fallback to date+title hash
+  const cacheBase = ev.uri || (ev.date.toISOString() + '|' + (ev.label||''));
+  const meetingId = btoa(encodeURIComponent(cacheBase.slice(0,100))).replace(/[^a-zA-Z0-9]/g,'').slice(0,32);
   const transcriptUrl = ev.meetingTranscriptUrl || '';
 
-  // Decide what kind of recap row to show
-  let recapHtml = '';
-
+  // Milestones: show detail inline, no recap toggle
   if (ev.kind === 'milestone') {
-    // Milestones: show detail inline, no recap toggle
-    recapHtml = ev.detail ? `<div style="font-size:12px;color:var(--gray-500);margin-top:3px;">${esc(ev.detail)}</div>` : '';
-  } else {
-    // Meetings: always show a "Show recap" toggle
-    const bodyId = 'recap-body-' + meetingId;
-    const cached = getRecapCache(meetingId);
-
-    let bodyContent;
-    if (cached) {
-      bodyContent = cached.hasTranscript
-        ? renderAIRecap(cached, meetingId, transcriptUrl)
-        : renderManualRecap(ev);
-    } else if (ev.detail || (ev.actionItems && ev.actionItems.length)) {
-      // Snapshot data — show as manual note, but still offer AI if transcriptUrl exists
-      bodyContent = renderManualRecap(ev, transcriptUrl ? meetingId : null, transcriptUrl);
-    } else {
-      // No snapshot data — show pending state
-      bodyContent = transcriptUrl
-        ? `<div class="tl-recap-no-transcript">No manual notes. Click to generate AI recap from transcript.</div>`
-        : `<div class="tl-recap-no-transcript">No transcript or notes available for this meeting.</div>`;
-    }
-
-    recapHtml = `
-      <button class="tl-recap-toggle" onclick="toggleRecapBody(this,'${bodyId}','${meetingId}','${esc(transcriptUrl)}')">▼ Show recap</button>
-      <div class="tl-recap-body" id="${bodyId}">${bodyContent}</div>`;
+    const recapHtml = ev.detail ? `<div style="font-size:12px;color:var(--gray-500);margin-top:3px;">${esc(ev.detail)}</div>` : '';
+    return `
+    <div class="tl-entry${extraClass}">
+      <div class="tl-entry-top">
+        <div class="tl-entry-date">${dateStr}${timeStr}${locationHtml}</div>
+        ${badge}
+      </div>
+      <div class="tl-entry-title">${esc(ev.label)}</div>
+      ${recapHtml}
+    </div>`;
   }
+
+  // Meetings: show "▼ Show recap" toggle
+  const bodyId = 'recap-body-' + meetingId;
+  const cached = getRecapCache(meetingId);
+
+  let bodyContent;
+  if (cached) {
+    bodyContent = renderAIRecap(cached, meetingId, transcriptUrl);
+  } else if (transcriptUrl) {
+    bodyContent = `<div class="tl-recap-no-transcript">Transcript available. Click to generate AI recap.</div>`;
+  } else {
+    bodyContent = `<div class="tl-recap-no-transcript">No transcript available for this meeting.</div>`;
+  }
+
+  const recapHtml = `
+    <button class="tl-recap-toggle" onclick="toggleRecapBody(this,'${bodyId}','${meetingId}','${esc(transcriptUrl)}')">▼ Show recap</button>
+    <div class="tl-recap-body" id="${bodyId}">${bodyContent}</div>`;
 
   return `
     <div class="tl-entry${extraClass}">
@@ -2278,19 +2200,6 @@ function renderAIRecap(cached, meetingId, transcriptUrl) {
   ${cached.hasTranscript ? `<button class="tl-transcript-link" onclick="openTranscriptModal('${meetingId}')">📄 View full transcript</button>` : ''}`;
 }
 
-function renderManualRecap(ev, meetingId, transcriptUrl) {
-  let html = `<div class="tl-recap-ai-hdr">
-    <span class="tl-recap-manual-badge">✏️ Notes</span>
-    ${meetingId && transcriptUrl ? `<button class="tl-recap-regen" style="margin-left:auto;" onclick="generateAndShowRecap('${meetingId}','${esc(transcriptUrl)}',document.getElementById('recap-body-${meetingId}'))">🤖 Generate AI recap from transcript</button>` : '<span class="tl-recap-ai-meta" style="margin-left:auto;">No transcript available</span>'}
-  </div>`;
-  if (ev.detail) html += `<p style="margin:6px 0 4px;">${esc(ev.detail)}</p>`;
-  if (ev.actionItems && ev.actionItems.length) {
-    html += `<div style="font-size:11px;font-weight:700;color:var(--gray-600);margin-top:6px;margin-bottom:3px;">Action items:</div>
-      <ul class="tl-actions-list">${ev.actionItems.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`;
-  }
-  return html;
-}
-
 function renderRecapMarkdown(md) {
   if (!md) return '';
   return md
@@ -2311,7 +2220,7 @@ function renderRecapMarkdown(md) {
 
 function getMeetingCache(clientName) {
   try {
-    const raw = localStorage.getItem('orbit_mtgs_' + clientName);
+    const raw = localStorage.getItem('meetings:' + clientName);
     if (!raw) return null;
     const obj = JSON.parse(raw);
     if (Date.now() - obj.ts > 86400000) return null; // 24h TTL
@@ -2321,7 +2230,7 @@ function getMeetingCache(clientName) {
 
 function setMeetingCache(clientName, events) {
   try {
-    localStorage.setItem('orbit_mtgs_' + clientName, JSON.stringify({ ts: Date.now(), events }));
+    localStorage.setItem('meetings:' + clientName, JSON.stringify({ ts: Date.now(), events }));
   } catch {}
 }
 
@@ -2331,7 +2240,19 @@ async function doTimelineSync() {
   const btn = document.getElementById('tl-sync-btn');
   const status = document.getElementById('tl-sync-status');
 
-  // Check API-synced cache first (freshest)
+  const apiKey = localStorage.getItem('orbit_api_key');
+  if (!apiKey) {
+    openSettingsModal('no-key');
+    return;
+  }
+
+  // If re-syncing, clear existing cache so we force a fresh fetch
+  if (btn.dataset.forceRefresh === '1') {
+    localStorage.removeItem('meetings:' + c.name);
+    btn.dataset.forceRefresh = '';
+  }
+
+  // Check cache first (button shows cached data instantly)
   const cached = getMeetingCache(c.name);
   if (cached) {
     const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
@@ -2340,28 +2261,11 @@ async function doTimelineSync() {
     return;
   }
 
-  const apiKey = localStorage.getItem('orbit_api_key');
-  if (!apiKey) {
-    // No API key — show pre-fetched static data if available
-    const staticMtgs = getStaticMeetings(c.name);
-    if (staticMtgs && staticMtgs.length) {
-      const genStr = _meetingsGenerated
-        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
-        : 'recently';
-      status.textContent = `📅 Calendar + Notes — ${staticMtgs.length} meetings — as of ${genStr}`;
-      renderHubTimeline(c, staticMtgs);
-    } else {
-      status.textContent = '📋 Showing snapshot data — no live calendar sync configured.';
-      renderHubTimeline(c, null);
-    }
-    return;
-  }
-
   btn.disabled = true;
   btn.textContent = '⏳ Syncing…';
 
   const setStatus = msg => { status.textContent = msg; };
-  setStatus('Starting calendar sync…');
+  setStatus('🔍 Searching Outlook calendar…');
 
   try {
     const events = await syncClientMeetings(c, apiKey, setStatus);
@@ -2371,7 +2275,7 @@ async function doTimelineSync() {
     setStatus(`📅 Outlook calendar — ${events.length} meetings, ${withTx} with transcripts — cached 24h`);
   } catch(err) {
     console.error('Timeline sync error:', err);
-    setStatus(`⚠️ Sync failed: ${err.message}. Showing snapshot data.`);
+    setStatus(`⚠️ Sync failed: ${err.message}`);
     renderHubTimeline(c, null);
   } finally {
     btn.disabled = false;
@@ -2427,120 +2331,111 @@ async function claudeCall(apiKey, prompt, maxTokens) {
   return resp.json();
 }
 
-// Parse any API response and return the first JSON array found in text blocks
-function extractJsonArray(data) {
-  const text = (data.content || [])
-    .filter(b => b.type === 'text')
-    .map(b => b.text)
-    .join('\n')
-    .replace(/```json?\n?/g, '').replace(/```\n?/g, '').trim();
-  const s = text.indexOf('[');
-  const e = text.lastIndexOf(']');
-  if (s === -1) return [];
-  return JSON.parse(text.slice(s, e + 1));
-}
+// ─── RESPONSE PARSING HELPERS (per spec) ─────────────────────────────────────
 
-// Extract a named string field from any API response block
-function extractFieldFromResponse(data, fieldName) {
-  for (const block of data.content || []) {
-    // mcp_tool_result: content is an array; real text is in content[0].text
-    const text = block.type === 'mcp_tool_result'
-      ? (block.content?.[0]?.text || '')
-      : block.type === 'text'
-        ? (block.text || '')
-        : '';
-    if (!text) continue;
-
-    // Try JSON parse first
-    const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
-    const objStart = clean.indexOf('{');
-    if (objStart !== -1) {
-      try {
-        const parsed = JSON.parse(clean.slice(objStart));
-        if (parsed[fieldName]) return parsed[fieldName];
-        if (parsed.value?.[fieldName]) return parsed.value[fieldName];
-      } catch {}
+function parseAnthropicResponse(data) {
+  // Collect all usable text from both mcp_tool_result and regular text blocks
+  let allText = '';
+  for (const block of (data.content || [])) {
+    if (block.type === 'mcp_tool_result') {
+      const text = block.content?.[0]?.text;
+      if (text) allText += text + '\n';
     }
+    if (block.type === 'text') {
+      allText += block.text + '\n';
+    }
+  }
+  return allText;
+}
 
-    // Regex fallback — handles the meetingTranscriptUrl URI directly
-    const regex = new RegExp(`"${fieldName}"\\s*:\\s*"([^"]+)"`);
-    const match = text.match(regex);
-    if (match) return match[1];
+function extractJSON(text) {
+  // Strip markdown fences first
+  const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
+  // Try JSON array
+  const arrStart = clean.indexOf('[');
+  const arrEnd = clean.lastIndexOf(']');
+  if (arrStart !== -1 && arrEnd > arrStart) {
+    try { return JSON.parse(clean.slice(arrStart, arrEnd + 1)); } catch {}
+  }
+  // Try JSON object
+  const objStart = clean.indexOf('{');
+  const objEnd = clean.lastIndexOf('}');
+  if (objStart !== -1 && objEnd > objStart) {
+    try { return JSON.parse(clean.slice(objStart, objEnd + 1)); } catch {}
   }
   return null;
 }
 
-function extractMeetingTranscriptUrl(data) {
-  // Try field parser first
-  const fromField = extractFieldFromResponse(data, 'meetingTranscriptUrl');
-  if (fromField) return fromField;
-  // Regex fallback scanning all text for the meeting-transcript:/// URI
-  for (const block of data.content || []) {
-    const text = block.type === 'mcp_tool_result'
-      ? (block.content?.[0]?.text || '')
-      : block.type === 'text' ? (block.text || '') : '';
-    const match = text.match(/meeting-transcript:\/\/\/[^\s"'\]\\]+/);
-    if (match) return match[0];
+function extractTranscriptUrl(text) {
+  // Try JSON parse first
+  try {
+    const obj = JSON.parse(text);
+    if (obj.meetingTranscriptUrl) return obj.meetingTranscriptUrl;
+  } catch {}
+  // Regex fallback
+  const match = text.match(/meeting-transcript:\/\/\/[^\s"'\]\\]+/);
+  return match ? match[0] : null;
+}
+
+function extractWebVTT(text) {
+  // Try JSON parse for transcripts[0].content
+  try {
+    const obj = JSON.parse(text);
+    if (obj.transcripts?.[0]?.content) return obj.transcripts[0].content;
+    if (obj.value?.transcripts?.[0]?.content) return obj.value.transcripts[0].content;
+  } catch {}
+  // Direct WEBVTT text
+  if (text.includes('WEBVTT')) {
+    const start = text.indexOf('WEBVTT');
+    return text.substring(start);
   }
   return null;
 }
+
+// ─── SYNC IMPLEMENTATION ──────────────────────────────────────────────────────
 
 async function syncClientMeetings(c, apiKey, onStatus) {
   const clientName = c.name;
-  const today = new Date();
-  const sixMonthsAgo = new Date(today);
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-  const threeMonthsFwd = new Date(today);
-  threeMonthsFwd.setMonth(threeMonthsFwd.getMonth() + 3);
 
-  // ── STEP 1: Calendar search ──────────────────────────────────────────────
-  onStatus?.(`Searching calendar for "${clientName}" meetings…`);
+  // ── API CALL 1: Search calendar ──────────────────────────────────────────
+  onStatus?.(`🔍 Searching Outlook calendar for "${clientName}" meetings…`);
 
-  const searchPrompt = `Search my Microsoft 365 calendar for all meetings and calls where "${clientName}" appears in the subject line or attendee list, between ${sixMonthsAgo.toISOString().slice(0,10)} and ${threeMonthsFwd.toISOString().slice(0,10)}.
+  const searchData = await m365ApiCall(
+    apiKey,
+    `Search my Outlook calendar for all meetings with "${clientName}" in the subject. Search from 2025-01-01 to now. Return the results as a JSON array. Each object should have: uri, subject, start, end, attendees (array of email strings), organizer, location. Return ONLY valid JSON, nothing else.`,
+    4000
+  );
 
-Return a JSON array — raw JSON only, no markdown fences. Each object must have:
-{
-  "uri": "the full calendar:///events/... URI for this event",
-  "title": "exact meeting subject line",
-  "date": "YYYY-MM-DDTHH:MM:SS (local time)",
-  "attendees": ["First Last", "First Last"],
-  "location": "Microsoft Teams / Zoom / phone / in-person / blank",
-  "summary": "1-2 sentences from the event body describing the purpose (empty string for future events)",
-  "actionItems": [],
-  "isInternal": false,
-  "kind": "meeting"
-}
+  const searchText = parseAnthropicResponse(searchData);
+  const meetings = extractJSON(searchText);
 
-Set isInternal:true only if every attendee is a NetDocuments employee (no client attendees).
-Set kind to "upcoming" for events in the future, "meeting" for past events.
-If no events found, return [].`;
-
-  const searchData = await m365ApiCall(apiKey, searchPrompt, 6000);
-  let meetings = [];
-  try {
-    meetings = extractJsonArray(searchData);
-  } catch(e) {
-    throw new Error('Could not parse calendar search results: ' + e.message);
+  if (!Array.isArray(meetings) || !meetings.length) {
+    onStatus?.(`No meetings found for "${clientName}" in Outlook calendar.`);
+    return [];
   }
-  if (!Array.isArray(meetings) || !meetings.length) return [];
 
-  // ── STEP 2: Per-event detail fetch → meetingTranscriptUrl ────────────────
-  // Only fetch details for past Teams meetings (upcoming ones won't have transcripts)
-  const pastMeetings = meetings.filter(m => m.kind !== 'upcoming' && m.uri);
-  onStatus?.(`Found ${meetings.length} meetings — fetching event details for ${pastMeetings.length} past meetings…`);
+  // ── API CALL 2: Per-event detail → meetingTranscriptUrl ──────────────────
+  const today = new Date();
+  const pastMeetings = meetings.filter(m => {
+    const d = new Date(m.start || m.date);
+    return !isNaN(d) && d < today && m.uri;
+  });
+
+  onStatus?.(`Found ${meetings.length} meetings — fetching transcript URLs for ${pastMeetings.length} past meetings…`);
 
   for (let i = 0; i < pastMeetings.length; i++) {
     const mtg = pastMeetings[i];
-    onStatus?.(`Getting transcript URL: ${i + 1}/${pastMeetings.length} — ${mtg.title?.slice(0,40)}`);
+    onStatus?.(`Getting transcript URL ${i + 1}/${pastMeetings.length}: ${(mtg.subject||'').slice(0,40)}`);
     try {
       const detailData = await m365ApiCall(
         apiKey,
-        `Use the read_resource tool to read this calendar event:\n${mtg.uri}\n\nReturn the complete JSON from the tool result, especially the meetingTranscriptUrl field.`,
+        `Use the read_resource tool to read this calendar event and return the raw tool result as JSON. URI: ${mtg.uri}`,
         4000
       );
-      mtg.meetingTranscriptUrl = extractMeetingTranscriptUrl(detailData) || null;
+      const detailText = parseAnthropicResponse(detailData);
+      mtg.meetingTranscriptUrl = extractTranscriptUrl(detailText) || null;
     } catch(e) {
-      console.warn('Event detail fetch failed for', mtg.title, e.message);
+      console.warn('Event detail fetch failed:', mtg.subject, e.message);
       mtg.meetingTranscriptUrl = null;
     }
   }
@@ -2552,7 +2447,7 @@ If no events found, return [].`;
 
 function getRecapCache(meetingId) {
   try {
-    const raw = localStorage.getItem('orbit_recap_' + meetingId);
+    const raw = localStorage.getItem('recap:' + meetingId);
     if (!raw) return null;
     return JSON.parse(raw);
   } catch { return null; }
@@ -2560,19 +2455,19 @@ function getRecapCache(meetingId) {
 
 function setRecapCache(meetingId, data) {
   try {
-    localStorage.setItem('orbit_recap_' + meetingId, JSON.stringify(data));
+    localStorage.setItem('recap:' + meetingId, JSON.stringify(data));
   } catch {}
 }
 
 // Store raw transcript separately (may be large)
 function setTranscriptCache(meetingId, text) {
   try {
-    localStorage.setItem('orbit_tx_' + meetingId, text);
+    localStorage.setItem('transcript:' + meetingId, text);
   } catch {}
 }
 
 function getTranscriptCache(meetingId) {
-  try { return localStorage.getItem('orbit_tx_' + meetingId) || null; } catch { return null; }
+  try { return localStorage.getItem('transcript:' + meetingId) || null; } catch { return null; }
 }
 
 // ─── RECAP TOGGLE & LAZY LOAD ─────────────────────────────────────────────────
@@ -2619,16 +2514,17 @@ async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
   bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Fetching transcript from Teams…</div>`;
 
   try {
-    // ── Step 3: Fetch transcript via M365 MCP ────────────────────────────────
+    // ── API Call 3: Fetch transcript (lazy — only when user clicks "Show recap") ──
     let rawTranscript = getTranscriptCache(meetingId);
     if (!rawTranscript) {
       const txData = await m365ApiCall(
         apiKey,
-        `Use the read_resource tool to read this meeting transcript:\n${transcriptUrl}\n\nReturn the complete tool result as JSON.`,
-        8000
+        `Use the read_resource tool to read this meeting transcript. URI: ${transcriptUrl}\n\nReturn the raw tool result.`,
+        16000
       );
 
-      rawTranscript = extractTranscriptFromResponse(txData);
+      const txText = parseAnthropicResponse(txData);
+      rawTranscript = extractWebVTT(txText);
       if (!rawTranscript || rawTranscript.length < 50) {
         throw new Error('Transcript was empty or unavailable for this meeting');
       }
@@ -2638,11 +2534,27 @@ async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
     const kchars = Math.round(rawTranscript.length / 100) / 10;
     bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Transcript retrieved (${kchars}k chars) — generating recap…</div>`;
 
-    // ── Step 4: Summarize with plain Claude (no MCP) ─────────────────────────
-    const truncated = rawTranscript.slice(0, 50000); // ~12.5k tokens
-    const summaryPrompt = `Summarize this meeting transcript for a project management system.\n\nTranscript:\n${truncated}\n\nGenerate:\n## Summary\n[2-3 sentences]\n\n## Key Decisions\n- [bullet points]\n\n## Action Items\n- [Owner]: [item] — [deadline if mentioned]\n\n## Topics Covered\n- [Topic]: [brief description]\n\n## Client Attendees\n- [Name] (role if mentioned)\n\n## ND Team Attendees\n- [Name] (role if mentioned)\n\nBe concise. Focus on decisions and action items. Omit sections with nothing to report.`;
+    // ── API Call 4: Summarize with plain Claude (NO MCP) ─────────────────────
+    const truncated = rawTranscript.slice(0, 50000);
+    const summaryPrompt = `Summarize this meeting transcript. Return a structured recap with these sections:
 
-    const sumData = await claudeCall(apiKey, summaryPrompt, 2000);
+## Summary
+[2-3 sentences]
+
+## Key Decisions
+- [bullet points]
+
+## Action Items
+- [Owner]: [action item]
+
+## Topics Covered
+- [Topic]: [1 sentence]
+
+Be concise. Here is the transcript:
+
+${truncated}`;
+
+    const sumData = await claudeCall(apiKey, summaryPrompt, 3000);
     const recap = sumData.content?.find(b => b.type === 'text')?.text || '';
     if (!recap) throw new Error('Empty summary returned');
 
@@ -2664,39 +2576,11 @@ async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
 }
 
 async function regenRecap(meetingId, transcriptUrl, btn) {
-  // Clear cache and regenerate
-  localStorage.removeItem('orbit_recap_' + meetingId);
+  // Clear caches and regenerate
+  localStorage.removeItem('recap:' + meetingId);
+  localStorage.removeItem('transcript:' + meetingId);
   const body = btn.closest('.tl-recap-body');
   if (body) await generateAndShowRecap(meetingId, transcriptUrl, body);
-}
-
-function extractTranscriptFromResponse(data) {
-  for (const block of data.content || []) {
-    // mcp_tool_result: text lives in content[0].text
-    const text = block.type === 'mcp_tool_result'
-      ? (block.content?.[0]?.text || '')
-      : block.type === 'text'
-        ? (block.text || '')
-        : '';
-    if (!text) continue;
-
-    // Primary path: JSON object with transcripts[0].content = "WEBVTT..."
-    const clean = text.replace(/```json?\n?/g,'').replace(/```\n?/g,'').trim();
-    const objStart = clean.indexOf('{');
-    if (objStart !== -1) {
-      try {
-        const parsed = JSON.parse(clean.slice(objStart));
-        if (parsed.transcripts?.[0]?.content) return parsed.transcripts[0].content;
-        if (parsed.value?.transcripts?.[0]?.content) return parsed.value.transcripts[0].content;
-        // Occasionally the content field IS the WEBVTT
-        if (parsed.content?.includes?.('WEBVTT')) return parsed.content;
-      } catch {}
-    }
-
-    // Fallback: raw WEBVTT text in the block
-    if (text.includes('WEBVTT')) return text;
-  }
-  return null;
 }
 
 // ─── TRANSCRIPT MODAL ─────────────────────────────────────────────────────────
@@ -2756,7 +2640,7 @@ function clearAllRecapCache() {
   const toRemove = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && (k.startsWith('orbit_recap_') || k.startsWith('orbit_tx_') || k.startsWith('orbit_mtgs_'))) {
+    if (k && (k.startsWith('recap:') || k.startsWith('transcript:') || k.startsWith('meetings:'))) {
       toRemove.push(k);
     }
   }
@@ -2920,36 +2804,6 @@ function saveNotes() {
   const val = document.getElementById('hub-notes-ta').value;
   localStorage.setItem(currentClientKey + '-notes', val);
   const msg = document.getElementById('save-msg');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2000);
-}
-
-// ── CUSTOMER FEEDBACK ──
-function renderHubFeedback(c) {
-  const saved = localStorage.getItem(currentClientKey + '-feedback') || '';
-  document.getElementById('hub-feedback-ta').value = saved;
-  document.getElementById('save-feedback-msg').classList.remove('show');
-}
-
-function saveFeedback() {
-  if (!currentClientKey) return;
-  localStorage.setItem(currentClientKey + '-feedback', document.getElementById('hub-feedback-ta').value);
-  const msg = document.getElementById('save-feedback-msg');
-  msg.classList.add('show');
-  setTimeout(() => msg.classList.remove('show'), 2000);
-}
-
-// ── FEATURE REQUESTS ──
-function renderHubFeatures(c) {
-  const saved = localStorage.getItem(currentClientKey + '-features') || '';
-  document.getElementById('hub-features-ta').value = saved;
-  document.getElementById('save-features-msg').classList.remove('show');
-}
-
-function saveFeatures() {
-  if (!currentClientKey) return;
-  localStorage.setItem(currentClientKey + '-features', document.getElementById('hub-features-ta').value);
-  const msg = document.getElementById('save-features-msg');
   msg.classList.add('show');
   setTimeout(() => msg.classList.remove('show'), 2000);
 }

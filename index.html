@@ -1306,7 +1306,8 @@ let allClients = [];
 let filteredClients = [];
 let activeRAG = 'ALL';
 let currentClientKey = null;
-// (meetings now come exclusively from live Outlook calendar API — see doTimelineSync)
+let _meetingsData = {};      // loaded from data/meetings.json — keyed by client name
+let _meetingsGenerated = null;
 
 // ══════════════════════════════════════════
 // REMOTE FETCH — GitHub Pages data/ folder
@@ -1343,6 +1344,18 @@ async function tryRemoteLoad() {
       }
     }
   } catch(e) { /* no snapshot yet */ }
+
+  // Load data/meetings.json — pre-fetched Outlook calendar data (no API key needed)
+  try {
+    const r = await fetch('data/meetings.json', { cache: 'no-store' });
+    if (r.ok) {
+      const mtgData = await r.json();
+      if (mtgData.clients) {
+        _meetingsData = mtgData.clients;
+        _meetingsGenerated = mtgData.generated || null;
+      }
+    }
+  } catch(e) { /* no meetings.json yet */ }
 
   if (csvLoaded && !document.getElementById('auto-status').textContent.includes('🛰️')) {
     const el = document.getElementById('auto-status');
@@ -1780,6 +1793,27 @@ function esc(str) {
 // ══════════════════════════════════════════
 let _currentHubClient = null;
 
+// ── STATIC MEETINGS LOOKUP (from data/meetings.json) ──
+function getStaticMeetings(clientName) {
+  if (!_meetingsData || !clientName) return null;
+  const keys = Object.keys(_meetingsData);
+  if (!keys.length) return null;
+  if (_meetingsData[clientName]) return _meetingsData[clientName];
+  const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const cn = norm(clientName);
+  const key = keys.find(k => {
+    const kn = norm(k);
+    if (kn === cn) return true;
+    const firstWord = cn.split(/[^a-z0-9]+/)[0];
+    if (firstWord.length >= 4 && kn.startsWith(firstWord)) return true;
+    if (firstWord.length >= 4 && cn.startsWith(norm(k).split(/[^a-z0-9]+/)[0])) return true;
+    if (cn.length >= 6 && kn.includes(cn.slice(0, 6))) return true;
+    if (kn.length >= 6 && cn.includes(kn.slice(0, 6))) return true;
+    return false;
+  });
+  return key ? _meetingsData[key] : null;
+}
+
 // ── ATTENDEE FORMATTING HELPERS ──
 // Format an email address as "First Last (ND)" or "First Last (ClientCo)"
 function formatAttendeeEmail(email, clientName) {
@@ -1827,8 +1861,10 @@ function openHub(idx) {
   document.getElementById('hub-client-name').textContent = c.name;
   renderHubMeta(c);
   renderHubOverview(c);
-  // Show whatever is cached; full sync happens when user opens Timeline tab
-  renderHubTimeline(c, getMeetingCache(c.name) || null);
+  // Use API cache if available, otherwise fall back to pre-fetched meetings.json
+  const cachedMeetings = getMeetingCache(c.name);
+  const staticMeetings = getStaticMeetings(c.name);
+  renderHubTimeline(c, cachedMeetings || staticMeetings || null);
   renderHubProducts(c);
   renderHubUsage(c);
   renderHubNotes(c);
@@ -1854,14 +1890,14 @@ function switchTab(name) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.hub-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
 
-  // Re-render timeline every time the tab is opened
+  // Re-render timeline every time the tab is opened — always show freshest available source
   if (name === 'timeline' && _currentHubClient) {
     const c = _currentHubClient;
     const cached = getMeetingCache(c.name);
+    const staticMtgs = getStaticMeetings(c.name);
     const statusEl = document.getElementById('tl-sync-status');
 
     if (cached) {
-      // Show cached data and display age
       const cacheRaw = localStorage.getItem('meetings:' + c.name);
       let ageStr = '';
       try {
@@ -1870,15 +1906,18 @@ function switchTab(name) {
         ageStr = mins < 60 ? `${mins}m ago` : `${Math.round(mins/60)}h ago`;
       } catch {}
       const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
-      statusEl.textContent =
-        `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
+      statusEl.textContent = `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
       renderHubTimeline(c, cached);
+    } else if (staticMtgs && staticMtgs.length) {
+      const genStr = _meetingsGenerated
+        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        : 'recently';
+      statusEl.textContent = `📅 Outlook calendar — ${staticMtgs.length} meetings — as of ${genStr}`;
+      renderHubTimeline(c, staticMtgs);
     } else if (localStorage.getItem('orbit_api_key')) {
-      // Have API key but no cache — auto-sync
       doTimelineSync();
     } else {
-      // No API key — prompt user
-      statusEl.textContent = '🔑 Add your Anthropic API key in ⚙️ Settings to load live calendar data.';
+      statusEl.textContent = '📅 No calendar data yet — contact your admin to refresh.';
       renderHubTimeline(c, null);
     }
   }
@@ -2242,7 +2281,19 @@ async function doTimelineSync() {
 
   const apiKey = localStorage.getItem('orbit_api_key');
   if (!apiKey) {
-    openSettingsModal('no-key');
+    // No API key — show pre-fetched static data if available
+    const staticMtgs = getStaticMeetings(c.name);
+    const status = document.getElementById('tl-sync-status');
+    if (staticMtgs && staticMtgs.length) {
+      const genStr = _meetingsGenerated
+        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        : 'recently';
+      status.textContent = `📅 Outlook calendar — ${staticMtgs.length} meetings — as of ${genStr}`;
+      renderHubTimeline(c, staticMtgs);
+    } else {
+      status.textContent = '📅 No calendar data available.';
+      renderHubTimeline(c, null);
+    }
     return;
   }
 

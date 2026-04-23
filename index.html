@@ -1131,6 +1131,8 @@
     <button class="hub-tab"        data-tab="usage"     onclick="switchTab('usage')">Usage</button>
     <button class="hub-tab"        data-tab="notes"     onclick="switchTab('notes')">Notes</button>
     <button class="hub-tab"        data-tab="links"     onclick="switchTab('links')">Links</button>
+    <button class="hub-tab"        data-tab="feedback"  onclick="switchTab('feedback')">Customer Feedback</button>
+    <button class="hub-tab"        data-tab="features"  onclick="switchTab('features')">Feature Requests</button>
   </div>
 
   <div class="hub-body">
@@ -1208,6 +1210,36 @@
     <div class="hub-pane" id="pane-links">
       <div class="section-hdr">Quick Links</div>
       <div class="links-grid" id="hub-links-grid"></div>
+    </div>
+
+    <!-- CUSTOMER FEEDBACK -->
+    <div class="hub-pane" id="pane-feedback">
+      <div class="section-hdr">Customer Feedback</div>
+      <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
+        Record feedback shared by this client. Saved locally to your browser.
+      </p>
+      <div class="notes-area">
+        <textarea id="hub-feedback-ta" placeholder="Add customer feedback here…"></textarea>
+        <div class="notes-toolbar">
+          <button class="btn-save" onclick="saveFeedback()">Save Feedback</button>
+          <span class="save-msg" id="save-feedback-msg">✓ Saved</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE REQUESTS -->
+    <div class="hub-pane" id="pane-features">
+      <div class="section-hdr">Feature Requests</div>
+      <p style="font-size:12px;color:var(--gray-500);margin-bottom:12px;">
+        Track feature requests raised by this client. Saved locally to your browser.
+      </p>
+      <div class="notes-area">
+        <textarea id="hub-features-ta" placeholder="Add feature requests here…"></textarea>
+        <div class="notes-toolbar">
+          <button class="btn-save" onclick="saveFeatures()">Save Feature Requests</button>
+          <span class="save-msg" id="save-features-msg">✓ Saved</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1836,6 +1868,8 @@ function openHub(idx) {
   renderHubUsage(c);
   renderHubNotes(c);
   renderHubLinks(c);
+  renderHubFeedback(c);
+  renderHubFeatures(c);
   generateAISummary(c);
 
   // Reset to overview tab
@@ -2886,6 +2920,36 @@ function saveNotes() {
   const val = document.getElementById('hub-notes-ta').value;
   localStorage.setItem(currentClientKey + '-notes', val);
   const msg = document.getElementById('save-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2000);
+}
+
+// ── CUSTOMER FEEDBACK ──
+function renderHubFeedback(c) {
+  const saved = localStorage.getItem(currentClientKey + '-feedback') || '';
+  document.getElementById('hub-feedback-ta').value = saved;
+  document.getElementById('save-feedback-msg').classList.remove('show');
+}
+
+function saveFeedback() {
+  if (!currentClientKey) return;
+  localStorage.setItem(currentClientKey + '-feedback', document.getElementById('hub-feedback-ta').value);
+  const msg = document.getElementById('save-feedback-msg');
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2000);
+}
+
+// ── FEATURE REQUESTS ──
+function renderHubFeatures(c) {
+  const saved = localStorage.getItem(currentClientKey + '-features') || '';
+  document.getElementById('hub-features-ta').value = saved;
+  document.getElementById('save-features-msg').classList.remove('show');
+}
+
+function saveFeatures() {
+  if (!currentClientKey) return;
+  localStorage.setItem(currentClientKey + '-features', document.getElementById('hub-features-ta').value);
+  const msg = document.getElementById('save-features-msg');
   msg.classList.add('show');
   setTimeout(() => msg.classList.remove('show'), 2000);
 }

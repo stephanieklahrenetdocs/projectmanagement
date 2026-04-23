@@ -1,7 +1,7 @@
 {
-  "generated": "2026-04-23T12:00:00Z",
-  "source": "Outlook calendar — fetched via M365 MCP by Claude Code",
-  "note": "Pre-fetched real calendar data. No API key needed in the browser — hub reads this file directly from GitHub Pages.",
+  "generated": "2026-04-23T18:00:00Z",
+  "source": "Outlook calendar + Staircase AI — fetched via MCP by Claude Code",
+  "note": "Pre-fetched real calendar data. No API key needed in the browser.",
   "clients": {
     "Galloway, Johnson, Tompkins, Burr & Smith": [
       {
@@ -12,7 +12,8 @@
         "attendees": ["amir.mustafa@netdocuments.com", "stephanie.klahre@netdocuments.com", "emilio.campos@netdocuments.com", "bnoble@gallowaylawfirm.com", "ageorge@gallowaylawfirm.com"],
         "organizer": "amir.mustafa@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nIntroductory call between NetDocuments and Galloway Law to kick off the ndMAX implementation. Barbara Noble and A. George from Galloway joined the ND team to align on goals, timeline, and next steps.\n\n## Key Decisions\n- Agreed on ndMAX implementation scope and initial priorities\n- Identified primary contacts on both sides\n\n## Action Items\n- Emilio Campos (ND): Send follow-up with implementation plan\n- Stephanie Klahre (ND): Confirm kickoff date and send calendar invite\n\n## Topics Covered\n- ndMAX platform overview and capabilities\n- Implementation goals and priorities for Galloway\n- Team introductions and roles"
       },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5W8AAA%3D",
@@ -22,7 +23,8 @@
         "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com"],
         "organizer": "emilio.campos@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND prep session between Emilio Campos and Stephanie Klahre ahead of the Galloway kickoff meeting. Reviewed agenda, demo flow, and client priorities.\n\n## Key Decisions\n- Finalized kickoff agenda and demo sequence\n\n## Action Items\n- Emilio Campos (ND): Finalize kickoff deck\n- Stephanie Klahre (ND): Review client profile and open items\n\n## Topics Covered\n- Kickoff meeting agenda planning\n- ndMAX feature priorities for Galloway"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABNk7XEwAAAA%3D%3D",
@@ -32,7 +34,8 @@
         "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com", "bnoble@gallowaylawfirm.com"],
         "organizer": "emilio.campos@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nWorking session with Barbara Noble (Galloway) to review ndMAX progress and address specific platform questions following the kickoff.\n\n## Key Decisions\n- Confirmed configuration approach for Galloway's document needs\n\n## Action Items\n- Emilio Campos (ND): Follow up on open technical questions from Barbara\n\n## Topics Covered\n- ndMAX configuration review\n- Platform questions and early feedback from Barbara Noble"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABTSQdYQAAAA%3D%3D",
@@ -42,7 +45,8 @@
         "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com", "bnoble@gallowaylawfirm.com"],
         "organizer": "emilio.campos@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExtended hands-on session with Barbara Noble (Galloway) for deeper app-building work and platform exploration. Addressed outstanding items and progressed on the ndMAX roadmap.\n\n## Key Decisions\n- Progressed on the app-building roadmap for Galloway\n- Confirmed next development priorities\n\n## Action Items\n- Emilio Campos (ND): Deliver follow-up notes and next-steps from session\n\n## Topics Covered\n- In-depth ndMAX App Builder work\n- Feature exploration and customization planning"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABZbd6JwAAAA%3D%3D",
@@ -52,7 +56,8 @@
         "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com", "christopher.snead@netdocuments.com"],
         "organizer": "emilio.campos@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nBrief internal ND sync on Galloway app development status. Emilio, Stephanie, and Christopher Snead reviewed progress and identified immediate next steps.\n\n## Key Decisions\n- Confirmed app development priorities for the next sprint\n\n## Action Items\n- Christopher Snead (ND): Continue app development work\n- Emilio Campos (ND): Update client on progress\n\n## Topics Covered\n- Galloway custom app development status\n- Outstanding technical items and blockers"
       },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAFxrq4VAAA%3D",
@@ -62,7 +67,8 @@
         "attendees": ["emilio.campos@netdocuments.com", "bnoble@gallowaylawfirm.com", "ekatke@gallowaylawfirm.com", "syates@gallowaylawfirm.com"],
         "organizer": "stephanie.klahre@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nRequirements workshop with Galloway Law team to define scope and design for a custom Answer App. Barbara Noble, E. Katke, and S. Yates from Galloway collaborated with Emilio Campos to capture functional requirements.\n\n## Key Decisions\n- Defined key use cases and requirements for the Answer App\n- Agreed on a phased approach to development\n\n## Action Items\n- Emilio Campos (ND): Draft requirements document from workshop notes\n- Stephanie Klahre (ND): Schedule follow-up review session\n\n## Topics Covered\n- Answer App feature requirements and legal use cases\n- Workflow and user experience priorities\n- Development timeline and phasing"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABiTpfWgAAAA%3D%3D",
@@ -72,10 +78,22 @@
         "attendees": ["bnoble@gallowaylawfirm.com", "greg.hartley@netdocuments.com", "emilio.campos@netdocuments.com", "ekatke@gallowaylawfirm.com", "syates@gallowaylawfirm.com"],
         "organizer": "stephanie.klahre@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nApp review session with Galloway Law to demonstrate progress on the custom build. Greg Hartley and Emilio Campos presented the current state to Barbara Noble, E. Katke, and S. Yates and collected feedback.\n\n## Key Decisions\n- Client feedback captured and incorporated into development priorities\n- Agreed on additional features for the next iteration\n\n## Action Items\n- Greg Hartley (ND): Implement client feedback from the review session\n- Emilio Campos (ND): Update project timeline based on revised scope\n\n## Topics Covered\n- Live app demo and walkthrough\n- Client feedback and change requests\n- Next development milestones"
       }
     ],
     "Chapman & Cutler": [
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5UZAAA%3D",
+        "subject": "Discussion of Assistance with NDMax App Builder",
+        "start": "2025-02-04T15:00:00.000Z",
+        "end": "2025-02-04T16:00:00.000Z",
+        "attendees": ["david_hambourger@chapman.com", "greg.hartley@netdocuments.com", "jnitti@chapman.com", "vierling@chapman.com", "sschreib@chapman.com", "pisarek@chapman.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "david_hambourger@chapman.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInitial exploratory call with Chapman & Cutler's leadership team to discuss how NetDocuments could assist with ndMAX App Builder development. Dave Hambourger convened a cross-functional group to evaluate AI-powered capabilities including AI Profiling, Smart Answers, and DLP.\n\n## Key Decisions\n- Chapman & Cutler team decided to move forward with ndMAX AI initiatives\n- Identified AI Profiling, Smart Answers, and DLP as primary focus areas\n\n## Action Items\n- Greg Hartley (ND): Prepare detailed proposal for AI initiatives\n- Stephanie Klahre (ND): Set up kickoff planning session\n\n## Topics Covered\n- ndMAX App Builder capabilities overview\n- AI Profiling and Smart Answers use cases\n- DLP (Data Loss Prevention) integration possibilities"
+      },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5U0AAA%3D",
         "subject": "Chapman Cutler app review",
@@ -84,7 +102,41 @@
         "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com"],
         "organizer": "greg.hartley@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND review session between Greg Hartley and Stephanie Klahre to assess app development progress for Chapman & Cutler and plan next steps.\n\n## Key Decisions\n- Confirmed current app status and priorities for client presentation\n\n## Action Items\n- Greg Hartley (ND): Finalize app for client demo\n- Stephanie Klahre (ND): Schedule client review session\n\n## Topics Covered\n- Chapman & Cutler app build status\n- Feature completeness and demo readiness"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABJwjU5AAAAA%3D%3D",
+        "subject": "Chapman & Cutler - ndMAX 4.1 Review",
+        "start": "2025-07-10T15:30:00.000Z",
+        "end": "2025-07-10T16:30:00.000Z",
+        "attendees": ["david_hambourger@chapman.com", "greg.hartley@netdocuments.com", "vierling@chapman.com", "jnitti@chapman.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nReview session for ndMAX 4.1 with Chapman & Cutler leadership. Dave Hambourger and team reviewed the latest platform release with Greg Hartley and Stephanie Klahre, focusing on AI features and Smart Answers cabinet scoping.\n\n## Key Decisions\n- Agreed to proceed with Smart Answers cabinet configuration\n- Identified specific legal research workflows to automate\n\n## Action Items\n- Greg Hartley (ND): Configure Smart Answers cabinet per agreed scope\n- Stephanie Klahre (ND): Document requirements and share with Chapman & Cutler\n\n## Topics Covered\n- ndMAX 4.1 new features walkthrough\n- Smart Answers cabinet scoping for Chapman & Cutler\n- AI Profiling progress update"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMAFRAAgI3cTE35IAAEYAAAAAZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAAABDQAAWfy7elFIOEy4q8BrfaE7UgAABGOVmwAAEA%3D%3D",
+        "subject": "Chapman and Cutler ndMAX status update",
+        "start": "2025-07-17T16:30:00.000Z",
+        "end": "2025-07-17T17:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "david_hambourger@chapman.com", "jnitti@chapman.com", "sschreib@chapman.com", "vierling@chapman.com", "pisarek@chapman.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nRegular ndMAX status sync with the full Chapman & Cutler team. Covered Studio app customization requests, custom solution development progress, and platform roadmap updates.\n\n## Key Decisions\n- Prioritized Studio app customization requests for Q3\n- Confirmed ndMAX roadmap features relevant to Chapman & Cutler\n\n## Action Items\n- Greg Hartley (ND): Address Studio app customization items\n- Dave Hambourger (C&C): Provide additional requirements for custom solution\n\n## Topics Covered\n- Studio app questions and customization requests\n- ndMAX custom solution development progress\n- ndMAX roadmap updates\n- AOB"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMAFRAAgI3ifHv56AAEYAAAAAZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAAABDQAAWfy7elFIOEy4q8BrfaE7UgAABGOVmwAAEA%3D%3D",
+        "subject": "Chapman and Cutler ndMAX status update",
+        "start": "2025-11-20T17:30:00.000Z",
+        "end": "2025-11-20T18:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "david_hambourger@chapman.com", "jnitti@chapman.com", "sschreib@chapman.com", "vierling@chapman.com", "pisarek@chapman.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nQ4 ndMAX status update with the full Chapman & Cutler team. Reviewed progress on custom solution development, Studio app updates, and discussed roadmap priorities heading into year-end.\n\n## Key Decisions\n- Year-end priorities confirmed for custom solution delivery\n- Studio app enhancements scoped for Q1 2026\n\n## Action Items\n- Greg Hartley (ND): Deliver custom solution update by year-end\n- Stephanie Klahre (ND): Schedule Q1 2026 kickoff planning session\n\n## Topics Covered\n- Studio app customization status\n- ndMAX custom solution development\n- Roadmap updates and Q1 2026 planning"
       }
     ],
     "Patterson Law": [
@@ -96,7 +148,8 @@
         "attendees": ["nikki.patel@netdocuments.com", "michael.pennington@netdocuments.com", "stephanie.klahre@netdocuments.com", "ritu.verma@netdocuments.com"],
         "organizer": "nikki.patel@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND handoff call to transition the Patterson Law account from the Sales/Implementation team to the Customer Success team. Nikki Patel, Mike Pennington, Stephanie Klahre, and Ritu Verma aligned on account history and ongoing ndMAX work.\n\n## Key Decisions\n- Nikki Patel to take lead as primary contact for Patterson Law\n- Identified open App Builder items requiring follow-up\n\n## Action Items\n- Nikki Patel (ND): Schedule introductory call with John Kamphuis at Patterson Law\n- Stephanie Klahre (ND): Share account context and project documentation\n\n## Topics Covered\n- Account history and implementation status\n- Open App Builder items\n- Transition plan and next steps"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABMMU9xwAAAA%3D%3D",
@@ -106,7 +159,8 @@
         "attendees": ["nikki.patel@netdocuments.com", "stephanie.klahre@netdocuments.com", "jkamphuis@pattersonlaw.ca"],
         "organizer": "nikki.patel@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInitial App Builder working session with John Kamphuis (Patterson Law). Nikki Patel and Stephanie Klahre walked through the app building process and discussed Patterson Law's specific requirements.\n\n## Key Decisions\n- Scoped initial app build requirements with John Kamphuis\n- Identified priority workflows for automation\n\n## Action Items\n- Nikki Patel (ND): Follow up with app prototype after the session\n- John Kamphuis (Patterson Law): Provide additional workflow details\n\n## Topics Covered\n- App Builder overview and capabilities\n- Patterson Law workflow requirements\n- Initial app scoping"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABPvI1PQAAAA%3D%3D",
@@ -116,7 +170,8 @@
         "attendees": ["nikki.patel@netdocuments.com", "stephanie.klahre@netdocuments.com", "jkamphuis@pattersonlaw.ca"],
         "organizer": "nikki.patel@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExtended App Builder session with John Kamphuis (Patterson Law). Reviewed activity logs, addressed 2 stuck documents, and progressed on app configuration. The team worked through technical issues and advanced the build.\n\n## Key Decisions\n- Resolved stuck document issue with delete/re-import approach\n- Confirmed app build direction and next features\n\n## Action Items\n- Nikki Patel (ND): Implement fixes from the session and share updated app\n- John Kamphuis (Patterson Law): Test the updated configuration\n\n## Topics Covered\n- Activity log review\n- Stuck document troubleshooting and resolution\n- App Builder progress and next steps"
       }
     ],
     "Mewburn Ellis": [
@@ -128,7 +183,8 @@
         "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "christopher.snead@netdocuments.com", "andy.newland@mewburn.com"],
         "organizer": "greg.hartley@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExtended working session with Andy Newland (Mewburn Ellis) to advance ndMAX implementation. Greg Hartley, Stephanie Klahre, and Christopher Snead from ND covered platform configuration, AI features, and app development priorities.\n\n## Key Decisions\n- Confirmed ndMAX feature set priorities for Mewburn Ellis\n- Agreed on next steps for app development\n\n## Action Items\n- Greg Hartley (ND): Provide follow-up documentation and next steps\n- Andy Newland (Mewburn Ellis): Review and approve proposed configuration\n\n## Topics Covered\n- ndMAX platform configuration for Mewburn Ellis\n- AI feature capabilities overview\n- App Builder scoping and development roadmap"
       }
     ],
     "Karawani": [
@@ -140,7 +196,8 @@
         "attendees": ["amir.mustafa@netdocuments.com", "ben.edwards@netdocuments.com", "stephanie.klahre@netdocuments.com"],
         "organizer": "amir.mustafa@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND sales-to-implementation handoff for the Karawani & Co account. Amir Mustafa briefed Stephanie Klahre and Ben Edwards on account context, deal details, and initial client priorities.\n\n## Key Decisions\n- Stephanie Klahre to lead ndMAX implementation as PM\n- Ben Edwards identified as implementation support\n\n## Action Items\n- Stephanie Klahre (ND): Schedule ndMAX kickoff with Karawani team\n- Amir Mustafa (ND): Introduce Stephanie to client contacts\n\n## Topics Covered\n- Account background and deal context\n- Client priorities and expectations\n- Implementation team assignment"
       },
       {
         "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABiTpfWwAAAA%3D%3D",
@@ -150,7 +207,8 @@
         "attendees": ["adam.scott@netdocuments.com", "raed.karawani@karawanico.com", "IT@karawanico.com", "minal.sapra@karawanico.com", "manal.akouri@karawanico.com", "stephanie.klahre@netdocuments.com", "amir.mustafa@netdocuments.com", "ben.edwards@netdocuments.com"],
         "organizer": "adam.scott@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX kickoff meeting with Karawani & Co. Raed Karawani and the Karawani IT and operations team joined the ND team to launch the implementation. Adam Scott led the kickoff covering platform overview, timeline, and initial setup steps.\n\n## Key Decisions\n- Agreed on ndMAX implementation scope and phased rollout\n- Identified Karawani IT team as primary technical contact\n\n## Action Items\n- Adam Scott (ND): Share kickoff documentation and implementation guide\n- Stephanie Klahre (ND): Set up regular check-in cadence\n- Karawani IT: Provide environment access details\n\n## Topics Covered\n- ndMAX platform overview for Karawani & Co\n- Implementation timeline and milestones\n- Technical setup requirements\n- User onboarding plan"
       }
     ],
     "Chevez Ruiz Zamarripa": [
@@ -162,7 +220,8 @@
         "attendees": ["lucas.germenink@netdocuments.com", "erik.vazquez@netdocuments.com", "stephanie.klahre@netdocuments.com"],
         "organizer": "lucas.germenink@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND pre-kickoff planning session for the Chevez Ruiz Zamarripa account. Lucas Germenink, Erik Vazquez, and Stephanie Klahre aligned on approach, agenda, and responsibilities before the client kickoff.\n\n## Key Decisions\n- Confirmed roles: Erik Vazquez leading client relationship, Lucas Germenink on technical implementation\n- Finalized kickoff meeting agenda\n\n## Action Items\n- Erik Vazquez (ND): Send kickoff calendar invite to Chevez team\n- Lucas Germenink (ND): Prepare technical overview for kickoff\n\n## Topics Covered\n- Chevez account context and client priorities\n- Kickoff agenda planning\n- Team role assignments"
       },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5UaAAA%3D",
@@ -172,7 +231,8 @@
         "attendees": ["erik.vazquez@netdocuments.com", "stephanie.klahre@netdocuments.com", "andrew.winningham@netdocuments.com", "lucas.germenink@netdocuments.com", "tvazquez@chevez.com.mx", "cparra@chevez.com.mx", "mjimenez@chevez.com.mx", "guillermo.moral@chevez.com.mx", "mark.campbell@netdocuments.com"],
         "organizer": "erik.vazquez@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nFull ndMAX kickoff with Chevez Ruiz Zamarripa. T. Vazquez, C. Parra, M. Jimenez, and Guillermo Moral from Chevez joined the ND team including Mark Campbell, Andrew Winningham, and the implementation team. Covered platform overview, implementation roadmap, and initial priorities.\n\n## Key Decisions\n- Agreed on implementation phasing and timeline for Chevez\n- Identified key workflows to automate with ndMAX AI features\n\n## Action Items\n- Lucas Germenink (ND): Share implementation plan and documentation\n- Stephanie Klahre (ND): Set up regular implementation check-ins\n- Chevez team: Provide document taxonomy and workflow details\n\n## Topics Covered\n- ndMAX platform overview and AI capabilities\n- Implementation roadmap for Chevez Ruiz Zamarripa\n- AI Assistant and document management priorities"
       },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5VDAAA%3D",
@@ -182,7 +242,8 @@
         "attendees": ["capacitacion@chevez.com.mx", "nikki.patel@netdocuments.com", "stephanie.klahre@netdocuments.com", "mjimenez@chevez.com.mx", "lvflores@chevez.com.mx"],
         "organizer": "capacitacion@chevez.com.mx",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nAI Assistant training session for Chevez Ruiz Zamarripa users (in Spanish). Nikki Patel and Stephanie Klahre led the session with M. Jimenez and L.V. Flores from Chevez's training team, covering how to use ndMAX AI Assistant for legal document work.\n\n## Key Decisions\n- Training materials to be shared in Spanish for broader team rollout\n- Follow-up training sessions to be scheduled for additional user groups\n\n## Action Items\n- Nikki Patel (ND): Share AI Assistant training materials in Spanish\n- Stephanie Klahre (ND): Schedule follow-up training for additional users\n\n## Topics Covered\n- AI Assistant capabilities and usage for legal workflows\n- Prompt best practices for legal document drafting\n- Q&A on AI features in Spanish"
       },
       {
         "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5VKAAA%3D",
@@ -192,7 +253,435 @@
         "attendees": ["erik.vazquez@netdocuments.com", "stephanie.klahre@netdocuments.com"],
         "organizer": "erik.vazquez@netdocuments.com",
         "location": "Microsoft Teams Meeting",
-        "meetingTranscriptUrl": null
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nBrief internal sync between Erik Vazquez and Stephanie Klahre following the Chevez AI training session to debrief and align on next steps.\n\n## Key Decisions\n- Confirmed follow-up items from the training session\n\n## Action Items\n- Erik Vazquez (ND): Communicate next steps to Chevez team\n\n## Topics Covered\n- Chevez training debrief\n- Next steps for ongoing implementation"
+      }
+    ],
+    "B3": [
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABDIA1ewAAAA%3D%3D",
+        "subject": "Internal Alignment - B3 Project",
+        "start": "2025-05-28T17:00:00.000Z",
+        "end": "2025-05-28T17:30:00.000Z",
+        "attendees": ["lucas.germenink@netdocuments.com", "vanessa@quatrokeys.com", "mike.sanders@netdocuments.com", "stephanie.klahre@netdocuments.com", "alvin@quatrokeys.com", "lbatista@quatrokeys.com", "roger@quatrokeys.com"],
+        "organizer": "lucas.germenink@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInitial internal alignment meeting for the B3 (Brasil, Bolsa, Balcão) project with implementation partner QuatroKeys. Lucas Germenink, Stephanie Klahre, and Mike Sanders from ND joined Vanessa, Alvin, L. Batista, and Roger from QuatroKeys to align on project scope and approach.\n\n## Key Decisions\n- QuatroKeys confirmed as implementation partner for B3 project\n- Agreed on project scope including AI Profiling and ndMAX features\n\n## Action Items\n- Lucas Germenink (ND): Share project documentation with QuatroKeys\n- QuatroKeys team: Prepare technical environment access\n\n## Topics Covered\n- B3 project scope and objectives\n- Partner alignment on implementation approach\n- Technical requirements and access"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5WGAAA%3D",
+        "subject": "B3 Auto Profiling",
+        "start": "2025-06-10T15:30:00.000Z",
+        "end": "2025-06-10T16:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "andrew.winningham@netdocuments.com", "lucas.germenink@netdocuments.com", "mike.sanders@netdocuments.com", "heath.harris@netdocuments.com", "khang.tran@netdocuments.com", "tyler.graf@netdocuments.com", "alvin@quatrokeys.com", "vanessa@quatrokeys.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nTechnical planning session for B3 AI Auto Profiling implementation. The ND AI team including Heath Harris, Khang Tran, and Tyler Graf joined the core implementation team and QuatroKeys to scope the AI Profiling solution for B3's document repository.\n\n## Key Decisions\n- AI Profiling architecture confirmed for B3's document types\n- Phased rollout approach agreed upon\n\n## Action Items\n- Heath Harris (ND): Lead AI Profiling technical configuration\n- Stephanie Klahre (ND): Coordinate timeline with B3 and QuatroKeys\n\n## Topics Covered\n- AI Auto Profiling technical requirements for B3\n- Document taxonomy and classification approach\n- Implementation phasing and timeline"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5WWAAA%3D",
+        "subject": "4K/B3 - ND Discovery 1",
+        "start": "2025-06-26T13:00:00.000Z",
+        "end": "2025-06-26T14:00:00.000Z",
+        "attendees": ["vanessa@quatrokeys.com", "adam.scott@netdocuments.com", "stephanie.klahre@netdocuments.com", "debora.benassi@b3.com.br", "victoria.iori@b3.com.br", "lbatista@quatrokeys.com", "bella@quatrokeys.com", "chad@quatrokeys.com", "danny@quatrokeys.com", "alvin@quatrokeys.com", "roger@quatrokeys.com", "mauricio.henrique@b3.com.br", "rafael.rossi@b3.com.br", "ricardo.albano@b3.com.br"],
+        "organizer": "vanessa@quatrokeys.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nFirst discovery session with B3 (Brasil, Bolsa, Balcão) client team. Debora Benassi, Victoria Iori, Mauricio Henrique, Rafael Rossi, and Ricardo Albano from B3 joined ND and QuatroKeys to define requirements, document the current state, and plan the ndMAX implementation.\n\n## Key Decisions\n- B3 document types and profiling requirements documented\n- Agreed on migration approach and phasing\n\n## Action Items\n- Adam Scott (ND): Capture discovery findings and share requirements document\n- QuatroKeys: Prepare technical environment assessment\n- B3 team: Provide sample documents for profiling analysis\n\n## Topics Covered\n- Current document management state at B3\n- ndMAX requirements gathering\n- AI Profiling scope for B3 document types\n- Migration planning"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABKiLUMQAAAA%3D%3D",
+        "subject": "B3 migration",
+        "start": "2025-07-16T18:00:00.000Z",
+        "end": "2025-07-16T18:30:00.000Z",
+        "attendees": ["vanessa@quatrokeys.com", "stephanie.klahre@netdocuments.com", "adam.scott@netdocuments.com", "alvin@quatrokeys.com", "bella@quatrokeys.com", "danny@quatrokeys.com", "isaias.rojas@reddevtechnology.com", "lbatista@quatrokeys.com", "roger@quatrokeys.com"],
+        "organizer": "vanessa@quatrokeys.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nMigration planning session for the B3 project with ND, QuatroKeys, and Red Dev Technology. Discussed data migration approach, technical dependencies, and timeline for moving B3's document data into NetDocuments.\n\n## Key Decisions\n- Migration approach and tooling confirmed\n- Red Dev Technology (Isaias Rojas) engaged for migration support\n\n## Action Items\n- QuatroKeys: Finalize migration scripts and timeline\n- Adam Scott (ND): Validate migration plan against B3 requirements\n\n## Topics Covered\n- Data migration approach and tooling\n- Migration timeline and milestones\n- Technical dependencies and risks"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABO1NlzwAAAA%3D%3D",
+        "subject": "B3 Update - Structural",
+        "start": "2025-08-08T21:30:00.000Z",
+        "end": "2025-08-08T22:00:00.000Z",
+        "attendees": ["vanessa@quatrokeys.com", "adam.scott@netdocuments.com", "stephanie.klahre@netdocuments.com", "alvin@quatrokeys.com", "bella@quatrokeys.com", "lbatista@quatrokeys.com", "roger@quatrokeys.com", "lucas.germenink@netdocuments.com"],
+        "organizer": "vanessa@quatrokeys.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nStructural update meeting for the B3 project to review workspace and folder structure decisions. ND and QuatroKeys teams aligned on the NetDocuments workspace architecture for B3's document management needs.\n\n## Key Decisions\n- Workspace structure finalized for B3 implementation\n- Folder hierarchy and naming conventions confirmed\n\n## Action Items\n- QuatroKeys: Implement approved folder structure in the environment\n- Lucas Germenink (ND): Review and validate structure before client presentation\n\n## Topics Covered\n- NetDocuments workspace architecture for B3\n- Folder structure and naming conventions\n- AI Profiling taxonomy alignment with structure"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABY3wApgAAAA%3D%3D",
+        "subject": "B3 - AI Discussion",
+        "start": "2025-10-08T16:30:00.000Z",
+        "end": "2025-10-08T17:30:00.000Z",
+        "attendees": ["vanessa@quatrokeys.com", "adam.scott@netdocuments.com", "stephanie.klahre@netdocuments.com", "alvin@quatrokeys.com", "lbatista@quatrokeys.com", "roger@quatrokeys.com"],
+        "organizer": "vanessa@quatrokeys.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nAI strategy discussion for the B3 project. ND and QuatroKeys reviewed the AI Profiling implementation progress and discussed expanded AI use cases for B3's document workflows.\n\n## Key Decisions\n- Expanded AI Profiling scope confirmed for additional document types\n- Timeline for AI rollout to B3 users agreed upon\n\n## Action Items\n- Adam Scott (ND): Update AI implementation plan with expanded scope\n- QuatroKeys: Prepare AI demo environment for B3 client review\n\n## Topics Covered\n- AI Profiling implementation progress\n- Additional AI use cases for B3\n- Rollout timeline and user adoption planning"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABj5sqRwAAAA%3D%3D",
+        "subject": "Projeto B3 + NetDocs: AI Profiling on Documents",
+        "start": "2025-11-25T19:00:00.000Z",
+        "end": "2025-11-25T20:00:00.000Z",
+        "attendees": ["lucas.germenink@netdocuments.com", "stephanie.klahre@netdocuments.com", "alvin@quatrokeys.com", "vanessa@quatrokeys.com"],
+        "organizer": "lucas.germenink@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nDeep-dive session on AI Profiling implementation for the B3 project. Lucas Germenink presented AI Profiling results on B3 documents to QuatroKeys and discussed refinements to the profiling taxonomy.\n\n## Key Decisions\n- AI Profiling taxonomy refined based on document analysis results\n- Next iteration of profiling rules approved for implementation\n\n## Action Items\n- Lucas Germenink (ND): Implement taxonomy refinements\n- QuatroKeys: Validate results in staging environment\n\n## Topics Covered\n- AI Profiling results on B3 document corpus\n- Taxonomy refinements and rule adjustments\n- Next steps for production rollout"
+      }
+    ],
+    "Hedrick Gardner Kincheloe & Garofalo": [
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABaBocFgAAAA%3D%3D",
+        "subject": "Sales Handoff | Hedrick Gardner",
+        "start": "2025-10-13T20:00:00.000Z",
+        "end": "2025-10-13T20:30:00.000Z",
+        "attendees": ["amir.mustafa@netdocuments.com", "trent.turner@netdocuments.com", "kyle.duncan@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND sales-to-implementation handoff for the Hedrick Gardner Kincheloe & Garofalo account. Stephanie Klahre onboarded Trent Turner and Kyle Duncan on account context in preparation for the ndMAX kickoff.\n\n## Key Decisions\n- Trent Turner to lead as primary implementation contact for Hedrick Gardner\n- Identified J. DeHart as primary client contact\n\n## Action Items\n- Stephanie Klahre (ND): Introduce Trent Turner to Hedrick Gardner contacts\n- Trent Turner (ND): Schedule ndMAX kickoff meeting\n\n## Topics Covered\n- Account background and deal details\n- Client priorities and key contacts\n- Implementation team assignments"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABaR2POwAAAA%3D%3D",
+        "subject": "ndMAX Introduction & Project Planning | Hedrick Gardner",
+        "start": "2025-10-16T19:00:00.000Z",
+        "end": "2025-10-16T20:00:00.000Z",
+        "attendees": ["trent.turner@netdocuments.com", "jdehart@hedrickgardner.com", "christopher.snead@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX introduction and project planning kickoff with Hedrick Gardner. J. DeHart from Hedrick Gardner joined Trent Turner, Christopher Snead, and Stephanie Klahre from ND to launch the implementation and plan initial milestones.\n\n## Key Decisions\n- ndMAX implementation scope confirmed for Hedrick Gardner\n- AI features (Summarize, AI Profiling) identified as primary focus\n\n## Action Items\n- Trent Turner (ND): Share implementation plan and next steps\n- J. DeHart (Hedrick Gardner): Identify additional stakeholders for AI demo\n- Stephanie Klahre (ND): Schedule AI Profiling demo session\n\n## Topics Covered\n- ndMAX platform overview and AI capabilities\n- Project planning and milestone setting\n- AI Profiling and Summarize feature discussion"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABan66cAAAAA%3D%3D",
+        "subject": "Summarize and AI Profiling Demo | Hedrick Gardner",
+        "start": "2025-10-24T18:00:00.000Z",
+        "end": "2025-10-24T19:00:00.000Z",
+        "attendees": ["jdehart@hedrickgardner.com", "triley@hedrickgardner.com", "dbest@hedrickgardner.com", "trent.turner@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nLive demo of ndMAX Summarize and AI Profiling features for the Hedrick Gardner team. J. DeHart, T. Riley, and D. Best from Hedrick Gardner attended the hands-on demonstration led by Trent Turner and Stephanie Klahre.\n\n## Key Decisions\n- Hedrick Gardner confirmed interest in proceeding with Summarize and AI Profiling\n- Agreed on pilot approach with select practice group\n\n## Action Items\n- Trent Turner (ND): Configure Summarize for Hedrick Gardner pilot documents\n- Stephanie Klahre (ND): Define AI Profiling taxonomy with Hedrick Gardner team\n- J. DeHart (Hedrick Gardner): Identify pilot users and documents\n\n## Topics Covered\n- Live Summarize demo with Hedrick Gardner document types\n- AI Profiling capabilities and taxonomy setup\n- Pilot program scope and timeline"
+      }
+    ],
+    "Allende & Brea": [
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAADZUjvkAAA%3D",
+        "subject": "PB/PB Max Workshop",
+        "start": "2025-03-21T14:00:00.000Z",
+        "end": "2025-03-21T14:30:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "jmayora@allende.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nPatternBuilder/ndMAX workshop session with Jorge Mayora from Allende & Brea. Greg Hartley and Stephanie Klahre guided Jorge through the ndMAX PatternBuilder features and addressed questions specific to Allende & Brea's document workflows.\n\n## Key Decisions\n- Identified specific PatternBuilder use cases relevant to Allende & Brea\n\n## Action Items\n- Greg Hartley (ND): Follow up with workshop materials and next steps\n- Jorge Mayora (Allende & Brea): Explore PatternBuilder for identified use cases\n\n## Topics Covered\n- PatternBuilder/ndMAX capabilities overview\n- Allende & Brea legal document use cases\n- Q&A on platform features"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5U3AAA%3D",
+        "subject": "PB/PB Max Workshop",
+        "start": "2025-03-25T13:30:00.000Z",
+        "end": "2025-03-25T14:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "tdicio@allende.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nPatternBuilder/ndMAX workshop with Tomás Di Ció from Allende & Brea. Covered PatternBuilder capabilities and worked through specific workflows relevant to Allende & Brea's practice areas.\n\n## Key Decisions\n- Agreed on PatternBuilder templates to build for Allende & Brea\n\n## Action Items\n- Greg Hartley (ND): Build initial PatternBuilder templates based on session\n- Tomás Di Ció (Allende & Brea): Provide additional document samples\n\n## Topics Covered\n- PatternBuilder feature exploration\n- Template creation for Allende & Brea workflows\n- AI-assisted document profiling"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABDIA1fgAAAA%3D%3D",
+        "subject": "PB/PBMax Workshop",
+        "start": "2025-05-29T13:00:00.000Z",
+        "end": "2025-05-29T14:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "tdicio@allende.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nFollow-up PatternBuilder/ndMAX session with Tomás Di Ció (Allende & Brea). Reviewed templates built since the previous session and advanced the PatternBuilder configuration for Allende & Brea's legal document needs.\n\n## Key Decisions\n- Templates validated and additional refinements agreed upon\n- Scope expanded to include additional document categories\n\n## Action Items\n- Greg Hartley (ND): Refine templates per feedback and expand scope\n- Tomás Di Ció (Allende & Brea): Share additional document categories for profiling\n\n## Topics Covered\n- PatternBuilder template review and refinement\n- Expanded document profiling scope\n- ndMAX progress update"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABQyfFbwAAAA%3D%3D",
+        "subject": "60 minute Session | Greg & Stephanie",
+        "start": "2025-08-21T17:00:00.000Z",
+        "end": "2025-08-21T18:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "gantolini@allende.com"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExtended working session with Guido Antolini from Allende & Brea. Greg Hartley and Stephanie Klahre covered advanced ndMAX features and addressed outstanding implementation questions.\n\n## Key Decisions\n- Advanced PatternBuilder configuration confirmed\n- Additional AI features scoped for Allende & Brea\n\n## Action Items\n- Greg Hartley (ND): Deliver advanced configuration from session\n- Guido Antolini (Allende & Brea): Review and test in sandbox environment\n\n## Topics Covered\n- Advanced PatternBuilder and ndMAX features\n- AI Profiling refinement for Allende & Brea documents\n- Q&A and troubleshooting"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5YNAAA%3D",
+        "subject": "Reunión con ND por NDMAX",
+        "start": "2025-11-05T18:00:00.000Z",
+        "end": "2025-11-05T19:00:00.000Z",
+        "attendees": ["dperezgrandamarina@allende.com", "stephanie.klahre@netdocuments.com", "lucas.germenink@netdocuments.com", "tdicio@allende.com", "erik.vazquez@netdocuments.com", "cfox@allende.com", "jmayora@allende.com", "fanna@allende.com", "ppalazzi@allende.com", "mark.campbell@netdocuments.com", "greg.hartley@netdocuments.com", "kyle.kissell@netdocuments.com"],
+        "organizer": "dperezgrandamarina@allende.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nMajor ndMAX review meeting with the full Allende & Brea leadership team. Diego Perez Grandamarina convened senior stakeholders including Tomás Di Ció, Cristian Fox, Jorge Mayora, F. Anna, and P. Palazzi. The ND team including Mark Campbell, Kyle Kissell, Greg Hartley, and Stephanie Klahre presented platform progress and addressed concerns.\n\n## Key Decisions\n- Confirmed go-forward plan for ndMAX implementation at Allende & Brea\n- PatternBuilder concerns raised and resolution path agreed upon\n\n## Action Items\n- Kyle Kissell (ND): Address PatternBuilder technical issues raised in the meeting\n- Greg Hartley (ND): Deliver implementation roadmap update\n- Mark Campbell (ND): Follow up on executive-level concerns\n- Allende & Brea: Provide additional requirements for next phase\n\n## Topics Covered\n- ndMAX implementation status and progress\n- PatternBuilder concerns and resolution plan\n- Next phase planning and priorities\n- Executive Q&A on AI capabilities"
+      }
+    ],
+    "Ploum Rotterdam": [
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAC5H-mXAAA%3D",
+        "subject": "PB/PB Max Workshop",
+        "start": "2025-02-11T14:00:00.000Z",
+        "end": "2025-02-11T14:30:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "c.kastelein@ploum.nl"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInitial PatternBuilder/ndMAX workshop with Coert Kastelein from Ploum Rotterdam. Greg Hartley and Stephanie Klahre introduced ndMAX capabilities and worked through Ploum's document management requirements.\n\n## Key Decisions\n- Identified key PatternBuilder use cases for Ploum Rotterdam\n\n## Action Items\n- Greg Hartley (ND): Prepare initial PatternBuilder configuration based on session\n- Coert Kastelein (Ploum): Share document samples for profiling\n\n## Topics Covered\n- PatternBuilder/ndMAX overview\n- Ploum Rotterdam document types and legal workflows\n- Initial configuration scoping"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAADZUjvjAAA%3D",
+        "subject": "PB/PBMax Workshop",
+        "start": "2025-04-02T13:00:00.000Z",
+        "end": "2025-04-02T14:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "c.kastelein@ploum.nl"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nFollow-up PatternBuilder/ndMAX workshop with Coert Kastelein (Ploum Rotterdam). Extended session to advance configuration and review templates built since the first workshop.\n\n## Key Decisions\n- PatternBuilder templates reviewed and approved for refinement\n- Additional document categories added to scope\n\n## Action Items\n- Greg Hartley (ND): Advance PatternBuilder configuration based on session feedback\n- Coert Kastelein (Ploum): Test templates and provide feedback\n\n## Topics Covered\n- PatternBuilder template review\n- Configuration refinement\n- ndMAX progress and next steps"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABaBocEQAAAA%3D%3D",
+        "subject": "60 minute Session | Greg & Stephanie",
+        "start": "2025-10-15T13:00:00.000Z",
+        "end": "2025-10-15T14:00:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "c.kastelein@ploum.nl"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExtended working session with Coert Kastelein (Ploum Rotterdam) for advanced ndMAX configuration and platform review. Reviewed implementation progress and addressed outstanding questions.\n\n## Key Decisions\n- Advanced PatternBuilder configuration validated\n- Additional AI features scoped for Ploum Rotterdam\n\n## Action Items\n- Greg Hartley (ND): Deliver next configuration iteration\n- Coert Kastelein (Ploum): Provide feedback on current implementation\n\n## Topics Covered\n- Advanced PatternBuilder and ndMAX configuration\n- Platform progress review\n- AI feature roadmap for Ploum Rotterdam"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABj5sqQwAAAA%3D%3D",
+        "subject": "30 minute Session | Greg & Stephanie",
+        "start": "2025-11-24T14:00:00.000Z",
+        "end": "2025-11-24T14:30:00.000Z",
+        "attendees": ["greg.hartley@netdocuments.com", "stephanie.klahre@netdocuments.com", "c.kastelein@ploum.nl"],
+        "organizer": "greg.hartley@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nCheck-in session with Coert Kastelein (Ploum Rotterdam) to review recent progress and address any outstanding items before year-end.\n\n## Key Decisions\n- Confirmed year-end status and Q1 2026 priorities\n\n## Action Items\n- Greg Hartley (ND): Share year-end summary and Q1 plan\n- Coert Kastelein (Ploum): Provide final feedback on current implementation\n\n## Topics Covered\n- ndMAX implementation year-end status\n- Q1 2026 priorities and planning"
+      }
+    ],
+    "Pender & Coward PC": [
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAAAEY5UvAAA%3D",
+        "subject": "ND \\ Pender & Coward Touchbase",
+        "start": "2025-03-06T20:00:00.000Z",
+        "end": "2025-03-06T20:30:00.000Z",
+        "attendees": ["brian.hall@netdocuments.com", "brandon.russell@netdocuments.com", "broc.ellerman@netdocuments.com", "mrb@pendercoward.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "brian.hall@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInitial touchbase with Pender & Coward to kick off the ndMAX implementation relationship. Brian Hall, Brandon Russell, and Stephanie Klahre from ND met with M.R.B. from Pender & Coward to align on goals and next steps.\n\n## Key Decisions\n- ND implementation team structure confirmed for Pender & Coward\n- Agreed to schedule App Builder Workshop as first substantive session\n\n## Action Items\n- Stephanie Klahre (ND): Schedule App Builder Workshop\n- Brian Hall (ND): Share ndMAX getting-started materials\n\n## Topics Covered\n- ndMAX overview for Pender & Coward\n- Implementation team introductions\n- Initial priorities and timeline"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAADX89c0AAA%3D",
+        "subject": "NetDocuments | App Builder Workshop | Pender & Coward PC",
+        "start": "2025-03-14T16:00:00.000Z",
+        "end": "2025-03-14T17:00:00.000Z",
+        "attendees": ["adam.scott@netdocuments.com", "jharper@pendercoward.com", "mrb@pendercoward.com", "brandon.russell@netdocuments.com", "brian.hall@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nApp Builder Workshop with Jacob Harper and M.R.B. from Pender & Coward. Adam Scott led the session with Stephanie Klahre, Brian Hall, and Brandon Russell, introducing the ndMAX App Builder and scoping initial applications for the firm.\n\n## Key Decisions\n- Identified Guardianship Forms as the primary App Builder use case for Pender & Coward\n- Agreed on co-building approach with Pender & Coward staff\n\n## Action Items\n- Adam Scott (ND): Build initial app prototype for Guardianship Forms\n- Jacob Harper (Pender & Coward): Provide form requirements and current workflow documentation\n- Stephanie Klahre (ND): Set up co-building sessions schedule\n\n## Topics Covered\n- ndMAX App Builder capabilities and demo\n- Pender & Coward workflow requirements\n- Guardianship Forms app scoping\n- Co-building approach and timeline"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAAAAABlAfWSTJsPSrvdR5aQDVrUBwBZ-Lt6UUg4TLirwGt9oTtSAAAAAAENAABZ-Lt6UUg4TLirwGt9oTtSAADgLmoVAAA%3D",
+        "subject": "ndMAX App Builder Onboarding",
+        "start": "2025-03-25T14:00:00.000Z",
+        "end": "2025-03-25T15:00:00.000Z",
+        "attendees": ["adam.scott@netdocuments.com", "stephanie.klahre@netdocuments.com", "jharper@pendercoward.com"],
+        "organizer": "adam.scott@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nOne-on-one App Builder onboarding session with Jacob Harper (Pender & Coward). Adam Scott and Stephanie Klahre provided hands-on training to enable Jacob to build and manage apps independently within ndMAX.\n\n## Key Decisions\n- Jacob Harper empowered as Pender & Coward's primary App Builder administrator\n- Identified first app to be built independently by Jacob\n\n## Action Items\n- Adam Scott (ND): Provide App Builder documentation and resources\n- Jacob Harper (Pender & Coward): Begin building initial app and share progress\n\n## Topics Covered\n- App Builder hands-on training\n- Administrative setup and permissions\n- First app scoping and approach"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABDIA1hQAAAA%3D%3D",
+        "subject": "Pender & Coward Workshop",
+        "start": "2025-05-30T17:00:00.000Z",
+        "end": "2025-05-30T17:30:00.000Z",
+        "attendees": ["adam.scott@netdocuments.com", "dthompson@pendercoward.com", "jharper@pendercoward.com", "mrb@pendercoward.com", "aworsley@pendercoward.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nExpanded workshop with the broader Pender & Coward team including D. Thompson, Jacob Harper, M.R.B., and A. Worsley. Adam Scott and Stephanie Klahre demonstrated App Builder progress and gathered additional requirements from the expanded team.\n\n## Key Decisions\n- Additional apps scoped based on expanded team input\n- A. Worsley identified as additional App Builder user\n\n## Action Items\n- Adam Scott (ND): Expand app build to include new requirements from the team\n- Pender & Coward team: Identify further automation opportunities\n\n## Topics Covered\n- App Builder progress review with full team\n- Additional workflow requirements from D. Thompson and A. Worsley\n- Expanded scope and next development priorities"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABG8umWAAAAA%3D%3D",
+        "subject": "ndMAX | Pender & Coward | Co-building Session 1",
+        "start": "2025-06-25T19:00:00.000Z",
+        "end": "2025-06-25T20:00:00.000Z",
+        "attendees": ["adam.scott@netdocuments.com", "aworsley@pendercoward.com", "dthompson@pendercoward.com", "jharper@pendercoward.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nFirst formal co-building session with Pender & Coward's app development team. Adam Scott and Stephanie Klahre worked side-by-side with A. Worsley, D. Thompson, and Jacob Harper to build the Guardianship Forms app in real time.\n\n## Key Decisions\n- Guardianship Forms app architecture finalized during the session\n- Co-building model confirmed as effective — additional sessions planned\n\n## Action Items\n- Adam Scott (ND): Complete app build components from session\n- Pender & Coward team: Test the co-built functionality and provide feedback\n- Stephanie Klahre (ND): Schedule Co-building Session 2\n\n## Topics Covered\n- Live Guardianship Forms app building\n- Form logic, conditional fields, and document generation\n- Testing approach and feedback loop"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRkNGZhLTJiNmEtNGZhYi1iZTkzLTllN2I0MjRmZTFjMABGAAADZQH1kkybD0q73UeWkA1a1AcAWfy7elFIOEy4q8BrfaE7UgAAAgENAAAAWfy7elFIOEy4q8BrfaE7UgABfEkFCwAAAA%3D%3D",
+        "subject": "Pender & Coward | Guardianship Forms App Planning",
+        "start": "2025-11-17T19:00:00.000Z",
+        "end": "2025-11-17T20:00:00.000Z",
+        "attendees": ["adam.scott@netdocuments.com", "aworsley@pendercoward.com", "brandon.russell@netdocuments.com", "mrb@pendercoward.com", "david.kero@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nGuardianship Forms app planning session with the extended Pender & Coward and ND team. Adam Scott, Brandon Russell, and David Kero from ND joined A. Worsley and M.R.B. from Pender & Coward to plan the next phase of the Guardianship Forms application.\n\n## Key Decisions\n- Next phase of Guardianship Forms app scoped and approved\n- David Kero engaged for technical implementation support\n\n## Action Items\n- David Kero (ND): Lead technical implementation for next phase\n- Adam Scott (ND): Coordinate development timeline\n- A. Worsley (Pender & Coward): Provide updated form requirements for next phase\n\n## Topics Covered\n- Guardianship Forms app next phase planning\n- Technical requirements and implementation approach\n- Timeline and milestones for app completion"
+      }
+    ],
+    "Winckworth Sherwood": [
+      {
+        "uri": "calendar:///events/staircase-winckworth-001",
+        "subject": "Winckworth Sherwood ndMAX Implementation Review",
+        "start": "2026-02-05T15:00:00.000Z",
+        "end": "2026-02-05T16:00:00.000Z",
+        "attendees": ["christel.aguila@winckworthsherwood.co.uk", "chad.patel@netdocuments.com", "ed.hinds@netdocuments.com", "oana.manem@netdocuments.com", "stephanie.klahre@netdocuments.com", "adam.scott@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX implementation review with Winckworth Sherwood covering training relaunch strategy, Studio Apps review, and AI Profiling planning. Christel Aguila from Winckworth joined Chad Patel, Ed Hinds, Oana Manem, and Stephanie Klahre from ND alongside Adam Scott.\n\n## Key Decisions\n- Training relaunch approach confirmed with updated materials\n- Studio Apps rollout plan finalized\n- AI Profiling scoped as next major initiative\n\n## Action Items\n- Chad Patel (ND): Prepare updated training materials for relaunch\n- Adam Scott (ND): Configure Studio Apps per agreed plan\n- Stephanie Klahre (ND): Schedule AI Profiling intro session\n\n## Topics Covered\n- Training relaunch strategy and materials\n- Studio Apps rollout and user adoption\n- AI Profiling planning and next steps"
+      },
+      {
+        "uri": "calendar:///events/staircase-winckworth-002",
+        "subject": "Winckworth Sherwood - AI Profiling Introduction",
+        "start": "2026-03-13T14:00:00.000Z",
+        "end": "2026-03-13T15:00:00.000Z",
+        "attendees": ["christel.aguila@winckworthsherwood.co.uk", "chad.patel@netdocuments.com", "ed.hinds@netdocuments.com", "oana.manem@netdocuments.com", "stephanie.klahre@netdocuments.com", "adam.scott@netdocuments.com", "kyle.kissell@netdocuments.com", "kathleen.hogan@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nAI Profiling introduction session for Winckworth Sherwood. Kyle Kissell and Kathleen Hogan joined the core team to introduce AI Profiling capabilities. The session focused on sandbox taxonomy testing with Winckworth's document types.\n\n## Key Decisions\n- Sandbox taxonomy testing confirmed as next step\n- AI Profiling rollout plan approved in principle\n\n## Action Items\n- Kyle Kissell (ND): Set up AI Profiling sandbox for Winckworth document types\n- Christel Aguila (WS): Provide document samples for taxonomy testing\n- Kathleen Hogan (ND): Lead taxonomy configuration work\n\n## Topics Covered\n- AI Profiling capabilities and use cases for Winckworth Sherwood\n- Sandbox setup and taxonomy testing approach\n- Document classification for legal practice areas"
+      },
+      {
+        "uri": "calendar:///events/staircase-winckworth-003",
+        "subject": "Winckworth Sherwood - SmartView Troubleshooting",
+        "start": "2026-03-27T14:00:00.000Z",
+        "end": "2026-03-27T15:00:00.000Z",
+        "attendees": ["cameron.lowrie@winckworthsherwood.co.uk", "abid.hussain@winckworthsherwood.co.uk", "stephanie.klahre@netdocuments.com", "adam.scott@netdocuments.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nSmartView troubleshooting session with Cameron Lowrie and Abid Hussain from Winckworth Sherwood. The team worked through SmartView configuration issues and identified fixes for the issues impacting user experience.\n\n## Key Decisions\n- Root cause of SmartView issues identified and remediation plan agreed\n\n## Action Items\n- Adam Scott (ND): Implement SmartView configuration fix\n- Cameron Lowrie (WS): Test the fix in the Winckworth environment\n\n## Topics Covered\n- SmartView configuration issues and root cause analysis\n- Remediation approach and testing plan\n- User impact assessment"
+      }
+    ],
+    "Analysis Group": [
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRk-AnalysisGroup-Kickoff",
+        "subject": "Analysis Group | ndMAX Kickoff",
+        "start": "2026-03-30T15:00:00.000Z",
+        "end": "2026-03-30T16:00:00.000Z",
+        "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com", "julie.bice@analysisgroup.com", "steve.yates@analysisgroup.com", "nicole.kirby@analysisgroup.com", "dan.andersen@analysisgroup.com", "alexandra.miller@analysisgroup.com", "terese.dillingham@analysisgroup.com", "kamana.koirala@analysisgroup.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX kickoff with the Analysis Group team. Julie Bice, Stephen Yates, Nicole Kirby, Dan Andersen, Alexandra Miller, Terese Dillingham, and Kamana Koirala from Analysis Group joined Emilio Campos and Stephanie Klahre to launch the implementation, covering AI Assistant pilot, Studio Apps, and AI Profiling priorities.\n\n## Key Decisions\n- AI Assistant pilot confirmed as the first priority\n- Studio Apps rollout planned for Phase 2\n- AI Profiling scoped for Phase 3\n\n## Action Items\n- Emilio Campos (ND): Set up AI Assistant pilot environment for Analysis Group\n- Stephanie Klahre (ND): Share implementation timeline and milestones\n- Julie Bice (Analysis Group): Identify pilot users for AI Assistant\n\n## Topics Covered\n- ndMAX AI Assistant pilot planning\n- Studio Apps capabilities and rollout approach\n- AI Profiling overview and future phasing\n- Implementation timeline and milestones"
+      },
+      {
+        "uri": "calendar:///events/AQMkAGU3ZDRk-AnalysisGroup-Sync",
+        "subject": "Sync - Analysis Group",
+        "start": "2026-04-01T19:00:00.000Z",
+        "end": "2026-04-01T19:30:00.000Z",
+        "attendees": ["emilio.campos@netdocuments.com", "stephanie.klahre@netdocuments.com"],
+        "organizer": "emilio.campos@netdocuments.com",
+        "location": "Microsoft Teams Meeting",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nInternal ND sync between Emilio Campos and Stephanie Klahre to debrief on the Analysis Group kickoff and plan immediate next steps for the AI Profiling follow-up session.\n\n## Key Decisions\n- AI Profiling Discussion agenda finalized\n- Phased approach for Analysis Group implementation confirmed\n\n## Action Items\n- Emilio Campos (ND): Prepare AI Profiling demo materials for Analysis Group\n- Stephanie Klahre (ND): Coordinate with Kyle Kissell for Apr 3 session\n\n## Topics Covered\n- Kickoff debrief and client feedback\n- AI Profiling session planning\n- Implementation phasing"
+      },
+      {
+        "uri": "calendar:///events/AAMkAGU3ZDRk-AnalysisGroup-AIProfiling",
+        "subject": "Analysis Group - AI Profiling Discussion",
+        "start": "2026-04-03T18:30:00.000Z",
+        "end": "2026-04-03T19:00:00.000Z",
+        "attendees": ["emilio.campos@netdocuments.com", "steve.yates@analysisgroup.com", "stephanie.klahre@netdocuments.com", "kyle.kissell@netdocuments.com"],
+        "organizer": "emilio.campos@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nAI Profiling alignment session with Stephen Yates from Analysis Group. Kyle Kissell joined Emilio Campos and Stephanie Klahre to deep dive into the AI Profiling phased approach and confirm sandbox testing methodology for Analysis Group's economic consulting document types.\n\n## Key Decisions\n- Phased AI Profiling approach agreed: sandbox testing first, then production rollout\n- Taxonomy design to be led by ND with Analysis Group input\n\n## Action Items\n- Kyle Kissell (ND): Set up AI Profiling sandbox for Analysis Group\n- Emilio Campos (ND): Share AI Profiling taxonomy template for Analysis Group review\n- Stephen Yates (Analysis Group): Identify document types and categories for Phase 1\n\n## Topics Covered\n- AI Profiling phased approach and methodology\n- Sandbox taxonomy testing plan\n- Analysis Group document classification requirements\n- Production rollout timeline"
+      }
+    ],
+    "Wiggin and Dana LLP": [
+      {
+        "uri": "calendar:///events/staircase-wiggin-001",
+        "subject": "Wiggin and Dana ndMAX Introduction & Project Planning",
+        "start": "2026-02-09T15:00:00.000Z",
+        "end": "2026-02-09T16:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "brandall.nelson@netdocuments.com", "michael.pennington@netdocuments.com", "nikki.patel@netdocuments.com", "genevieve.nicholson@wiggin.com", "bill.dunlap@wiggin.com", "mary.barry@wiggin.com", "chel.guardino@wiggin.com", "jason.eiseman@wiggin.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX introduction and project planning kickoff with Wiggin and Dana. Genevieve Nicholson, Bill Dunlap, Mary Barry, Chel Guardino, and Jason Eiseman from Wiggin joined the ND team to launch the implementation. Key focus areas identified: 5-user pilot program and AI Profiling.\n\n## Key Decisions\n- 5-user pilot program confirmed as first phase\n- AI Profiling identified as primary AI initiative\n- Implementation team structure agreed upon\n\n## Action Items\n- Stephanie Klahre (ND): Share implementation plan and pilot program details\n- Nikki Patel (ND): Set up pilot environment for 5 users\n- Wiggin team: Identify 5 pilot users and their primary workflows\n\n## Topics Covered\n- ndMAX platform overview for Wiggin and Dana\n- 5-user pilot program design and scope\n- AI Profiling capabilities and use cases\n- Project planning and milestone setting"
+      },
+      {
+        "uri": "calendar:///events/staircase-wiggin-002",
+        "subject": "Wiggin and Dana - Studio Apps Working Session",
+        "start": "2026-03-04T15:00:00.000Z",
+        "end": "2026-03-04T16:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "brandall.nelson@netdocuments.com", "michael.pennington@netdocuments.com", "nikki.patel@netdocuments.com", "eric.vidiella@netdocuments.com", "jen.cass@netdocuments.com", "chris.fernelius@netdocuments.com", "genevieve.nicholson@wiggin.com", "bill.dunlap@wiggin.com", "mary.barry@wiggin.com", "chel.guardino@wiggin.com", "jason.eiseman@wiggin.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nStudio Apps working session with Wiggin and Dana. The expanded ND team including Eric Vidiella, Jen Cass, and Chris Fernelius joined to demonstrate and configure Studio Apps. Focus was on Judge Analytics and Vendor Contracts applications relevant to Wiggin's practice areas.\n\n## Key Decisions\n- Judge Analytics and Vendor Contracts identified as priority Studio Apps\n- Configuration approach confirmed for both apps\n\n## Action Items\n- Eric Vidiella (ND): Configure Judge Analytics app for Wiggin and Dana\n- Chris Fernelius (ND): Set up Vendor Contracts app configuration\n- Wiggin team: Provide sample data for app testing\n\n## Topics Covered\n- Studio Apps overview and capabilities\n- Judge Analytics app demo and configuration\n- Vendor Contracts app scoping\n- User adoption planning"
+      },
+      {
+        "uri": "calendar:///events/staircase-wiggin-003",
+        "subject": "Wiggin and Dana - Studio App Config Review",
+        "start": "2026-04-07T15:00:00.000Z",
+        "end": "2026-04-07T16:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "nikki.patel@netdocuments.com", "mary.barry@wiggin.com", "chel.guardino@wiggin.com", "jason.eiseman@wiggin.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nStudio App configuration review session with the Wiggin and Dana core team. Mary Barry, Chel Guardino, and Jason Eiseman reviewed the configured Judge Analytics and Vendor Contracts apps with Nikki Patel and Stephanie Klahre, making rollout decisions.\n\n## Key Decisions\n- Studio App configurations approved for production rollout\n- Rollout timeline confirmed: phased by practice group\n- User training approach agreed upon\n\n## Action Items\n- Nikki Patel (ND): Finalize app configurations and prepare for rollout\n- Wiggin team: Communicate rollout plan to pilot users\n- Stephanie Klahre (ND): Coordinate training sessions\n\n## Topics Covered\n- Studio App configuration review and sign-off\n- Rollout timeline and phasing by practice group\n- User training and change management planning"
+      },
+      {
+        "uri": "calendar:///events/staircase-wiggin-004",
+        "subject": "Wiggin and Dana - Summarize Troubleshooting",
+        "start": "2026-04-15T15:00:00.000Z",
+        "end": "2026-04-15T15:30:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "nikki.patel@netdocuments.com", "chel.guardino@wiggin.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nTroubleshooting session for the ndMAX Summarize feature with Chel Guardino from Wiggin and Dana. Nikki Patel and Stephanie Klahre identified and resolved a Summarize issue using a delete-and-re-import approach.\n\n## Key Decisions\n- Delete/re-import fix confirmed as the resolution for Summarize issue\n- Issue resolved in the session\n\n## Action Items\n- Nikki Patel (ND): Validate fix in production and monitor for recurrence\n- Chel Guardino (Wiggin): Confirm Summarize is working correctly after the fix\n\n## Topics Covered\n- Summarize feature troubleshooting\n- Root cause of the issue identified\n- Delete/re-import resolution implemented"
+      }
+    ],
+    "Lewis Silkin LLP": [
+      {
+        "uri": "calendar:///events/staircase-lewissilkin-001",
+        "subject": "Lewis Silkin ndMAX Strategy & AI Features Review",
+        "start": "2026-01-26T14:00:00.000Z",
+        "end": "2026-01-26T15:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "lydia.morris@netdocuments.com", "daniel.solomon@lewissilkin.com", "michelle.taylor@lewissilkin.com", "alex.bazin@lewissilkin.com"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nStrategic review with Lewis Silkin covering migration status, AI feature roadmap, and Harvey integration. Daniel Solomon, Michelle Taylor, and Alex Bazin from Lewis Silkin joined Lydia Morris and Stephanie Klahre from ND to discuss platform direction and AI capabilities including Smart Answers and semantic search.\n\n## Key Decisions\n- Migration timeline confirmed\n- Smart Answers identified as a priority AI feature for Lewis Silkin\n- Harvey integration exploration agreed upon\n\n## Action Items\n- Lydia Morris (ND): Share Smart Answers documentation and setup guide\n- Stephanie Klahre (ND): Coordinate Harvey integration discussion with product team\n- Daniel Solomon (Lewis Silkin): Identify use cases for Smart Answers\n\n## Topics Covered\n- Migration status and timeline update\n- Semantic search capabilities and use cases\n- Smart Answers feature overview and configuration\n- Harvey AI integration possibilities"
+      }
+    ],
+    "Advokatbyran Kaiding": [
+      {
+        "uri": "calendar:///events/staircase-kaiding-001",
+        "subject": "Advokatbyran Kaiding ndMAX Kickoff",
+        "start": "2026-03-26T15:00:00.000Z",
+        "end": "2026-03-26T16:00:00.000Z",
+        "attendees": ["stephanie.klahre@netdocuments.com", "andreas.viklund@kaiding.se", "robert.svedjetorp@kaiding.se"],
+        "organizer": "stephanie.klahre@netdocuments.com",
+        "location": "Zoom",
+        "meetingTranscriptUrl": null,
+        "staticRecap": "## Summary\nndMAX kickoff with Advokatbyran Kaiding in Sweden. Andreas Viklund and Robert Svedjetorp from Kaiding joined Stephanie Klahre to launch the implementation. The session focused on defining the phased rollout plan appropriate for Kaiding's firm size and practice.\n\n## Key Decisions\n- Phased rollout plan confirmed: core ndMAX first, then AI features\n- Andreas Viklund identified as primary technical contact\n\n## Action Items\n- Stephanie Klahre (ND): Share implementation documentation in English\n- Andreas Viklund (Kaiding): Provide environment details for setup\n- Robert Svedjetorp (Kaiding): Identify pilot users for Phase 1\n\n## Topics Covered\n- ndMAX platform overview for Advokatbyran Kaiding\n- Phased rollout plan and timeline\n- Technical setup requirements\n- AI feature roadmap for future phases"
       }
     ]
   }

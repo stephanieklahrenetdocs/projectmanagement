@@ -2122,6 +2122,7 @@ function renderHubTimeline(c, liveEvents) {
           location: m.location || '',
           uri: m.uri || '',
           meetingTranscriptUrl: m.meetingTranscriptUrl || null,
+          staticRecap: m.staticRecap || null,
           kind: d > today ? 'upcoming' : (internal ? 'internal' : 'meeting'),
           live: true,
           clientName: c.name
@@ -2203,6 +2204,9 @@ function buildTimelineEntry(ev) {
   let bodyContent;
   if (cached) {
     bodyContent = renderAIRecap(cached, meetingId, transcriptUrl);
+  } else if (ev.staticRecap) {
+    bodyContent = `<div class="tl-recap-content">${renderRecapMarkdown(ev.staticRecap)}</div>
+      <div style="font-size:11px;color:var(--gray-400);margin-top:8px;">📋 Pre-generated recap</div>`;
   } else if (transcriptUrl) {
     bodyContent = `<div class="tl-recap-no-transcript">Transcript available. Click to generate AI recap.</div>`;
   } else {

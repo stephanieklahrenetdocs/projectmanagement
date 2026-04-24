@@ -1348,6 +1348,12 @@ let _clientLocations = {};   // loaded from data/client-locations.json — city 
 async function tryRemoteLoad() {
   let csvLoaded = false;
 
+  // 0. Load client-locations.json first so city shows when table renders
+  try {
+    const r = await fetch('data/client-locations.json', { cache: 'no-store' });
+    if (r.ok) _clientLocations = await r.json();
+  } catch(e) { /* no locations file */ }
+
   // 1. Try data/combined.csv (full CSV committed to repo)
   try {
     const r = await fetch('data/combined.csv', { cache: 'no-store' });
@@ -1377,12 +1383,6 @@ async function tryRemoteLoad() {
       }
     }
   } catch(e) { /* no snapshot yet */ }
-
-  // Load data/client-locations.json — city lookup per client name
-  try {
-    const r = await fetch('data/client-locations.json', { cache: 'no-store' });
-    if (r.ok) _clientLocations = await r.json();
-  } catch(e) { /* no locations file */ }
 
   // Load data/meetings.json — pre-fetched Outlook calendar data (no API key needed)
   try {

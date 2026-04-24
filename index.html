@@ -1924,13 +1924,47 @@ function switchTab(name) {
 }
 
 // ── META BAR ──
+const _countryTZ = {
+  'United States':'America/New_York','USA':'America/New_York','US':'America/New_York',
+  'United Kingdom':'Europe/London','UK':'Europe/London','England':'Europe/London','Scotland':'Europe/London','Wales':'Europe/London',
+  'Australia':'Australia/Sydney','New Zealand':'Pacific/Auckland',
+  'Canada':'America/Toronto',
+  'Germany':'Europe/Berlin','France':'Europe/Paris','Netherlands':'Europe/Amsterdam',
+  'Spain':'Europe/Madrid','Italy':'Europe/Rome','Switzerland':'Europe/Zurich',
+  'Sweden':'Europe/Stockholm','Norway':'Europe/Oslo','Denmark':'Europe/Copenhagen',
+  'Finland':'Europe/Helsinki','Belgium':'Europe/Brussels','Austria':'Europe/Vienna',
+  'Poland':'Europe/Warsaw','Portugal':'Europe/Lisbon','Ireland':'Europe/Dublin',
+  'Singapore':'Asia/Singapore','Japan':'Asia/Tokyo','China':'Asia/Shanghai',
+  'India':'Asia/Kolkata','UAE':'Asia/Dubai','United Arab Emirates':'Asia/Dubai',
+  'South Africa':'Africa/Johannesburg','Brazil':'America/Sao_Paulo',
+  'Mexico':'America/Mexico_City','Argentina':'America/Argentina/Buenos_Aires',
+  'Chile':'America/Santiago','Colombia':'America/Bogota',
+};
+
+function _clientTZDiff(country) {
+  const tz = _countryTZ[country];
+  if (!tz) return null;
+  try {
+    const now = new Date();
+    const toMs = zone => new Date(now.toLocaleString('en-US', { timeZone: zone })) - new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+    const diff = Math.round(((toMs(tz) - toMs(Intl.DateTimeFormat().resolvedOptions().timeZone)) / 3600000) * 2) / 2;
+    return diff;
+  } catch (e) { return null; }
+}
+
 function renderHubMeta(c) {
   const meta = document.getElementById('hub-meta');
   const parts = [];
   if (c.rag) parts.push(`<span class="hub-meta-item"><span class="dot dot-${c.rag.toLowerCase()}"></span><strong>${c.rag}</strong></span>`);
   if (c.status) parts.push(`<span class="hub-meta-item">📋 <strong>${c.status}</strong></span>`);
   if (c.segment) parts.push(`<span class="hub-meta-item">🏢 ${c.segment}</span>`);
-  if (c.country) parts.push(`<span class="hub-meta-item">🌍 ${c.country}</span>`);
+  if (c.country) {
+    const diff = _clientTZDiff(c.country);
+    const tzBadge = diff != null && diff !== 0
+      ? ` <span style="font-size:10px;opacity:.65;font-weight:400;">(${diff > 0 ? '+' : ''}${diff}h)</span>`
+      : '';
+    parts.push(`<span class="hub-meta-item">🌍 ${c.country}${tzBadge}</span>`);
+  }
   if (c.aiArrContracted) parts.push(`<span class="hub-meta-item">💰 <strong>${fmtCurrency(c.aiArrContracted)}</strong> AI ARR</span>`);
   meta.innerHTML = parts.join('');
 }

@@ -1960,9 +1960,14 @@ function renderHubMeta(c) {
   if (c.segment) parts.push(`<span class="hub-meta-item">🏢 ${c.segment}</span>`);
   if (c.country) {
     const diff = _clientTZDiff(c.country);
-    const tzBadge = diff != null && diff !== 0
-      ? ` <span style="font-size:10px;opacity:.65;font-weight:400;">(${diff > 0 ? '+' : ''}${diff}h)</span>`
-      : '';
+    let tzBadge = '';
+    if (diff != null) {
+      const tz = _countryTZ[c.country];
+      const localTime = tz ? new Date().toLocaleTimeString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true }) : null;
+      const diffLabel = diff === 0 ? 'same time as you' : `${Math.abs(diff)}h ${diff > 0 ? 'ahead' : 'behind'}`;
+      const timeStr = localTime ? ` · ${localTime}` : '';
+      tzBadge = ` <span title="${diffLabel}" style="font-size:11px;opacity:.8;font-weight:400;background:rgba(255,255,255,.12);border-radius:4px;padding:1px 5px;">🕐 ${diff > 0 ? '+' : ''}${diff}h${timeStr}</span>`;
+    }
     parts.push(`<span class="hub-meta-item">🌍 ${c.country}${tzBadge}</span>`);
   }
   if (c.aiArrContracted) parts.push(`<span class="hub-meta-item">💰 <strong>${fmtCurrency(c.aiArrContracted)}</strong> AI ARR</span>`);

@@ -1154,9 +1154,9 @@
     <!-- TIMELINE -->
     <div class="hub-pane" id="pane-timeline">
       <div id="tl-sync-bar" class="tl-sync-bar">
-        <button class="tl-sync-btn" id="tl-sync-btn" onclick="document.getElementById('tl-sync-btn').dataset.forceRefresh='1';doTimelineSync()">📅 Sync Meetings</button>
-        <span class="tl-sync-status" id="tl-sync-status">📅 Loading calendar data…</span>
-        <button class="tl-settings-btn" onclick="openSettingsModal()" title="Calendar sync settings" style="background:none;border:none;">⚙️</button>
+        <button class="tl-sync-btn" id="tl-sync-btn" onclick="refreshFromAsana()">🔄 Refresh from Asana</button>
+        <span class="tl-sync-status" id="tl-sync-status">📋 Loading meeting data…</span>
+        <button class="tl-settings-btn" onclick="openSettingsModal()" title="Integration settings" style="background:none;border:none;">⚙️</button>
       </div>
       <div class="section-hdr">Meetings &amp; Implementation Timeline</div>
       <div id="hub-timeline"></div>
@@ -1924,36 +1924,9 @@ function switchTab(name) {
   document.querySelectorAll('.hub-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.hub-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + name));
 
-  // Re-render timeline every time the tab is opened — always show freshest available source
+  // Re-render timeline every time the tab is opened
   if (name === 'timeline' && _currentHubClient) {
-    const c = _currentHubClient;
-    const cached = getMeetingCache(c.name);
-    const staticMtgs = getStaticMeetings(c.name);
-    const statusEl = document.getElementById('tl-sync-status');
-
-    if (cached) {
-      const cacheRaw = localStorage.getItem('meetings:' + c.name);
-      let ageStr = '';
-      try {
-        const ts = JSON.parse(cacheRaw).ts;
-        const mins = Math.round((Date.now() - ts) / 60000);
-        ageStr = mins < 60 ? `${mins}m ago` : `${Math.round(mins/60)}h ago`;
-      } catch {}
-      const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
-      statusEl.textContent = `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — synced ${ageStr}`;
-      renderHubTimeline(c, cached);
-    } else if (staticMtgs && staticMtgs.length) {
-      const genStr = _meetingsGenerated
-        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
-        : 'recently';
-      statusEl.textContent = `📅 Outlook calendar — ${staticMtgs.length} meetings — as of ${genStr}`;
-      renderHubTimeline(c, staticMtgs);
-    } else if (localStorage.getItem('orbit_api_key')) {
-      doTimelineSync();
-    } else {
-      statusEl.textContent = '📅 No calendar data yet — contact your admin to refresh.';
-      renderHubTimeline(c, null);
-    }
+    loadTimelineFromAsana(_currentHubClient.name, false);
   }
 }
 
@@ -2350,90 +2323,212 @@ function setMeetingCache(clientName, events) {
   } catch {}
 }
 
-async function doTimelineSync() {
+// ─── ASANA INTEGRATION ───────────────────────────────────────────────────────
+
+// Core Asana fetch helper — uses PAT from localStorage
+async function asanaFetch(path) {
+  const pat = localStorage.getItem('asana_pat');
+  if (!pat) throw new Error('No Asana PAT — open ⚙️ Settings to add it.');
+  const resp = await fetch('https://app.asana.com/api/1.0' + path, {
+    headers: { 'Authorization': 'Bearer ' + pat, 'Accept': 'application/json' }
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`Asana ${resp.status}: ${err.slice(0, 200)}`);
+  }
+  return resp.json();
+}
+
+function _ageLabel(ts) {
+  const mins = Math.round((Date.now() - ts) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.round(mins / 60)}h ago`;
+}
+
+// Main timeline loader — called on tab switch and on manual refresh
+async function loadTimelineFromAsana(clientName, forceRefresh) {
+  const statusEl = document.getElementById('tl-sync-status');
+  const btn = document.getElementById('tl-sync-btn');
   const c = _currentHubClient;
   if (!c) return;
-  const btn = document.getElementById('tl-sync-btn');
-  const status = document.getElementById('tl-sync-status');
 
-  const apiKey = localStorage.getItem('orbit_api_key');
-  if (!apiKey) {
-    // No API key — show pre-fetched static data if available
-    const staticMtgs = getStaticMeetings(c.name);
-    const status = document.getElementById('tl-sync-status');
+  const cacheKey = 'asana_timeline:' + clientName;
+
+  // Check 1-hour cache (skip if forceRefresh)
+  if (!forceRefresh) {
+    try {
+      const raw = localStorage.getItem(cacheKey);
+      if (raw) {
+        const { ts, events } = JSON.parse(raw);
+        if (Date.now() - ts < 3600000) {
+          statusEl.textContent = `📋 Asana — ${events.length} meetings — ${_ageLabel(ts)}`;
+          renderHubTimeline(c, events);
+          return;
+        }
+      }
+    } catch {}
+  }
+
+  // No PAT → fall back to static meetings.json data
+  if (!localStorage.getItem('asana_pat')) {
+    const staticMtgs = getStaticMeetings(clientName);
     if (staticMtgs && staticMtgs.length) {
       const genStr = _meetingsGenerated
-        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        ? new Date(_meetingsGenerated).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
         : 'recently';
-      status.textContent = `📅 Outlook calendar — ${staticMtgs.length} meetings — as of ${genStr}`;
+      statusEl.textContent = `📋 ${staticMtgs.length} meetings — as of ${genStr} (add Asana PAT in ⚙️ for live data)`;
       renderHubTimeline(c, staticMtgs);
     } else {
-      status.textContent = '📅 No calendar data available.';
+      statusEl.textContent = '📋 No meeting data — open ⚙️ Settings to add your Asana PAT.';
       renderHubTimeline(c, null);
     }
     return;
   }
 
-  // If re-syncing, clear existing cache so we force a fresh fetch
-  if (btn.dataset.forceRefresh === '1') {
-    localStorage.removeItem('meetings:' + c.name);
-    btn.dataset.forceRefresh = '';
-  }
-
-  // Check cache first (button shows cached data instantly)
-  const cached = getMeetingCache(c.name);
-  if (cached) {
-    const withTx = cached.filter(e => e.meetingTranscriptUrl).length;
-    status.textContent = `📅 Outlook calendar — ${cached.length} meetings, ${withTx} with transcripts — cached`;
-    renderHubTimeline(c, cached);
-    return;
-  }
-
   btn.disabled = true;
-  btn.textContent = '⏳ Syncing…';
-
-  const setStatus = msg => { status.textContent = msg; };
-  setStatus('🔍 Searching Outlook calendar…');
+  btn.textContent = '⏳ Loading…';
+  statusEl.textContent = '🔍 Searching Asana for project…';
 
   try {
-    const events = await syncClientMeetings(c, apiKey, setStatus);
-    setMeetingCache(c.name, events);
+    // Step 1: Find project via typeahead
+    const workspaceGid = '1148806218142272';
+    const typeaheadData = await asanaFetch(
+      `/workspaces/${workspaceGid}/typeahead?resource_type=project&query=${encodeURIComponent(clientName)}&count=5`
+    );
+    const projects = typeaheadData.data || [];
+
+    if (!projects.length) {
+      // Fall back to static
+      const staticMtgs = getStaticMeetings(clientName);
+      if (staticMtgs && staticMtgs.length) {
+        statusEl.textContent = `📋 No Asana project found — showing static data (${staticMtgs.length} meetings)`;
+        renderHubTimeline(c, staticMtgs);
+      } else {
+        statusEl.textContent = `📋 No Asana project found for "${clientName}".`;
+        renderHubTimeline(c, null);
+      }
+      return;
+    }
+
+    const project = projects[0];
+    statusEl.textContent = `📋 Found: ${project.name} — loading tasks…`;
+
+    // Step 2: Get all tasks in project
+    const tasksData = await asanaFetch(
+      `/projects/${project.gid}/tasks?opt_fields=gid,name,notes,due_on,completed,created_at&limit=100`
+    );
+    const allTasks = tasksData.data || [];
+
+    // Step 3: Filter to meeting tasks (month abbreviation prefix)
+    const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const meetingTasks = allTasks.filter(t => {
+      const upper = (t.name || '').toUpperCase();
+      return MONTHS.some(m => upper.startsWith(m + ' '));
+    });
+
+    const events = asanaMeetingsToEvents(meetingTasks, clientName);
+
+    // Cache 1 hour
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), events }));
+    } catch {}
+
+    statusEl.textContent = `📋 Asana — ${events.length} meetings — just updated`;
     renderHubTimeline(c, events);
-    const withTx = events.filter(e => e.meetingTranscriptUrl).length;
-    setStatus(`📅 Outlook calendar — ${events.length} meetings, ${withTx} with transcripts — cached 24h`);
-  } catch(err) {
-    console.error('Timeline sync error:', err);
-    setStatus(`⚠️ Sync failed: ${err.message}`);
-    renderHubTimeline(c, null);
+
+  } catch (err) {
+    console.error('Asana load error:', err);
+    // Fall back to static on error
+    const staticMtgs = getStaticMeetings(clientName);
+    if (staticMtgs && staticMtgs.length) {
+      statusEl.textContent = `⚠️ Asana error — showing static data (${staticMtgs.length} meetings)`;
+      renderHubTimeline(c, staticMtgs);
+    } else {
+      statusEl.textContent = `⚠️ Failed to load from Asana: ${err.message}`;
+      renderHubTimeline(c, null);
+    }
   } finally {
     btn.disabled = false;
-    btn.textContent = '📅 Sync Meetings';
+    btn.textContent = '🔄 Refresh from Asana';
   }
 }
 
-// Shared low-level M365 MCP API call
-async function m365ApiCall(apiKey, prompt, maxTokens) {
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-beta': 'mcp-client-2025-04-04',
-      'anthropic-dangerous-direct-browser-access': 'true'   // required for browser CORS
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: maxTokens || 4000,
-      mcp_servers: [{ type: 'url', url: 'https://microsoft365.mcp.claude.com/mcp', name: 'm365' }],
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`API ${resp.status}: ${err.slice(0, 220)}`);
+function refreshFromAsana() {
+  if (_currentHubClient) {
+    loadTimelineFromAsana(_currentHubClient.name, true);
   }
-  return resp.json();
+}
+
+// Convert Asana task array → event objects compatible with renderHubTimeline
+function asanaMeetingsToEvents(tasks, clientName) {
+  const MONTH_MAP = { JAN:0, FEB:1, MAR:2, APR:3, MAY:4, JUN:5, JUL:6, AUG:7, SEP:8, OCT:9, NOV:10, DEC:11 };
+  const events = tasks.map(task => {
+    const name = task.name || '';
+    const notes = task.notes || '';
+
+    // Parse "MAR 30 - Subject" or "MAR 30 – Subject"
+    const dateMatch = name.match(/^([A-Za-z]{3})\s+(\d{1,2})\s*[-–]\s*/);
+    let startIso = task.due_on ? task.due_on + 'T00:00:00.000Z' : null;
+    let subject = name;
+
+    if (dateMatch) {
+      const monthKey = dateMatch[1].toUpperCase();
+      const day = parseInt(dateMatch[2], 10);
+      subject = name.slice(dateMatch[0].length).trim();
+      const monthNum = MONTH_MAP[monthKey];
+      if (monthNum !== undefined) {
+        // Infer year: prefer due_on year, else 2026
+        const year = task.due_on ? new Date(task.due_on + 'T12:00:00Z').getFullYear() : 2026;
+        startIso = new Date(Date.UTC(year, monthNum, day)).toISOString();
+      }
+    }
+
+    const attendees = parseAsanaAttendees(notes);
+    const staticRecap = parseAsanaRecap(notes);
+
+    // Detect internal: [INTERNAL] tag or all attendees @netdocuments.com
+    const internalTag = name.toUpperCase().includes('[INTERNAL]');
+    const allND = attendees.length > 0 && attendees.every(a => {
+      const m = a.match(/@(.+)$/);
+      return !m || m[1].toLowerCase() === 'netdocuments.com';
+    });
+
+    return {
+      uri: 'asana:///tasks/' + task.gid,
+      subject: subject.replace(/\[INTERNAL\]/gi, '').trim(),
+      start: startIso,
+      end: null,
+      attendees: attendees,
+      organizer: null,
+      location: null,
+      meetingTranscriptUrl: null,
+      staticRecap: staticRecap,
+      _internal: internalTag || allND
+    };
+  });
+
+  // Newest first
+  return events.sort((a, b) => new Date(b.start || 0) - new Date(a.start || 0));
+}
+
+// Parse "Attendees: Name <email>, ..." or "Attendees:\n- Name\n- Name" from task notes
+function parseAsanaAttendees(notes) {
+  const match = notes.match(/Attendees?:\s*([\s\S]*?)(?:\n\s*\n|\nRECAP:|\nRecap:|$)/i);
+  if (!match) return [];
+  const section = match[1];
+  return section
+    .split(/[\n,]/)
+    .map(s => s.replace(/^[-•*]\s*/, '').trim())
+    .filter(s => s.length > 2);
+}
+
+// Parse "RECAP:\n..." — everything after that marker
+function parseAsanaRecap(notes) {
+  const idx = notes.search(/RECAP:/i);
+  if (idx === -1) return null;
+  const text = notes.slice(idx + 6).trim();
+  return text || null;
 }
 
 // Plain Claude call (no MCP) — for summarization
@@ -2520,56 +2615,6 @@ function extractWebVTT(text) {
   return null;
 }
 
-// ─── SYNC IMPLEMENTATION ──────────────────────────────────────────────────────
-
-async function syncClientMeetings(c, apiKey, onStatus) {
-  const clientName = c.name;
-
-  // ── API CALL 1: Search calendar ──────────────────────────────────────────
-  onStatus?.(`🔍 Searching Outlook calendar for "${clientName}" meetings…`);
-
-  const searchData = await m365ApiCall(
-    apiKey,
-    `Search my Outlook calendar for all meetings with "${clientName}" in the subject. Search from 2025-01-01 to now. Return the results as a JSON array. Each object should have: uri, subject, start, end, attendees (array of email strings), organizer, location. Return ONLY valid JSON, nothing else.`,
-    4000
-  );
-
-  const searchText = parseAnthropicResponse(searchData);
-  const meetings = extractJSON(searchText);
-
-  if (!Array.isArray(meetings) || !meetings.length) {
-    onStatus?.(`No meetings found for "${clientName}" in Outlook calendar.`);
-    return [];
-  }
-
-  // ── API CALL 2: Per-event detail → meetingTranscriptUrl ──────────────────
-  const today = new Date();
-  const pastMeetings = meetings.filter(m => {
-    const d = new Date(m.start || m.date);
-    return !isNaN(d) && d < today && m.uri;
-  });
-
-  onStatus?.(`Found ${meetings.length} meetings — fetching transcript URLs for ${pastMeetings.length} past meetings…`);
-
-  for (let i = 0; i < pastMeetings.length; i++) {
-    const mtg = pastMeetings[i];
-    onStatus?.(`Getting transcript URL ${i + 1}/${pastMeetings.length}: ${(mtg.subject||'').slice(0,40)}`);
-    try {
-      const detailData = await m365ApiCall(
-        apiKey,
-        `Use the read_resource tool to read this calendar event and return the raw tool result as JSON. URI: ${mtg.uri}`,
-        4000
-      );
-      const detailText = parseAnthropicResponse(detailData);
-      mtg.meetingTranscriptUrl = extractTranscriptUrl(detailText) || null;
-    } catch(e) {
-      console.warn('Event detail fetch failed:', mtg.subject, e.message);
-      mtg.meetingTranscriptUrl = null;
-    }
-  }
-
-  return meetings;
-}
 
 // ─── RECAP CACHE ─────────────────────────────────────────────────────────────
 
@@ -2620,87 +2665,15 @@ function toggleRecapBody(btn, bodyId, meetingId, transcriptUrl) {
     return;
   }
 
-  // No cache — if we have a transcriptUrl, we can generate
+  // No cache — transcript-based AI recap is not supported in Asana mode
   if (transcriptUrl) {
-    const apiKey = localStorage.getItem('orbit_api_key');
-    if (!apiKey) {
-      body.innerHTML = `<div class="tl-recap-no-transcript">Add your Anthropic API key in ⚙️ Settings to generate AI recaps from transcripts.</div>`;
-      return;
-    }
-    generateAndShowRecap(meetingId, transcriptUrl, body, apiKey);
+    body.innerHTML = `<div class="tl-recap-no-transcript">Live transcript recap is not available in Asana mode. Add a RECAP section to the Asana task notes instead.</div>`;
   }
   // else body already has the right content from initial render
 }
 
-async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl, apiKey) {
-  if (!apiKey) apiKey = localStorage.getItem('orbit_api_key');
-  if (!apiKey) {
-    bodyEl.innerHTML = `<div class="tl-recap-err">No API key. Open ⚙️ Settings to add your Anthropic key.</div>`;
-    return;
-  }
-
-  bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Fetching transcript from Teams…</div>`;
-
-  try {
-    // ── API Call 3: Fetch transcript (lazy — only when user clicks "Show recap") ──
-    let rawTranscript = getTranscriptCache(meetingId);
-    if (!rawTranscript) {
-      const txData = await m365ApiCall(
-        apiKey,
-        `Use the read_resource tool to read this meeting transcript. URI: ${transcriptUrl}\n\nReturn the raw tool result.`,
-        16000
-      );
-
-      const txText = parseAnthropicResponse(txData);
-      rawTranscript = extractWebVTT(txText);
-      if (!rawTranscript || rawTranscript.length < 50) {
-        throw new Error('Transcript was empty or unavailable for this meeting');
-      }
-      setTranscriptCache(meetingId, rawTranscript);
-    }
-
-    const kchars = Math.round(rawTranscript.length / 100) / 10;
-    bodyEl.innerHTML = `<div class="tl-recap-loading"><div class="tl-recap-spinner"></div>Transcript retrieved (${kchars}k chars) — generating recap…</div>`;
-
-    // ── API Call 4: Summarize with plain Claude (NO MCP) ─────────────────────
-    const truncated = rawTranscript.slice(0, 50000);
-    const summaryPrompt = `Summarize this meeting transcript. Return a structured recap with these sections:
-
-## Summary
-[2-3 sentences]
-
-## Key Decisions
-- [bullet points]
-
-## Action Items
-- [Owner]: [action item]
-
-## Topics Covered
-- [Topic]: [1 sentence]
-
-Be concise. Here is the transcript:
-
-${truncated}`;
-
-    const sumData = await claudeCall(apiKey, summaryPrompt, 3000);
-    const recap = sumData.content?.find(b => b.type === 'text')?.text || '';
-    if (!recap) throw new Error('Empty summary returned');
-
-    // Cache and render
-    const cacheData = {
-      generatedAt: new Date().toISOString(),
-      recap,
-      hasTranscript: true,
-      transcriptLength: rawTranscript.length
-    };
-    setRecapCache(meetingId, cacheData);
-    bodyEl.innerHTML = renderAIRecap(cacheData, meetingId, transcriptUrl);
-
-  } catch(err) {
-    console.error('Recap generation error:', err);
-    bodyEl.innerHTML = `<div class="tl-recap-err">⚠️ ${esc(err.message)}</div>
-      <button class="tl-recap-regen" style="margin-top:6px;" onclick="generateAndShowRecap('${meetingId}','${esc(transcriptUrl)}',this.closest('.tl-recap-body'))">Try again</button>`;
-  }
+async function generateAndShowRecap(meetingId, transcriptUrl, bodyEl) {
+  bodyEl.innerHTML = `<div class="tl-recap-no-transcript">Live transcript recap is not available in Asana mode. Add a RECAP section to the Asana task notes instead.</div>`;
 }
 
 async function regenRecap(meetingId, transcriptUrl, btn) {
@@ -2729,16 +2702,16 @@ function closeTranscriptModal() {
 
 function openSettingsModal(reason) {
   const modal = document.getElementById('tl-modal-bg');
-  const key = localStorage.getItem('orbit_api_key') || '';
-  document.getElementById('tl-api-key-input').value = key;
+  const pat = localStorage.getItem('asana_pat') || '';
+  document.getElementById('tl-asana-pat-input').value = pat;
   // Show status banner
   const banner = document.getElementById('tl-key-banner');
   if (reason === 'no-key') {
-    banner.textContent = 'No API key set — enter your Anthropic key below to enable live calendar sync.';
+    banner.textContent = 'No Asana PAT set — enter your token below to enable live meeting sync.';
     banner.className = 'tl-key-banner tl-key-none';
     banner.style.display = '';
-  } else if (key) {
-    banner.textContent = 'API key is saved.';
+  } else if (pat) {
+    banner.textContent = 'Asana PAT is saved.';
     banner.className = 'tl-key-banner tl-key-ok';
     banner.style.display = '';
   } else {
@@ -2751,14 +2724,14 @@ function closeSettingsModal() {
   document.getElementById('tl-modal-bg').style.display = 'none';
 }
 
-function saveApiKey() {
-  const key = document.getElementById('tl-api-key-input').value.trim();
-  if (!key) {
-    localStorage.removeItem('orbit_api_key');
-    showToast('API key cleared.');
+function saveSettings() {
+  const pat = document.getElementById('tl-asana-pat-input').value.trim();
+  if (!pat) {
+    localStorage.removeItem('asana_pat');
+    showToast('Asana PAT cleared.');
   } else {
-    localStorage.setItem('orbit_api_key', key);
-    showToast('API key saved to browser storage.');
+    localStorage.setItem('asana_pat', pat);
+    showToast('Asana PAT saved to browser storage.');
   }
   closeSettingsModal();
 }
@@ -2768,12 +2741,12 @@ function clearAllRecapCache() {
   const toRemove = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
-    if (k && (k.startsWith('recap:') || k.startsWith('transcript:') || k.startsWith('meetings:'))) {
+    if (k && (k.startsWith('recap:') || k.startsWith('transcript:') || k.startsWith('meetings:') || k.startsWith('asana_timeline:'))) {
       toRemove.push(k);
     }
   }
   toRemove.forEach(k => { localStorage.removeItem(k); count++; });
-  showToast(`Cleared ${count} cached items. Recaps will regenerate on next view.`);
+  showToast(`Cleared ${count} cached items.`);
   closeSettingsModal();
 }
 
@@ -3072,28 +3045,28 @@ init();
 <!-- ═══ SETTINGS MODAL ═══ -->
 <div id="tl-modal-bg" class="tl-modal-bg" style="display:none;" onclick="if(event.target===this)closeSettingsModal()">
   <div class="tl-modal">
-    <div class="tl-modal-title">⚙️ Calendar Sync Settings</div>
+    <div class="tl-modal-title">⚙️ Integration Settings</div>
     <div id="tl-key-banner" class="tl-key-banner" style="display:none;"></div>
     <p style="font-size:13px;color:var(--gray-500);margin-bottom:14px;line-height:1.5;">
-      Orbit uses the Anthropic API to pull live calendar events from your Microsoft 365 account.
-      Your key is stored only in this browser — never sent to any server except Anthropic.
+      Orbit uses Asana to pull live meeting data for each client project.
+      Your token is stored only in this browser — never sent to any server except Asana.
     </p>
     <div class="tl-modal-field">
-      <label class="tl-modal-label">Anthropic API Key</label>
-      <input class="tl-modal-input" type="password" id="tl-api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+      <label class="tl-modal-label">Asana Personal Access Token</label>
+      <input class="tl-modal-input" type="password" id="tl-asana-pat-input" placeholder="1/12345678:abcdef…" autocomplete="off">
       <div style="font-size:11px;color:var(--gray-500);margin-top:4px;">
-        Get your key at <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>
+        Get your token at <a href="https://app.asana.com/0/my-apps" target="_blank">app.asana.com/0/my-apps</a>
       </div>
     </div>
     <div style="font-size:12px;color:var(--gray-500);margin-bottom:12px;padding:10px;background:var(--gray-100);border-radius:6px;line-height:1.5;">
-      <strong style="color:var(--gray-700);">How it works:</strong> Sync Meetings fetches calendar events + Teams transcript URLs via M365 MCP. When you expand a meeting recap, the transcript is fetched and summarized by Claude automatically. Meeting lists are cached 24h; individual recaps are cached indefinitely until regenerated.
+      <strong style="color:var(--gray-700);">How it works:</strong> "Refresh from Asana" searches for the client's Asana project, then loads tasks with a month-prefix name (e.g. "MAR 30 - Kickoff"). Attendees and recaps are read from task notes. Results cache for 1 hour; click Refresh to force a reload. Without a PAT, pre-built static recaps are shown instead.
     </div>
     <div style="margin-bottom:16px;">
-      <button class="tl-btn-cancel" style="font-size:11px;padding:5px 10px;" onclick="clearAllRecapCache()">🗑 Clear all cached recaps</button>
+      <button class="tl-btn-cancel" style="font-size:11px;padding:5px 10px;" onclick="clearAllRecapCache()">🗑 Clear all cached data</button>
     </div>
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button class="tl-btn-cancel" onclick="closeSettingsModal()">Cancel</button>
-      <button class="tl-btn-save" onclick="saveApiKey()">Save Key</button>
+      <button class="tl-btn-save" onclick="saveSettings()">Save</button>
     </div>
   </div>
 </div>

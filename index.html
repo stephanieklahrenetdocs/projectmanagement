@@ -1340,6 +1340,7 @@ let activeRAG = 'ALL';
 let currentClientKey = null;
 let _meetingsData = {};      // loaded from data/meetings.json — keyed by client name
 let _meetingsGenerated = null;
+let _clientLocations = {};   // loaded from data/client-locations.json — city per client name
 
 // ══════════════════════════════════════════
 // REMOTE FETCH — GitHub Pages data/ folder
@@ -1376,6 +1377,12 @@ async function tryRemoteLoad() {
       }
     }
   } catch(e) { /* no snapshot yet */ }
+
+  // Load data/client-locations.json — city lookup per client name
+  try {
+    const r = await fetch('data/client-locations.json', { cache: 'no-store' });
+    if (r.ok) _clientLocations = await r.json();
+  } catch(e) { /* no locations file */ }
 
   // Load data/meetings.json — pre-fetched Outlook calendar data (no API key needed)
   try {
@@ -1801,7 +1808,7 @@ function renderTable() {
     const hsDisplay = hs != null ? `<span title="Staircase health score" style="font-size:11px;font-weight:700;color:${hsColor};margin-left:4px;">${hs}</span>` : '';
     html += `<tr onclick="openHub(${c._idx})">
       <td><span class="client-name truncate" title="${esc(c.name)}">${esc(c.name)}${c.top50 ? ' ⭐' : ''}</span>
-          <span style="font-size:11px;color:var(--gray-500)">${esc(c.country||'')}${(() => { const d = c.country ? _clientTZDiff(c.country) : null; if (d == null) return ''; const tz = _countryTZ[c.country]; const t = tz ? new Date().toLocaleTimeString('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}) : null; return ` <span title="${Math.abs(d)}h ${d>0?'ahead':'behind'}" style="opacity:.75;">🕐 ${d>0?'+':''}${d}h${t?' · '+t:''}</span>`; })()}</span></td>
+          <span style="font-size:11px;color:var(--gray-500)">${(() => { const city = _clientLocations[c.name]; const loc = city ? `${city}, ${c.country||''}` : (c.country||''); const d = c.country ? _clientTZDiff(c.country) : null; const tz = _countryTZ[c.country]; const t = tz ? new Date().toLocaleTimeString('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}) : null; const tzBadge = d != null ? ` <span title="${Math.abs(d)}h ${d>0?'ahead':'behind'}" style="opacity:.75;">🕐 ${d>0?'+':''}${d}h${t?' · '+t:''}</span>` : ''; return esc(loc) + tzBadge; })()}</span></td>
       <td><span class="pm-chip">${esc(pm)}</span></td>
       <td><span class="rag-badge ${ragClass}"><span class="dot dot-${(c.rag||'').toLowerCase()}"></span>${c.rag||'–'}</span>${hsDisplay}</td>
       <td><span class="status-badge ${statusClass}">${c.status||'–'}</span></td>
@@ -1975,7 +1982,9 @@ function renderHubMeta(c) {
       const timeStr = localTime ? ` · ${localTime}` : '';
       tzBadge = ` <span title="${diffLabel}" style="font-size:11px;opacity:.8;font-weight:400;background:rgba(255,255,255,.12);border-radius:4px;padding:1px 5px;">🕐 ${diff > 0 ? '+' : ''}${diff}h${timeStr}</span>`;
     }
-    parts.push(`<span class="hub-meta-item">🌍 ${c.country}${tzBadge}</span>`);
+    const city = _clientLocations[c.name];
+    const locLabel = city ? `${city}, ${c.country}` : c.country;
+    parts.push(`<span class="hub-meta-item">🌍 ${locLabel}${tzBadge}</span>`);
   }
   if (c.aiArrContracted) parts.push(`<span class="hub-meta-item">💰 <strong>${fmtCurrency(c.aiArrContracted)}</strong> AI ARR</span>`);
   meta.innerHTML = parts.join('');

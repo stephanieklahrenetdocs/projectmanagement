@@ -1769,7 +1769,7 @@ function renderTable() {
     const hsDisplay = hs != null ? `<span title="Staircase health score" style="font-size:11px;font-weight:700;color:${hsColor};margin-left:4px;">${hs}</span>` : '';
     html += `<tr onclick="openHub(${c._idx})">
       <td><span class="client-name truncate" title="${esc(c.name)}">${esc(c.name)}${c.top50 ? ' ⭐' : ''}</span>
-          <span style="font-size:11px;color:var(--gray-500)">${esc(c.country||'')}</span></td>
+          <span style="font-size:11px;color:var(--gray-500)">${esc(c.country||'')}${(() => { const d = c.country ? _clientTZDiff(c.country) : null; if (d == null) return ''; const tz = _countryTZ[c.country]; const t = tz ? new Date().toLocaleTimeString('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}) : null; return ` <span title="${Math.abs(d)}h ${d>0?'ahead':'behind'}" style="opacity:.75;">🕐 ${d>0?'+':''}${d}h${t?' · '+t:''}</span>`; })()}</span></td>
       <td><span class="pm-chip">${esc(pm)}</span></td>
       <td><span class="rag-badge ${ragClass}"><span class="dot dot-${(c.rag||'').toLowerCase()}"></span>${c.rag||'–'}</span>${hsDisplay}</td>
       <td><span class="status-badge ${statusClass}">${c.status||'–'}</span></td>

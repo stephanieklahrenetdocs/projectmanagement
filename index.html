@@ -1348,10 +1348,13 @@ let _clientLocations = {};   // loaded from data/client-locations.json — city 
 async function tryRemoteLoad() {
   let csvLoaded = false;
 
-  // 0. Load client-locations.json first so city shows when table renders
+  // 0. Load client-locations.json and re-render table once loaded
   try {
     const r = await fetch('data/client-locations.json', { cache: 'no-store' });
-    if (r.ok) _clientLocations = await r.json();
+    if (r.ok) {
+      _clientLocations = await r.json();
+      if (allClients.length) applyFilters();
+    }
   } catch(e) { /* no locations file */ }
 
   // 1. Try data/combined.csv (full CSV committed to repo)
